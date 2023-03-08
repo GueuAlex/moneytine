@@ -20,10 +20,14 @@ class _LoginTextFieldState extends State<LoginTextField> {
   ////////////////checker//////////////////
   bool _isChecked = false;
 
+  //////////// password visibility ///////////////////
+  bool isVisiblePassword = false;
+
   @override
   Widget build(BuildContext context) {
     ///////////// email field ///////////////////
     final emailField = TextFormField(
+      cursorColor: Palette.appPrimaryColor,
       controller: emailController,
       autofocus: false,
       validator: (value) {
@@ -62,9 +66,10 @@ class _LoginTextFieldState extends State<LoginTextField> {
 
     //////////////////// password field ///////////////
     final passwordField = TextFormField(
+      cursorColor: Palette.appPrimaryColor,
       controller: passwordController,
       autofocus: false,
-      obscureText: true,
+      obscureText: !isVisiblePassword ? true : false,
       validator: (value) {
         if (value!.isEmpty) {
           return ("Veuillez renseigner le mot de passe !");
@@ -82,6 +87,26 @@ class _LoginTextFieldState extends State<LoginTextField> {
         prefixIcon: const Icon(
           CupertinoIcons.lock,
           color: Palette.secondaryColor,
+        ),
+        suffixIcon: InkWell(
+          onTap: () {
+            setState(() {
+              if (isVisiblePassword) {
+                isVisiblePassword = false;
+              } else {
+                isVisiblePassword = true;
+              }
+            });
+          },
+          child: !isVisiblePassword
+              ? const Icon(
+                  CupertinoIcons.eye_slash,
+                  color: Palette.secondaryColor,
+                )
+              : const Icon(
+                  CupertinoIcons.eye,
+                  color: Palette.secondaryColor,
+                ),
         ),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         //hintText: 'email',

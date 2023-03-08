@@ -21,10 +21,16 @@ class _SinginTextFieldState extends State<SinginTextField> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
+  //////////// password visibility ///////////////////
+  bool isVisiblePassword = false;
+  bool isVisiblePassword1 = false;
+
   @override
   Widget build(BuildContext context) {
     //////////////////////first name field ///////////
     final firstNameFiel = TextFormField(
+      cursorColor: Palette.appPrimaryColor,
+
       autofocus: false,
 
       //first name validator
@@ -105,6 +111,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
 
     ///////////// email field ///////////////////
     final emailField = TextFormField(
+      cursorColor: Palette.appPrimaryColor,
       controller: emailController,
       autofocus: false,
       validator: (value) {
@@ -143,9 +150,10 @@ class _SinginTextFieldState extends State<SinginTextField> {
 
     //////////////////// password field ///////////////
     final passwordField = TextFormField(
+      cursorColor: Palette.appPrimaryColor,
       controller: passwordController,
       autofocus: false,
-      obscureText: true,
+      obscureText: !isVisiblePassword ? true : false,
       validator: (value) {
         if (value!.isEmpty) {
           return ("Veuillez renseigner le mot de passe !");
@@ -160,6 +168,26 @@ class _SinginTextFieldState extends State<SinginTextField> {
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
+        suffixIcon: InkWell(
+          onTap: () {
+            setState(() {
+              if (isVisiblePassword) {
+                isVisiblePassword = false;
+              } else {
+                isVisiblePassword = true;
+              }
+            });
+          },
+          child: !isVisiblePassword
+              ? const Icon(
+                  CupertinoIcons.eye_slash,
+                  color: Palette.secondaryColor,
+                )
+              : const Icon(
+                  CupertinoIcons.eye,
+                  color: Palette.secondaryColor,
+                ),
+        ),
         prefixIcon: const Icon(
           CupertinoIcons.lock,
           color: Palette.secondaryColor,
@@ -177,9 +205,10 @@ class _SinginTextFieldState extends State<SinginTextField> {
 
     ///////////////confirm password field/////////////
     final confirmPasswordField = TextFormField(
+      cursorColor: Palette.appPrimaryColor,
       controller: confirmPasswordController,
       autofocus: false,
-      obscureText: true,
+      obscureText: !isVisiblePassword1 ? true : false,
       validator: (value) {
         if (value!.isEmpty) {
           return ("Veuillez confirmer le mot de passe !");
@@ -200,9 +229,29 @@ class _SinginTextFieldState extends State<SinginTextField> {
           CupertinoIcons.lock,
           color: Palette.secondaryColor,
         ),
+        suffixIcon: InkWell(
+          onTap: () {
+            setState(() {
+              if (isVisiblePassword1) {
+                isVisiblePassword1 = false;
+              } else {
+                isVisiblePassword1 = true;
+              }
+            });
+          },
+          child: !isVisiblePassword1
+              ? const Icon(
+                  CupertinoIcons.eye_slash,
+                  color: Palette.secondaryColor,
+                )
+              : const Icon(
+                  CupertinoIcons.eye,
+                  color: Palette.secondaryColor,
+                ),
+        ),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         //hintText: 'email',
-        labelText: 'Mot de passe',
+        labelText: 'Répéter le mot de passe',
         labelStyle: const TextStyle(color: Palette.secondaryColor),
         border: OutlineInputBorder(
           borderSide: BorderSide.none,

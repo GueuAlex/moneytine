@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../style/palette.dart';
-import 'custom_button.dart';
+import '../../../style/palette.dart';
+import '../../../widgets/custom_button.dart';
+import '../../home_page/home_page.dart';
 
 class JointTontineSheetContent1 extends StatelessWidget {
   const JointTontineSheetContent1({
@@ -66,7 +67,13 @@ class JointTontineSheetContent1 extends StatelessWidget {
               height: 45,
               radius: 50.0,
               text: 'Oui',
-              onPress: () {}),
+              onPress: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return HomePageScreen();
+                }));
+              }),
         ),
         Padding(
           padding: const EdgeInsets.only(

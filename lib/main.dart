@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
       ),
       //home: const MyHomePage(title: 'MoneyTine'),
       home: const SplashCreen(),
+      //home: const DropDownListExample(),
     );
   }
 }

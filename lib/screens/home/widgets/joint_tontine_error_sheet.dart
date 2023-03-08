@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../style/palette.dart';
-import 'custom_button.dart';
+import '../../../style/palette.dart';
+import '../../../widgets/custom_button.dart';
 
 class JointTontineErrorSheet extends StatelessWidget {
   const JointTontineErrorSheet({

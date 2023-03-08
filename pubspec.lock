@@ -73,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  drop_down_list:
+    dependency: "direct main"
+    description:
+      name: drop_down_list
+      sha256: c4f0529fca9516f35037d0b53737a647a79716040e994e121486102f3efcc1ab
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   dynamic_color:
     dependency: transitive
     description:
@@ -118,6 +126,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_cupertino_date_picker:
+    dependency: "direct main"
+    description:
+      name: flutter_cupertino_date_picker
+      sha256: ff7d7ef990379e586e88b16925db768d8e4641cb5ad17a669ddd13d320aca01e
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.26+2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -131,6 +147,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_speed_dial:
+    dependency: "direct main"
+    description:
+      name: flutter_speed_dial
+      sha256: "41d7ad0bc224248637b3a5e0b9083e912a75445bdb450cf82b8ed06d7af7c61d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -158,7 +182,7 @@ packages:
     source: hosted
     version: "2.0.0"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
@@ -229,6 +253,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  persistent_bottom_nav_bar_v2:
+    dependency: "direct main"
+    description:
+      name: persistent_bottom_nav_bar_v2
+      sha256: "2c1f787b7b6b1dfdbb7ef06c11653410caa0e90e66efe774e4153bd7cde8cb9c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.6"
   petitparser:
     dependency: transitive
     description:
@@ -314,6 +346,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.16"
+  toggle_switch:
+    dependency: "direct main"
+    description:
+      name: toggle_switch
+      sha256: "82c778c4bfe93af154a41e346ccd1d5b0cb6a50f8f187941412edd0a9bbf51ee"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   vector_graphics:
     dependency: transitive
     description:

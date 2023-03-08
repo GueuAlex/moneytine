@@ -3,165 +3,181 @@ import 'dart:io';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytine/screens/add_tontine/add_tontine.dart';
-//import 'package:moneytine/screens/my_tontines/mes_tontines.dart';
-import 'package:moneytine/screens/home_page/home_page.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:moneytine/screens/my_tontines/mes_tontines.dart';
 import 'package:moneytine/style/palette.dart';
-import 'package:moneytine/widgets/app_bar_actions.dart';
-import 'package:quickalert/quickalert.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-import '../../widgets/menu_button.dart';
-import '../../widgets/top_banner.dart';
-import 'widgets/add_tontine_error_sheet.dart';
-import 'widgets/joint_tontine_error_sheet.dart';
-import 'widgets/joint_tontine_sheet_contente1.dart';
+import '../add_tontine/add_tontine.dart';
+import '../home/widgets/add_tontine_error_sheet.dart';
+import '../home/widgets/joint_tontine_error_sheet.dart';
+import '../home/widgets/joint_tontine_sheet_contente1.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class HomePageScreen extends StatefulWidget {
+  HomePageScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<HomePageScreen> createState() => _HomePageScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _HomePageScreenState extends State<HomePageScreen> {
+  //PersistentTabController _controller;
+  final PersistentTabController _controller =
+      PersistentTabController(initialIndex: 0);
+
+  final double iconSize = 30;
   String code = '';
   String tontineName = '';
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      //resizeToAvoidBottomInset: true,
-      extendBody: true,
-      appBar: AppBar(
-        title: Text(
-          'Acceuil',
-          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                fontSize: 25,
-                color: Palette.whiteColor,
-                fontWeight: FontWeight.w700,
-              ),
-        ),
-        elevation: 1,
-        backgroundColor: Palette.secondaryColor,
-        actions: AppBarAction.actionList,
+
+  List<Widget> _buildScreens(BuildContext context) {
+    return [
+      const MesTontinesScreen(),
+      const Center(
+        child: Text('notifications UI'),
       ),
-      backgroundColor: Palette.secondaryColor,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
+      const Center(child: Text('Seetings UI'))
+    ];
+  }
+
+  List<PersistentBottomNavBarItem> _navBarsItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: Icon(
+          CupertinoIcons.person_3,
+          size: iconSize,
+        ),
+        title: "Mes tontines",
+        textStyle: const TextStyle(fontWeight: FontWeight.bold),
+        activeColorPrimary: Palette.appPrimaryColor,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Stack(
           children: [
-            Container(
-              padding: const EdgeInsets.only(
-                right: 10.0,
-                left: 10.0,
-                top: 15.0,
-              ),
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height / 4,
-              child: const TopBanner(),
+            Icon(
+              CupertinoIcons.bell,
+              size: iconSize,
             ),
-            const SizedBox(
-              height: 95,
-            ),
-            Expanded(
-              child: Container(
-                //height: MediaQuery.of(context).size.height / ,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(90),
+            Positioned(
+                right: 5,
+                top: 5,
+                child: Container(
+                  width: 10,
+                  height: 10,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.red,
                   ),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      //width: double.,
-                      margin: const EdgeInsets.only(
-                        top: 50.0,
-                        bottom: 18.0,
-                      ),
-
-                      /* child: Text(
-                        'Menu',
-                        style:
-                            Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Palette.secondaryColor.withOpacity(
-                                    0.9,
-                                  ),
-                                ),
-                      ), */
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        child: GridView.count(
-                          mainAxisSpacing: 5,
-                          crossAxisCount: 3,
-                          children: [
-                            MunuButton(
-                              text: 'Créer une tontine',
-                              icon: Icons.create_new_folder,
-                              onTap: () {
-                                addTontine();
-                              },
-                            ),
-                            MunuButton(
-                              text: 'Rejoindre une tontine',
-                              icon: CupertinoIcons.link,
-                              onTap: () {
-                                rejoindreTontine(context);
-
-                                //print(code);
-                              },
-                            ),
-                            MunuButton(
-                              text: 'Mes tontines',
-                              icon: CupertinoIcons.person_3_fill,
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) {
-                                  return HomePageScreen();
-                                }));
-                              },
-                            ),
-                            /* MunuButton(
-                              text: 'Mes paiements',
-                              icon: CupertinoIcons.creditcard,
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) {
-                                  return const MesPaiements();
-                                }));
-                              },
-                            ), */
-                            MunuButton(
-                              text: 'Parametres',
-                              icon: Platform.isIOS
-                                  ? CupertinoIcons.settings
-                                  : Icons.settings,
-                              onTap: () {},
-                            ),
-                            MunuButton(
-                              text: ' ',
-                              icon: CupertinoIcons.add,
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
+                ))
           ],
         ),
+        title: "Notifications",
+        textStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        activeColorPrimary: Palette.appPrimaryColor,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
+      PersistentBottomNavBarItem(
+        icon: Icon(
+          CupertinoIcons.settings,
+          size: iconSize,
+        ),
+        title: "Parametres",
+        textStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          //height: 0.4,
+        ),
+        activeColorPrimary: Palette.appPrimaryColor,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+      ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PersistentTabView(
+      floatingActionButton: SpeedDial(
+        //animationCurve: Curves.easeInCirc,
+        overlayColor: Palette.blackColor,
+        overlayOpacity: 0.3,
+        animatedIcon: AnimatedIcons.menu_close,
+        children: [
+          SpeedDialChild(
+            onTap: () {
+              addTontine();
+            },
+            child: const Icon(
+              Icons.create_new_folder,
+              color: Palette.whiteColor,
+            ),
+            label: 'Créer une tontine',
+            labelBackgroundColor: Palette.primaryColor.withOpacity(0.9),
+            labelStyle: const TextStyle(color: Palette.whiteColor),
+            backgroundColor: Palette.primaryColor,
+          ),
+          SpeedDialChild(
+            onTap: () {
+              rejoindreTontine(context);
+            },
+            child: const Icon(
+              CupertinoIcons.person_3,
+              color: Palette.whiteColor,
+            ),
+            label: 'Rejoindre une tontine',
+            labelBackgroundColor: Palette.primaryColor.withOpacity(0.9),
+            labelStyle: const TextStyle(color: Palette.whiteColor),
+            backgroundColor: Palette.primaryColor,
+          ),
+        ],
+      ),
+      context,
+      controller: _controller,
+      screens: _buildScreens(context),
+      items: _navBarsItems(),
+      confineInSafeArea: true,
+
+      backgroundColor: Colors.white, // Default is Colors.white.
+      handleAndroidBackButtonPress: true, // Default is true.
+      resizeToAvoidBottomInset:
+          true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+      stateManagement: true, // Default is true.
+      hideNavigationBarWhenKeyboardShows:
+          true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+      decoration: NavBarDecoration(
+        boxShadow: [
+          BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: const Offset(0, -1))
+        ],
+        //gradient: LinearGradient(colors: Colors.primaries),
+        borderRadius: BorderRadius.circular(10.0),
+
+        colorBehindNavBar: Colors.white,
+      ),
+      popAllScreensOnTapOfSelectedTab: true,
+      popActionScreens: PopActionScreensType.all,
+      itemAnimationProperties: const ItemAnimationProperties(
+        // Navigation Bar's items animation properties.
+        duration: Duration(milliseconds: 200),
+        curve: Curves.ease,
+      ),
+      screenTransitionAnimation: const ScreenTransitionAnimation(
+        // Screen transition animation on change of selected tab.
+        animateTabTransition: true,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 200),
+      ),
+      navBarStyle:
+          NavBarStyle.style6, // Choose the nav bar style with this property.
     );
   }
 
-//////////////////////////////////////// ///////////////////////////////////////
+  //////////////////////////////////////// ///////////////////////////////////////
   ///
 /////////////////////////////join tontine methods//////////////////////////////
   ///

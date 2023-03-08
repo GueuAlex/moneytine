@@ -20,7 +20,7 @@ class MunuButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           side: BorderSide(
             color: Palette.appPrimaryColor.withOpacity(0.2),
-            width: 5,
+            width: 2,
           ),
           borderRadius: BorderRadius.circular(20.0),
         ),
