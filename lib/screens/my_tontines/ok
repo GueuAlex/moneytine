@@ -1,0 +1,26 @@
+TabBarView(
+          children: <Widget>[
+            Column(
+              children: const [
+                HeaderText(),
+                SizedBox(
+                  height: 16.0,
+                ),
+                Jorganise(),
+              ],
+            ),
+            Column(
+              children: const [
+                HeaderText(),
+                SizedBox(
+                  height: 16.0,
+                ),
+                JeParticipe(),
+              ],
+            ),
+          ],
+        ),
+
+
+        
+          

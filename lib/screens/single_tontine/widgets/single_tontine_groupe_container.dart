@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moneytine/style/palette.dart';
 
 import '../../../models/tontine.dart';
 import 'export_widgets.dart';
@@ -51,7 +52,30 @@ class SingleTontineGroupeContainer extends StatelessWidget {
           const SizedBox(
             height: 15.0,
           ),
-          const GenerateGroupeButton()
+          Row(
+            //mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              GenerateGroupeButton(
+                icon: CupertinoIcons.arrow_2_circlepath_circle,
+                text: 'générer un groupe',
+                color: Palette.appPrimaryColor,
+                onTap: () {
+                  print('generate groupe ici');
+                },
+              ),
+              const SizedBox(
+                width: 5.0,
+              ),
+              GenerateGroupeButton(
+                icon: CupertinoIcons.delete,
+                text: 'suprimer cette tontine',
+                color: Palette.primaryColor,
+                onTap: () {
+                  print('remove this groupe');
+                },
+              )
+            ],
+          ),
         ],
       ),
     );

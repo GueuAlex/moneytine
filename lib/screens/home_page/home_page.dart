@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:moneytine/screens/my_tontines/mes_tontines.dart';
+import 'package:moneytine/screens/notifs/notifs_screen.dart';
+import 'package:moneytine/screens/settings/settings_screen.dart';
 import 'package:moneytine/style/palette.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -16,7 +17,7 @@ import '../home/widgets/joint_tontine_error_sheet.dart';
 import '../home/widgets/joint_tontine_sheet_contente1.dart';
 
 class HomePageScreen extends StatefulWidget {
-  HomePageScreen({super.key});
+  const HomePageScreen({super.key});
 
   @override
   State<HomePageScreen> createState() => _HomePageScreenState();
@@ -27,45 +28,47 @@ class _HomePageScreenState extends State<HomePageScreen> {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
 
-  final double iconSize = 30;
+  //inal double iconSize = 22;
   String code = '';
   String tontineName = '';
 
   List<Widget> _buildScreens(BuildContext context) {
     return [
       const MesTontinesScreen(),
-      const Center(
-        child: Text('notifications UI'),
-      ),
-      const Center(child: Text('Seetings UI'))
+      const NotifsScreen(),
+      const SettingsScreen()
     ];
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: Icon(
-          CupertinoIcons.person_3,
-          size: iconSize,
+        icon: const Icon(
+          CupertinoIcons.money_dollar_circle,
+          //size: iconSize,
+          size: 22,
         ),
         title: "Mes tontines",
-        textStyle: const TextStyle(fontWeight: FontWeight.bold),
+        textStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
+        ),
         activeColorPrimary: Palette.appPrimaryColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: Stack(
           children: [
-            Icon(
+            const Icon(
               CupertinoIcons.bell,
-              size: iconSize,
+              size: 22,
             ),
             Positioned(
-                right: 5,
+                right: 3,
                 top: 5,
                 child: Container(
-                  width: 10,
-                  height: 10,
+                  width: 7,
+                  height: 7,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.red,
@@ -76,19 +79,21 @@ class _HomePageScreenState extends State<HomePageScreen> {
         title: "Notifications",
         textStyle: const TextStyle(
           fontWeight: FontWeight.bold,
+          fontSize: 12,
         ),
         activeColorPrimary: Palette.appPrimaryColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(
+        icon: const Icon(
           CupertinoIcons.settings,
-          size: iconSize,
+          //size: iconSize,
+          size: 22,
         ),
         title: "Parametres",
         textStyle: const TextStyle(
           fontWeight: FontWeight.bold,
-          //height: 0.4,
+          fontSize: 12,
         ),
         activeColorPrimary: Palette.appPrimaryColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
@@ -98,82 +103,84 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PersistentTabView(
-      floatingActionButton: SpeedDial(
-        //animationCurve: Curves.easeInCirc,
-        overlayColor: Palette.blackColor,
-        overlayOpacity: 0.3,
-        animatedIcon: AnimatedIcons.menu_close,
-        children: [
-          SpeedDialChild(
-            onTap: () {
-              addTontine();
-            },
-            child: const Icon(
-              Icons.create_new_folder,
-              color: Palette.whiteColor,
+    return Scaffold(
+      body: PersistentTabView(
+        /* floatingActionButton: SpeedDial(
+          //animationCurve: Curves.easeInCirc,
+          overlayColor: Palette.blackColor,
+          overlayOpacity: 0.3,
+          animatedIcon: AnimatedIcons.menu_close,
+          children: [
+            SpeedDialChild(
+              onTap: () {
+                addTontine();
+              },
+              child: const Icon(
+                Icons.create_new_folder,
+                color: Palette.whiteColor,
+              ),
+              label: 'Créer une tontine',
+              labelBackgroundColor: Palette.primaryColor.withOpacity(0.9),
+              labelStyle: const TextStyle(color: Palette.whiteColor),
+              backgroundColor: Palette.primaryColor,
             ),
-            label: 'Créer une tontine',
-            labelBackgroundColor: Palette.primaryColor.withOpacity(0.9),
-            labelStyle: const TextStyle(color: Palette.whiteColor),
-            backgroundColor: Palette.primaryColor,
-          ),
-          SpeedDialChild(
-            onTap: () {
-              rejoindreTontine(context);
-            },
-            child: const Icon(
-              CupertinoIcons.person_3,
-              color: Palette.whiteColor,
+            SpeedDialChild(
+              onTap: () {
+                rejoindreTontine(context);
+              },
+              child: const Icon(
+                CupertinoIcons.person_3,
+                color: Palette.whiteColor,
+              ),
+              label: 'Rejoindre une tontine',
+              labelBackgroundColor: Palette.primaryColor.withOpacity(0.9),
+              labelStyle: const TextStyle(color: Palette.whiteColor),
+              backgroundColor: Palette.primaryColor,
             ),
-            label: 'Rejoindre une tontine',
-            labelBackgroundColor: Palette.primaryColor.withOpacity(0.9),
-            labelStyle: const TextStyle(color: Palette.whiteColor),
-            backgroundColor: Palette.primaryColor,
-          ),
-        ],
-      ),
-      context,
-      controller: _controller,
-      screens: _buildScreens(context),
-      items: _navBarsItems(),
-      confineInSafeArea: true,
+          ],
+        ), */
+        context,
+        controller: _controller,
+        screens: _buildScreens(context),
+        items: _navBarsItems(),
+        confineInSafeArea: true,
 
-      backgroundColor: Colors.white, // Default is Colors.white.
-      handleAndroidBackButtonPress: true, // Default is true.
-      resizeToAvoidBottomInset:
-          true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-      stateManagement: true, // Default is true.
-      hideNavigationBarWhenKeyboardShows:
-          true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-      decoration: NavBarDecoration(
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, -1))
-        ],
-        //gradient: LinearGradient(colors: Colors.primaries),
-        borderRadius: BorderRadius.circular(10.0),
+        backgroundColor: Colors.white, // Default is Colors.white.
+        handleAndroidBackButtonPress: true, // Default is true.
+        resizeToAvoidBottomInset:
+            true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+        stateManagement: true, // Default is true.
+        hideNavigationBarWhenKeyboardShows:
+            true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+        decoration: NavBarDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, -1))
+          ],
+          //gradient: LinearGradient(colors: Colors.primaries),
+          //borderRadius: BorderRadius.circular(10.0),
 
-        colorBehindNavBar: Colors.white,
+          colorBehindNavBar: Colors.white,
+        ),
+        popAllScreensOnTapOfSelectedTab: true,
+        popActionScreens: PopActionScreensType.all,
+        itemAnimationProperties: const ItemAnimationProperties(
+          // Navigation Bar's items animation properties.
+          duration: Duration(milliseconds: 200),
+          curve: Curves.ease,
+        ),
+        screenTransitionAnimation: const ScreenTransitionAnimation(
+          // Screen transition animation on change of selected tab.
+          animateTabTransition: true,
+          curve: Curves.ease,
+          duration: Duration(milliseconds: 200),
+        ),
+        navBarStyle:
+            NavBarStyle.style6, // Choose the nav bar style with this property.
       ),
-      popAllScreensOnTapOfSelectedTab: true,
-      popActionScreens: PopActionScreensType.all,
-      itemAnimationProperties: const ItemAnimationProperties(
-        // Navigation Bar's items animation properties.
-        duration: Duration(milliseconds: 200),
-        curve: Curves.ease,
-      ),
-      screenTransitionAnimation: const ScreenTransitionAnimation(
-        // Screen transition animation on change of selected tab.
-        animateTabTransition: true,
-        curve: Curves.ease,
-        duration: Duration(milliseconds: 200),
-      ),
-      navBarStyle:
-          NavBarStyle.style6, // Choose the nav bar style with this property.
     );
   }
 

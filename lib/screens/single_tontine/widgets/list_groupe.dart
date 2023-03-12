@@ -28,14 +28,6 @@ class ListGroup extends StatelessWidget {
             (index) => GroupeCard(
               groupe: tontine.groupes[index],
               tontine: tontine,
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) {
-                    return SingleGroupeScreen(
-                        tontine: tontine, groupe: tontine.groupes[index]);
-                  }),
-                );
-              },
             ),
           ),
         ),
@@ -49,18 +41,28 @@ class GroupeCard extends StatelessWidget {
     super.key,
     required this.groupe,
     required this.tontine,
-    required this.onTap,
+    // required this.onTap,
   });
   final Groupe groupe;
   final Tontine tontine;
 
-  final VoidCallback onTap;
+  //final VoidCallback onTap;
   final int colorIndex = Random().nextInt(9);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) {
+            return SingleGroupeScreen(
+              tontine: tontine,
+              groupe: groupe,
+              groupeColor: Groupe.colorList[colorIndex],
+            );
+          }),
+        );
+      },
       child: Container(
         padding: const EdgeInsets.only(
           top: 5.0,

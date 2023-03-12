@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:moneytine/screens/auth/singin.dart';
-import 'package:moneytine/screens/home/main_screen.dart';
+import 'package:moneytine/screens/home_page/home_page.dart';
 import 'package:moneytine/style/palette.dart';
 
 import '../../widgets/logo_container.dart';
@@ -43,7 +43,7 @@ class LoginScreen extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) {
-            return const MainScreen();
+            return const HomePageScreen();
           }), (route) => false);
           // Do something when the button is pressed
         }, // Icon to display on the button

@@ -26,7 +26,7 @@ class TabBarMenu extends StatelessWidget {
           textAlign: TextAlign.center,
           style: const TextStyle(
             color: Palette.appPrimaryColor,
-            fontSize: 22,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),

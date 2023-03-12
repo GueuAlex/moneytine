@@ -24,15 +24,6 @@ class SingleTontine extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 239, 239, 239),
       appBar: AppBar(
         backgroundColor: Palette.primaryColor,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              'assets/icons/menu_dot.svg',
-              color: Palette.greyWhiteColor,
-            ),
-          ),
-        ],
         title: Text(tontine.tontineName),
       ),
       body: SafeArea(
@@ -140,8 +131,8 @@ class TontineMembersList extends StatelessWidget {
       width: double.infinity,
       height: 35,
       decoration: BoxDecoration(
-        color: Groupe.colorList[colorIndex].withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10.0),
+        color: Palette.greyColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(5.0),
       ),
       /////// faire un condition ici plutard pour voir s'il des membres //////
       /// child : Row()

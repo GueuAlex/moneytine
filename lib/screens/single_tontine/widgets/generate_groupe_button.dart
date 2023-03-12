@@ -6,43 +6,51 @@ import '../../../style/palette.dart';
 class GenerateGroupeButton extends StatelessWidget {
   const GenerateGroupeButton({
     super.key,
+    required this.text,
+    required this.color,
+    required this.icon,
+    required this.onTap,
   });
+
+  final String text;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.only(
-            right: 8.0,
-            left: 8.0,
-          ),
-          height: 45,
-          decoration: BoxDecoration(
-              border: Border.all(
-                  width: 1, color: Palette.greyColor.withOpacity(0.5)),
-              borderRadius: BorderRadius.circular(10.0)),
-          child: Row(
-            children: [
-              const Icon(
-                CupertinoIcons.arrow_2_circlepath_circle,
-                size: 35,
-                color: Palette.appPrimaryColor,
-              ),
-              const SizedBox(
-                width: 8.0,
-              ),
-              Text(
-                'Générer un groupe'.toUpperCase(),
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Palette.appPrimaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ],
-          ),
-        )
-      ],
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.only(
+          right: 8.0,
+          left: 8.0,
+        ),
+        height: 45,
+        decoration: BoxDecoration(
+            color: color,
+            border: Border.all(width: 1, color: color),
+            borderRadius: BorderRadius.circular(50.0)),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 35,
+              color: Palette.whiteColor,
+            ),
+            const SizedBox(
+              width: 5.0,
+            ),
+            Text(
+              text.toLowerCase(),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Palette.whiteColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

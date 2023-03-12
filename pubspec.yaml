@@ -48,6 +48,9 @@ dependencies:
   persistent_bottom_nav_bar_v2: ^4.2.6
   flutter_speed_dial: ^6.2.0
   toggle_switch: ^2.0.1
+  percent_indicator: ^4.2.3
+  flutter_slidable: ^2.0.0
+  flutter_custom_clippers: ^2.1.0
 
   
 dev_dependencies:

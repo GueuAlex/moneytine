@@ -49,7 +49,7 @@ class JeParticipeTontineCard extends StatelessWidget {
             title: Text(
               tontine.tontineName,
               style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    fontSize: 21,
+                    fontSize: 16,
                     fontWeight: FontWeight.w700,
                     letterSpacing: -0.2,
                     color: const Color.fromARGB(255, 104, 103, 102),
@@ -57,7 +57,10 @@ class JeParticipeTontineCard extends StatelessWidget {
             ),
             subtitle: Text(
                 'Créer le ${DateFormat('dd / MM / yyyy').format(tontine.startDate)}\nPar Creator name'),
-            trailing: Text('${tontine.membersId.length} membres'),
+            trailing: Text(
+              '${tontine.membersId.length} membres',
+              style: const TextStyle(fontSize: 12),
+            ),
           ),
           const SizedBox(
             height: 8.0,

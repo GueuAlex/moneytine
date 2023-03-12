@@ -403,7 +403,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
             const SizedBox(
               height: 15.0,
             ),
-            //////////////////////////////// number of type field //////////////////////////
+            //////////////////////////////// number of type field /////////////
             type.isNotEmpty
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

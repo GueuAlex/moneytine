@@ -135,3 +135,28 @@
       });
     }
   }
+
+
+
+
+  [{
+   "id":1,
+   "uniqueCode":345533,
+   "tontineName":"super mega tontine",
+   "type":"mensuel",
+   "numberOfType":8.0,
+   "contribution":45559.44,
+   "startDate":"2023-03-06 11:10:21.628211",
+   "firstPaiemntDate":"2023-03-06 11:10:21.628211",
+   "creatorId":1,
+   "membersId":[1, 2, 3, 4],
+   "groupes":[
+                {
+                    "id":1,
+                    "nom":"Groupe_1",
+                    "membrsId": [1, 2, 3, 4],
+                    "cretat":"2023-03-06 11:10:21.628211"
+                    
+                }
+       ]
+}]
