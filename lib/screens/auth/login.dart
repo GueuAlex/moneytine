@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moneytine/functions/functions.dart';
 import 'package:moneytine/screens/auth/singin.dart';
 import 'package:moneytine/screens/home_page/home_page.dart';
 import 'package:moneytine/style/palette.dart';
@@ -7,8 +9,28 @@ import 'package:moneytine/style/palette.dart';
 import '../../widgets/logo_container.dart';
 import 'widgets/login_text_field.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  //////////////////////// controllers ////////////////////////////////////////
+  ///
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  /////////////////form key ////////////////////////////
+  final _formKey = GlobalKey<FormState>();
+
+  ///////////////////// bools //////////////////////////
+  ///
+  bool isLoading = false;
+
+  //////////////////////////
+  ///
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +62,51 @@ class LoginScreen extends StatelessWidget {
             ),
           )),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) {
-            return const HomePageScreen();
-          }), (route) => false);
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            setState(() {
+              isLoading = true;
+            });
+            if (await Functions.postLoginDetails(
+                    email: emailController.text,
+                    password: passwordController.text) !=
+                null) {
+              Future.delayed(const Duration(seconds: 4)).then((value) {
+                setState(() {
+                  isLoading = false;
+                });
+                Fluttertoast.showToast(
+                    msg: 'Connecté !',
+                    backgroundColor: Palette.appPrimaryColor);
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) {
+                  return const HomePageScreen();
+                }), (route) => false);
+              });
+            } else {
+              setState(() {
+                isLoading = false;
+              });
+              Fluttertoast.showToast(
+                  msg: 'email ou mot passe incorect',
+                  backgroundColor: Palette.appPrimaryColor);
+            }
+          }
+          /*  */
           // Do something when the button is pressed
         }, // Icon to display on the button
         backgroundColor: Palette.secondaryColor.withOpacity(0.9),
-        child: const Icon(
-          CupertinoIcons.chevron_right,
-          color: Palette.whiteColor,
-        ), // Background color of the button
+        child: !isLoading
+            ? const Icon(
+                CupertinoIcons.chevron_right,
+                color: Palette.whiteColor,
+              )
+            : const Center(
+                child: CircularProgressIndicator.adaptive(
+                  backgroundColor: Palette.secondaryColor,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ), // Background color of the button
       ),
       body: Stack(
         children: [
@@ -68,7 +123,13 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   const LogoContainer(),
-                  const LoginTextField(),
+                  Form(
+                    key: _formKey,
+                    child: LoginTextField(
+                      emailController: emailController,
+                      passwordController: passwordController,
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 30.0),
                     child: GestureDetector(

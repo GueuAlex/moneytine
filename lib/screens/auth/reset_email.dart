@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moneytine/functions/functions.dart';
 import 'package:moneytine/screens/auth/login.dart';
 import 'package:moneytine/style/palette.dart';
 
@@ -7,9 +8,24 @@ import '../../widgets/leading.dart';
 import 'otp_screen.dart';
 import 'widgets/reset_email_text_field.dart';
 
-class ResetEmailScreen extends StatelessWidget {
+class ResetEmailScreen extends StatefulWidget {
   const ResetEmailScreen({super.key});
 
+  @override
+  State<ResetEmailScreen> createState() => _ResetEmailScreenState();
+}
+
+class _ResetEmailScreenState extends State<ResetEmailScreen> {
+  ///////////////// email controller //////////////////////
+  final TextEditingController emailController = TextEditingController();
+
+  ///////////form key /////////////////
+  final _formKey = GlobalKey<FormState>();
+
+  //////////////////bool ////////////////
+  bool isLoading = false;
+
+  //////////////
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -19,17 +35,49 @@ class ResetEmailScreen extends StatelessWidget {
         extendBody: true,
         backgroundColor: Palette.secondaryColor,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // Do something when the button is pressed
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const OtpScreen();
-            }));
+          onPressed: () async {
+            if (_formKey.currentState!.validate()) {
+              setState(() {
+                isLoading = true;
+              });
+              int code = await Functions.postEmail(
+                api: 'users/verification/email',
+                email: emailController.text,
+              );
+              Future.delayed(const Duration(seconds: 3)).then((value) {
+                if (code != 0) {
+                  setState(() {
+                    isLoading = false;
+                  });
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return OtpScreen(
+                      otp: code,
+                      email: emailController.text,
+                      isSiginProcess: false,
+                    );
+                  }));
+                } else {
+                  setState(() {
+                    isLoading = false;
+                  });
+                }
+              });
+              /*  */
+            }
           }, // Icon to display on the button
           backgroundColor: Palette.secondaryColor,
-          child: const Icon(
-            CupertinoIcons.chevron_right,
-            color: Palette.whiteColor,
-          ), // Background color of the button
+          child: !isLoading
+              ? const Icon(
+                  CupertinoIcons.chevron_right,
+                  color: Palette.whiteColor,
+                )
+              : const Center(
+                  child: CircularProgressIndicator.adaptive(
+                    backgroundColor: Palette.secondaryColor,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ), // Background color of the button
         ),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -70,8 +118,8 @@ class ResetEmailScreen extends StatelessWidget {
                 ),
                 child: Text(
                   'Pour mettre à jour votre mot de passe, veuillez entrer votre adresse email. You will receive a OTP code via email to creat a new password',
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: Palette.whiteColor,
                         fontSize: 16,
                         height: 1.2,
@@ -93,7 +141,12 @@ class ResetEmailScreen extends StatelessWidget {
                         topLeft: Radius.circular(90),
                       ),
                     ),
-                    child: const ResetEmailTextField(),
+                    child: Form(
+                      key: _formKey,
+                      child: ResetEmailTextField(
+                        emailController: emailController,
+                      ),
+                    ),
                   ),
                 ),
               )

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/models/user.dart';
+import 'package:moneytine/remote_services/remote_services.dart';
+import 'package:moneytine/screens/auth/success.dart';
 
 import '../../style/palette.dart';
 import '../../widgets/leading.dart';
@@ -7,8 +12,30 @@ import 'login.dart';
 import 'reset_password_screen.dart';
 import 'widgets/otp_text_field.dart';
 
-class OtpScreen extends StatelessWidget {
-  const OtpScreen({super.key});
+class OtpScreen extends StatefulWidget {
+  OtpScreen({
+    super.key,
+    required this.otp,
+    required this.email,
+    this.user,
+    this.isSiginProcess = true,
+  });
+  int otp;
+  final String email;
+  final User? user;
+  final bool isSiginProcess;
+
+  @override
+  State<OtpScreen> createState() => _OtpScreenState();
+}
+
+class _OtpScreenState extends State<OtpScreen> {
+  final TextEditingController textEditingController = TextEditingController();
+
+  bool isLoading = false;
+  bool canPush = false;
+  int userEntryOtp = 0;
+  bool isNewOptProcess = false;
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +47,80 @@ class OtpScreen extends StatelessWidget {
         backgroundColor: Palette.secondaryColor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const ResetPasswordScreen();
-            }));
+            setState(() {
+              isLoading = true;
+            });
+            if (textEditingController.text.isEmpty) {
+              Fluttertoast.showToast(
+                  msg: 'Code invalide',
+                  backgroundColor: Palette.appPrimaryColor);
+            } else {
+              setState(() {
+                userEntryOtp = int.parse(textEditingController.text);
+              });
+            }
+            print(' dans screen : $userEntryOtp');
+            Future.delayed(const Duration(seconds: 4)).then((value) async {
+              if (widget.otp == userEntryOtp) {
+                setState(() {
+                  isLoading = false;
+                });
+                //print(' ici : ${await postUser()}');
+                if (widget.isSiginProcess) {
+                  if (await Functions.postUser(widget.user) != null) {
+                    Fluttertoast.showToast(
+                      msg: 'Vous êtes bien inscit !',
+                      backgroundColor: Palette.appPrimaryColor,
+                    );
+                    // ignore: use_build_context_synchronously
+                    Navigator.pushAndRemoveUntil(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const SucessScreen();
+                    }), (route) => false);
+                  } else {
+                    setState(() {
+                      isLoading = false;
+                    });
+                    Fluttertoast.showToast(
+                      msg: 'Cette adresse email existe déjà !',
+                      backgroundColor: Palette.appPrimaryColor,
+                    );
+                  }
+                } else {
+                  // reset process
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return ResetPasswordScreen(email: widget.email);
+                      },
+                    ),
+                  );
+                }
+              } else {
+                setState(() {
+                  isLoading = false;
+                });
+                Fluttertoast.showToast(
+                  msg: 'Code invalide',
+                  backgroundColor: Palette.appPrimaryColor,
+                );
+              }
+            });
+
             // Do something when the button is pressed
           }, // Icon to display on the button
           backgroundColor: Palette.secondaryColor,
-          child: const Icon(
-            CupertinoIcons.chevron_right,
-            color: Palette.whiteColor,
-          ), // Background color of the button
+          child: !isLoading
+              ? const Icon(
+                  CupertinoIcons.chevron_right,
+                  color: Palette.whiteColor,
+                )
+              : const Center(
+                  child: CircularProgressIndicator.adaptive(
+                    backgroundColor: Palette.secondaryColor,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ), // Background color of the button
         ),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -68,11 +159,17 @@ class OtpScreen extends StatelessWidget {
                   right: 8.0,
                   left: 8.0,
                 ),
-                child: const Text(
-                  'Pour continuer, veuillez entrer le code OTP reçu par email',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Palette.whiteColor),
-                ),
+                child: widget.isSiginProcess
+                    ? const Text(
+                        'Pour continuer, veuillez entrer le code de vérification reçu par email',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Palette.whiteColor),
+                      )
+                    : const Text(
+                        'Pour continuer, veuillez entrer le code OTP reçu par email',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Palette.whiteColor),
+                      ),
               ),
               const SizedBox(
                 height: 100.0,
@@ -89,7 +186,68 @@ class OtpScreen extends StatelessWidget {
                         topLeft: Radius.circular(90),
                       ),
                     ),
-                    child: const OteTextField(),
+                    child: Column(
+                      children: [
+                        OteTextField(
+                          textEditingController: textEditingController,
+                          email: widget.email,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 30.0),
+                          child: Text('Vous n\'avez pas reçu le code ?'),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 20.0),
+                          height: 40,
+                          padding: const EdgeInsets.only(
+                            right: 8.0,
+                            left: 8.0,
+                          ),
+                          decoration: BoxDecoration(
+                              color: Palette.secondaryColor.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: TextButton(
+                            onPressed: () async {
+                              setState(() {
+                                isNewOptProcess = true;
+                              });
+                              int newOtp = await Functions.postEmail(
+                                api: 'users/verification/email',
+                                email: widget.email,
+                              );
+                              Future.delayed(const Duration(seconds: 4))
+                                  .then((value) {
+                                if (newOtp != 0) {
+                                  setState(() {
+                                    widget.otp = newOtp;
+                                    isNewOptProcess = false;
+                                  });
+                                  Fluttertoast.showToast(
+                                    msg: 'Code renvoyer !',
+                                    backgroundColor: Palette.appPrimaryColor,
+                                  );
+                                } else {
+                                  setState(() {
+                                    isNewOptProcess = false;
+                                  });
+                                }
+                              });
+                            },
+                            child: isNewOptProcess
+                                ? const Text(
+                                    'chargement...',
+                                    style: TextStyle(
+                                        color: Palette.secondaryColor),
+                                  )
+                                : const Text(
+                                    'Renvoyer le code',
+                                    style: TextStyle(
+                                        color: Palette.secondaryColor),
+                                  ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -98,5 +256,15 @@ class OtpScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<int> resendOpt({required String api, required String email}) async {
+    var response = await RemoteServices().postEmail(api: api, email: email);
+    if (response != null) {
+      int code = int.parse(response);
+      //print(' result : $code');
+      return code;
+    }
+    return 0;
   }
 }

@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../style/palette.dart';
 
 class ResetEmailTextField extends StatefulWidget {
-  const ResetEmailTextField({super.key});
+  const ResetEmailTextField({
+    super.key,
+    required this.emailController,
+  });
+  final TextEditingController emailController;
 
   @override
   State<ResetEmailTextField> createState() => _ResetEmailTextFieldState();
@@ -11,13 +15,12 @@ class ResetEmailTextField extends StatefulWidget {
 
 class _ResetEmailTextFieldState extends State<ResetEmailTextField> {
   /////////////////////// controllers/////////////////////////////////
-  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     ///////////// email field ///////////////////
     final emailField = TextFormField(
-      controller: emailController,
+      controller: widget.emailController,
       autofocus: false,
       validator: (value) {
         if (value!.isEmpty) {
@@ -34,7 +37,7 @@ class _ResetEmailTextFieldState extends State<ResetEmailTextField> {
         return null;
       },
       onSaved: (value) {
-        emailController.text = value!;
+        widget.emailController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(

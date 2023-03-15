@@ -5,17 +5,20 @@ import 'package:moneytine/screens/auth/reset_email.dart';
 import '../../../style/palette.dart';
 
 class LoginTextField extends StatefulWidget {
-  const LoginTextField({super.key});
+  const LoginTextField({
+    super.key,
+    required this.emailController,
+    required this.passwordController,
+  });
+  final TextEditingController emailController;
 
+  final TextEditingController passwordController;
   @override
   State<LoginTextField> createState() => _LoginTextFieldState();
 }
 
 class _LoginTextFieldState extends State<LoginTextField> {
   /////////////////////// controllers/////////////////////////////////
-  final TextEditingController emailController = TextEditingController();
-
-  final TextEditingController passwordController = TextEditingController();
 
   ////////////////checker//////////////////
   bool _isChecked = false;
@@ -28,7 +31,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
     ///////////// email field ///////////////////
     final emailField = TextFormField(
       cursorColor: Palette.appPrimaryColor,
-      controller: emailController,
+      controller: widget.emailController,
       autofocus: false,
       validator: (value) {
         if (value!.isEmpty) {
@@ -45,7 +48,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
         return null;
       },
       onSaved: (value) {
-        passwordController.text = value!;
+        widget.passwordController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -67,7 +70,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
     //////////////////// password field ///////////////
     final passwordField = TextFormField(
       cursorColor: Palette.appPrimaryColor,
-      controller: passwordController,
+      controller: widget.passwordController,
       autofocus: false,
       obscureText: !isVisiblePassword ? true : false,
       validator: (value) {
@@ -80,7 +83,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
         return null;
       },
       onSaved: (value) {
-        passwordController.text = value!;
+        widget.passwordController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(

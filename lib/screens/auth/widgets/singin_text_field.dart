@@ -4,23 +4,22 @@ import 'package:flutter/material.dart';
 import '../../../style/palette.dart';
 
 class SinginTextField extends StatefulWidget {
-  const SinginTextField({super.key});
-
+  const SinginTextField({
+    super.key,
+    required this.firstNameController,
+    required this.emailController,
+    required this.passwordController,
+    required this.confirmPasswordController,
+  });
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController firstNameController;
+  final TextEditingController confirmPasswordController;
   @override
   State<SinginTextField> createState() => _SinginTextFieldState();
 }
 
 class _SinginTextFieldState extends State<SinginTextField> {
-  /////////////////////// controllers/////////////////////////////////
-  final TextEditingController emailController = TextEditingController();
-
-  final TextEditingController passwordController = TextEditingController();
-
-  final TextEditingController firstNameController = TextEditingController();
-
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-
   //////////// password visibility ///////////////////
   bool isVisiblePassword = false;
   bool isVisiblePassword1 = false;
@@ -45,11 +44,11 @@ class _SinginTextFieldState extends State<SinginTextField> {
 
         return null;
       },
-      controller: firstNameController,
+      controller: widget.firstNameController,
       keyboardType: TextInputType.name,
       //validation: ()=>{}
       onSaved: (value) {
-        firstNameController.text = value!;
+        widget.firstNameController.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -112,7 +111,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
     ///////////// email field ///////////////////
     final emailField = TextFormField(
       cursorColor: Palette.appPrimaryColor,
-      controller: emailController,
+      controller: widget.emailController,
       autofocus: false,
       validator: (value) {
         if (value!.isEmpty) {
@@ -129,7 +128,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
         return null;
       },
       onSaved: (value) {
-        emailController.text = value!;
+        widget.emailController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -151,7 +150,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
     //////////////////// password field ///////////////
     final passwordField = TextFormField(
       cursorColor: Palette.appPrimaryColor,
-      controller: passwordController,
+      controller: widget.passwordController,
       autofocus: false,
       obscureText: !isVisiblePassword ? true : false,
       validator: (value) {
@@ -164,7 +163,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
         return null;
       },
       onSaved: (value) {
-        passwordController.text = value!;
+        widget.passwordController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -206,14 +205,15 @@ class _SinginTextFieldState extends State<SinginTextField> {
     ///////////////confirm password field/////////////
     final confirmPasswordField = TextFormField(
       cursorColor: Palette.appPrimaryColor,
-      controller: confirmPasswordController,
+      controller: widget.confirmPasswordController,
       autofocus: false,
       obscureText: !isVisiblePassword1 ? true : false,
       validator: (value) {
         if (value!.isEmpty) {
           return ("Veuillez confirmer le mot de passe !");
         }
-        if (confirmPasswordController.text != passwordController.text) {
+        if (widget.confirmPasswordController.text !=
+            widget.passwordController.text) {
           return ("Les mots de passe ne correspondent pas !");
         }
         //email match regEx
@@ -221,7 +221,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
         return null;
       },
       onSaved: (value) {
-        confirmPasswordController.text = value!;
+        widget.confirmPasswordController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(

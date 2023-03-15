@@ -10,24 +10,36 @@ String userToJson(User data) => json.encode(data.toJson());
 
 class User {
   User({
-    required this.id,
+    this.id,
     required this.fullName,
     required this.email,
+    required this.password,
+    this.gender,
+    this.birthDate,
   });
 
-  int id;
+  int? id;
   String fullName;
   String email;
+  String password;
+  String? gender;
+  DateTime? birthDate;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
-        fullName: json["fullName"],
+        fullName: json["name"],
         email: json["email"],
+        password: json["password"],
+        gender: json["gender"],
+        birthDate: DateTime.parse(json["birthDate"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "fullName": fullName,
+        "name": fullName,
         "email": email,
+        "password": password,
+        "gender": gender,
+        "birthDate": birthDate?.toIso8601String(),
       };
 }

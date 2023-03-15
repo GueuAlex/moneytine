@@ -4,7 +4,15 @@ import 'package:flutter/material.dart';
 import '../../../style/palette.dart';
 
 class ResetPasswordTextField extends StatefulWidget {
-  const ResetPasswordTextField({super.key});
+  const ResetPasswordTextField({
+    super.key,
+    required this.passwordController,
+    required this.confirmPasswordController,
+  });
+
+  final TextEditingController passwordController;
+
+  final TextEditingController confirmPasswordController;
 
   @override
   State<ResetPasswordTextField> createState() => _ResetPasswordTextFieldState();
@@ -12,23 +20,20 @@ class ResetPasswordTextField extends StatefulWidget {
 
 class _ResetPasswordTextFieldState extends State<ResetPasswordTextField> {
   /////////////////////// controllers/////////////////////////////////
-  final TextEditingController passwordController = TextEditingController();
-
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     ///////////////confirm password field/////////////
     final confirmPasswordField = TextFormField(
-      controller: confirmPasswordController,
+      controller: widget.confirmPasswordController,
       autofocus: false,
       obscureText: true,
       validator: (value) {
         if (value!.isEmpty) {
           return ("Veuillez confirmer le mot de passe !");
         }
-        if (confirmPasswordController.text != passwordController.text) {
+        if (widget.confirmPasswordController.text !=
+            widget.passwordController.text) {
           return ("Les mots de passe ne correspondent pas !");
         }
         //email match regEx
@@ -36,7 +41,7 @@ class _ResetPasswordTextFieldState extends State<ResetPasswordTextField> {
         return null;
       },
       onSaved: (value) {
-        confirmPasswordController.text = value!;
+        widget.confirmPasswordController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -57,7 +62,7 @@ class _ResetPasswordTextFieldState extends State<ResetPasswordTextField> {
 
     //////////////////// password field ///////////////
     final passwordField = TextFormField(
-      controller: passwordController,
+      controller: widget.passwordController,
       autofocus: false,
       obscureText: true,
       validator: (value) {
@@ -70,7 +75,7 @@ class _ResetPasswordTextFieldState extends State<ResetPasswordTextField> {
         return null;
       },
       onSaved: (value) {
-        passwordController.text = value!;
+        widget.passwordController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(

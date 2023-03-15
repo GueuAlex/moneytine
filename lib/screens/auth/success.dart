@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../style/palette.dart';
 import '../../widgets/leading.dart';
 import 'login.dart';
 
 class SucessScreen extends StatelessWidget {
-  const SucessScreen({super.key});
+  const SucessScreen({
+    super.key,
+    this.isSiginProcess = true,
+  });
+  final bool isSiginProcess;
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +71,17 @@ class SucessScreen extends StatelessWidget {
                   right: 8.0,
                   left: 8.0,
                 ),
-                child: const Text(
-                  'Succès',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Palette.whiteColor),
-                ),
+                child: isSiginProcess
+                    ? const Text(
+                        'Votre compte à bien été créer !',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Palette.whiteColor),
+                      )
+                    : const Text(
+                        'sucess',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Palette.whiteColor),
+                      ),
               ),
               const SizedBox(
                 height: 100.0,
@@ -87,7 +98,7 @@ class SucessScreen extends StatelessWidget {
                     ),
                   ),
                   child: Center(
-                    child: Image.asset('assets/images/password_success.jpg'),
+                    child: SvgPicture.asset('assets/icons/sucess.svg'),
                   ),
                 ),
               )

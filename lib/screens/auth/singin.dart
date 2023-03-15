@@ -1,13 +1,45 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/models/user.dart';
+import 'package:moneytine/remote_services/remote_services.dart';
 import 'package:moneytine/screens/auth/login.dart';
+import 'package:moneytine/screens/auth/otp_screen.dart';
+import 'package:moneytine/screens/auth/widgets/singin_text_field.dart';
 import 'package:moneytine/style/palette.dart';
 
 import '../../widgets/logo_container.dart';
-import 'widgets/singin_text_field.dart';
 
-class SinginScreen extends StatelessWidget {
+class SinginScreen extends StatefulWidget {
   const SinginScreen({super.key});
+
+  @override
+  State<SinginScreen> createState() => _SinginScreenState();
+}
+
+class _SinginScreenState extends State<SinginScreen> {
+  /////////////////////// controllers/////////////////////////////////
+  final TextEditingController emailController = TextEditingController();
+
+  final TextEditingController passwordController = TextEditingController();
+
+  final TextEditingController firstNameController = TextEditingController();
+
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
+  bool isLoading = false;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    firstNameController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +71,46 @@ class SinginScreen extends StatelessWidget {
             ),
           )),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Do something when the button is pressed
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            setState(() {
+              isLoading = true;
+            });
+            var code = await Functions.postEmail(
+              api: 'users/verification/email',
+              email: emailController.text,
+            );
+
+            Future.delayed(const Duration(seconds: 4)).then((value) {
+              User user = User(
+                  fullName: firstNameController.text,
+                  email: emailController.text,
+                  password: passwordController.text);
+              setState(() {
+                isLoading = false;
+              });
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return OtpScreen(
+                  otp: code,
+                  user: user,
+                  email: emailController.text,
+                );
+              }));
+            });
+          }
         }, // Icon to display on the button
         backgroundColor: Palette.secondaryColor.withOpacity(0.9),
-        child: const Icon(
-          CupertinoIcons.chevron_right,
-          color: Palette.whiteColor,
-        ), // Background color of the button
+        child: !isLoading
+            ? const Icon(
+                CupertinoIcons.chevron_right,
+                color: Palette.whiteColor,
+              )
+            : const Center(
+                child: CircularProgressIndicator.adaptive(
+                  backgroundColor: Palette.secondaryColor,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ), // Background color of the button
       ),
       body: Stack(
         children: [
@@ -63,7 +127,14 @@ class SinginScreen extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   const LogoContainer(),
-                  const SinginTextField(),
+                  Form(
+                      key: _formKey,
+                      child: SinginTextField(
+                          firstNameController: firstNameController,
+                          emailController: emailController,
+                          passwordController: passwordController,
+                          confirmPasswordController:
+                              confirmPasswordController)),
                   Padding(
                     padding: const EdgeInsets.only(top: 30.0),
                     child: GestureDetector(

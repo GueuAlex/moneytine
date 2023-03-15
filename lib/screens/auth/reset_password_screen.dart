@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moneytine/functions/functions.dart';
 import 'package:moneytine/screens/auth/success.dart';
 
 import '../../style/palette.dart';
@@ -7,8 +9,36 @@ import '../../widgets/leading.dart';
 import 'login.dart';
 import 'widgets/reset_password_text_field.dart';
 
-class ResetPasswordScreen extends StatelessWidget {
-  const ResetPasswordScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({
+    super.key,
+    required this.email,
+  });
+  final String email;
+
+  @override
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+}
+
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  ///////////////////// controller /////////////////////////////////
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  //////////////// form key ////////////////////////
+  final _formKey = GlobalKey<FormState>();
+
+  ////////////////bool ////////////////////////
+  bool isLoading = false;
+
+  ////////////dispose() controllers /////////////////
+  @override
+  void dispose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +49,56 @@ class ResetPasswordScreen extends StatelessWidget {
         extendBody: true,
         backgroundColor: Palette.secondaryColor,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             // Do something when the button is pressed
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const SucessScreen();
-            }));
+            if (_formKey.currentState!.validate()) {
+              setState(() {
+                isLoading = true;
+              });
+              if (await Functions.resetPassword(
+                      email: widget.email, password: passwordController.text) !=
+                  null) {
+                Future.delayed(const Duration(seconds: 4)).then((value) {
+                  setState(() {
+                    isLoading = false;
+                  });
+                });
+                Fluttertoast.showToast(
+                  msg: 'Mot de passe réinitialiser',
+                  backgroundColor: Palette.appPrimaryColor,
+                );
+
+                // ignore: use_build_context_synchronously
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return const SucessScreen(
+                    isSiginProcess: false,
+                  );
+                }));
+              } else {
+                setState(() {
+                  isLoading = false;
+                });
+                Fluttertoast.showToast(
+                  msg: 'Veuillez réessayer plutard',
+                  backgroundColor: Palette.appPrimaryColor,
+                );
+              }
+            }
+            /* ; */
           }, // Icon to display on the button
           backgroundColor: Palette.secondaryColor,
-          child: const Icon(
-            CupertinoIcons.chevron_right,
-            color: Palette.whiteColor,
-          ), // Background color of the button
+          child: !isLoading
+              ? const Icon(
+                  CupertinoIcons.chevron_right,
+                  color: Palette.whiteColor,
+                )
+              : const Center(
+                  child: CircularProgressIndicator.adaptive(
+                    backgroundColor: Palette.secondaryColor,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ), // Background color of the button
         ),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -89,7 +158,13 @@ class ResetPasswordScreen extends StatelessWidget {
                         topLeft: Radius.circular(90),
                       ),
                     ),
-                    child: const ResetPasswordTextField(),
+                    child: Form(
+                      key: _formKey,
+                      child: ResetPasswordTextField(
+                        passwordController: passwordController,
+                        confirmPasswordController: confirmPasswordController,
+                      ),
+                    ),
                   ),
                 ),
               )
