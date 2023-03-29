@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/models/tontine.dart';
+import 'package:moneytine/models/user.dart';
+import 'package:moneytine/remote_services/remote_services.dart';
 import 'package:moneytine/screens/home_page/home_page.dart';
+import 'package:moneytine/screens/single_tontine/single_tontine.dart';
 import 'package:moneytine/widgets/custom_button.dart';
 import 'package:moneytine/widgets/custom_text.dart';
 
 import '../../../style/palette.dart';
 
-class AddTontineSheetContent extends StatelessWidget {
+class AddTontineSheetContent extends StatefulWidget {
   const AddTontineSheetContent({
     super.key,
     required this.tontineName,
@@ -17,132 +22,184 @@ class AddTontineSheetContent extends StatelessWidget {
     required this.dateDernierPaie,
     required this.amount,
     required this.uniqueCode,
+    required this.user,
   });
   final String tontineName;
   final String type;
-  final double monbreType;
+  final int monbreType;
   final DateTime dateDebut;
   final DateTime datePremierePaie;
   final DateTime dateDernierPaie;
   final double amount;
   final int uniqueCode;
+  final User user;
 
+  @override
+  State<AddTontineSheetContent> createState() => _AddTontineSheetContentState();
+}
+
+class _AddTontineSheetContentState extends State<AddTontineSheetContent> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       bottom: true,
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            SizedBox(
-              width: double.infinity,
-              child: Column(
-                children: [
-                  Container(
-                    width: 70,
-                    height: 7,
-                    decoration: BoxDecoration(
-                      color: Palette.greyColor,
-                      borderRadius: BorderRadius.circular(30),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              SizedBox(
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Palette.greyColor.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                    child: CustomText(
-                      text: 'Récapitulatif',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
+                    const Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: CustomText(
+                        text: 'Récapitulatif',
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 15.0),
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        RecapInfosRow(
-                          label: 'Nom :',
-                          text: tontineName,
-                        ),
-                        RecapInfosRow(
-                          label: 'Type :',
-                          text: type,
-                        ),
-                        RecapInfosRow(
-                          label: 'Nomde de mois :',
-                          text: monbreType.toString(),
-                        ),
-                        RecapInfosRow(
-                          label: 'Date de début :',
-                          text: DateFormat('dd / MM / yyyy').format(dateDebut),
-                        ),
-                        RecapInfosRow(
-                          label: 'Date du prémier paiement :',
-                          text: DateFormat('dd / MM / yyyy')
-                              .format(datePremierePaie),
-                        ),
-                        RecapInfosRow(
-                          label: 'Date du dernier prémier paiement :',
-                          text: DateFormat('dd / MM / yyyy')
-                              .format(dateDernierPaie),
-                        ),
-                        RecapInfosRow(
-                          label: 'Montant de cotisation :',
-                          text: amount.toString(),
-                        ),
-                        RecapInfosRow(
-                          label: 'Montant pour 1/2 part :',
-                          text: demiPart(amount).toString(),
-                        ),
-                        RecapInfosRow(
-                          label: 'Montant pour 1/4 de part :',
-                          text: unQuartPart(amount).toString(),
-                        ),
-                        RecapInfosRow(
-                          label: 'Code d\'invitation :',
-                          text: uniqueCode.toString(),
-                        ),
-                      ],
+                    Container(
+                      margin: const EdgeInsets.only(top: 15.0),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: <Widget>[
+                          RecapInfosRow(
+                            label: 'Nom :',
+                            text: widget.tontineName.isEmpty
+                                ? DateFormat('tontine_dd/MM/yyyy')
+                                    .format(DateTime.now())
+                                : widget.tontineName,
+                          ),
+                          RecapInfosRow(
+                            label: 'Type :',
+                            text: widget.type,
+                          ),
+                          RecapInfosRow(
+                            label: 'Nomde de mois :',
+                            text: widget.monbreType.toString(),
+                          ),
+                          RecapInfosRow(
+                            label: 'Date de début :',
+                            text: DateFormat('dd / MM / yyyy')
+                                .format(widget.dateDebut),
+                          ),
+                          RecapInfosRow(
+                            label: 'Date du prémier paiement :',
+                            text: DateFormat('dd / MM / yyyy')
+                                .format(widget.datePremierePaie),
+                          ),
+                          RecapInfosRow(
+                            label: 'Date du dernier prémier paiement :',
+                            text: DateFormat('dd / MM / yyyy')
+                                .format(widget.dateDernierPaie),
+                          ),
+                          RecapInfosRow(
+                            label: 'Montant de cotisation :',
+                            text: widget.amount.toString(),
+                          ),
+                          RecapInfosRow(
+                            label: 'Montant pour 1/2 part :',
+                            text: demiPart(widget.amount).toString(),
+                          ),
+                          RecapInfosRow(
+                            label: 'Montant pour 1/4 de part :',
+                            text: unQuartPart(widget.amount).toString(),
+                          ),
+                          RecapInfosRow(
+                            label: 'Code d\'invitation :',
+                            text: widget.uniqueCode.toString(),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ), /////////////////////
+                  ],
+                ),
+              ), /////////////////////
 
-            SizedBox(
-              width: double.infinity,
-              child: Column(
-                children: [
-                  CustomButton(
+              SizedBox(
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    CustomButton(
                       color: Palette.appPrimaryColor,
                       width: double.infinity,
                       height: 45,
                       radius: 50,
                       text: 'Créer la tontine',
-                      onPress: () {
-                        Future.delayed(const Duration(seconds: 2)).then(
-                            (value) => Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(builder: (context) {
-                                  return HomePageScreen();
-                                }), (route) => false));
-                      }),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  CustomButton(
-                      color: Palette.primaryColor,
-                      width: double.infinity,
-                      height: 45,
-                      radius: 50,
-                      text: 'Annuler',
-                      onPress: () {
-                        Navigator.pop(context);
-                      }),
-                ],
-              ),
-            )
-          ],
+                      onPress: () async {
+                        Functions.showLoadingSheet(ctxt: context);
+                        Tontine newTontine = Tontine(
+                          id: 0,
+                          uniqueCode: widget.uniqueCode,
+                          tontineName: widget.tontineName,
+                          type: widget.type,
+                          numberOfType: widget.monbreType,
+                          contribution: widget.amount,
+                          startDate: widget.dateDebut,
+                          firstPaiemntDate: widget.datePremierePaie,
+                          creatorId: int.parse(widget.user.id.toString()),
+                        );
+                        int? responseId = await RemoteServices().postNewTontine(
+                          api: 'tontines',
+                          tontine: newTontine,
+                        );
+
+                        if (responseId != null) {
+                          Tontine? tontine =
+                              await RemoteServices().getSingleTontine(
+                            id: responseId,
+                          );
+                          setState(() {
+                            currentUSerTontineList.add(tontine!);
+                          });
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
+                          if (tontine != null) {
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return SingleTontine(
+                                    tontine: tontine,
+                                    user: widget.user,
+                                    isFiret: true,
+                                  );
+                                },
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    CustomButton(
+                        color: Palette.primaryColor,
+                        width: double.infinity,
+                        height: 45,
+                        radius: 50,
+                        text: 'Annuler',
+                        onPress: () {
+                          Navigator.pop(context);
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -169,19 +226,33 @@ class RecapInfosRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(
-              left: 8.0, right: 8.0, top: 5.0, bottom: 3.0),
-          child: Text(label),
-        ),
-        Padding(
+    return Container(
+      width: double.infinity,
+      height: 25,
+      margin: const EdgeInsets.only(
+        top: 2,
+      ),
+      padding: const EdgeInsets.only(
+        right: 2.0,
+        left: 10.0,
+      ),
+      decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(5)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Padding(
             padding: const EdgeInsets.only(
                 left: 8.0, right: 8.0, top: 5.0, bottom: 3.0),
-            child: Text(text)),
-      ],
+            child: Text(label),
+          ),
+          Padding(
+              padding: const EdgeInsets.only(
+                  left: 8.0, right: 8.0, top: 5.0, bottom: 3.0),
+              child: Text(text)),
+        ],
+      ),
     );
   }
 }

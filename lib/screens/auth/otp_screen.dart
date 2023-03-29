@@ -44,7 +44,7 @@ class _OtpScreenState extends State<OtpScreen> {
       height: MediaQuery.of(context).size.height,
       child: Scaffold(
         extendBody: true,
-        backgroundColor: Palette.secondaryColor,
+        backgroundColor: Palette.whiteColor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             setState(() {
@@ -123,7 +123,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 ), // Background color of the button
         ),
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Palette.secondaryColor,
           leadingWidth: 120,
           leading: CustomLeading(
               contextColor: Palette.whiteColor,
@@ -140,39 +140,54 @@ class _OtpScreenState extends State<OtpScreen> {
           child: Column(
             children: <Widget>[
               Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 2, 18, 42).withOpacity(0.2),
-                  shape: BoxShape.circle,
-                  //border: Border.all(width: 1, color: Colors.white)
+                decoration: const BoxDecoration(
+                  color: Palette.secondaryColor,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.elliptical(200, 10),
+                    bottomLeft: Radius.elliptical(200, 10),
+                  ),
                 ),
-                child: const Icon(
-                  CupertinoIcons.barcode_viewfinder,
-                  color: Palette.whiteColor,
-                  size: 45,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(
-                  top: 10.0,
-                  right: 8.0,
-                  left: 8.0,
-                ),
-                child: widget.isSiginProcess
-                    ? const Text(
-                        'Pour continuer, veuillez entrer le code de vérification reçu par email',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Palette.whiteColor),
-                      )
-                    : const Text(
-                        'Pour continuer, veuillez entrer le code OTP reçu par email',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Palette.whiteColor),
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 2, 18, 42)
+                            .withOpacity(0.2),
+                        shape: BoxShape.circle,
+                        //border: Border.all(width: 1, color: Colors.white)
                       ),
-              ),
-              const SizedBox(
-                height: 100.0,
+                      child: const Icon(
+                        CupertinoIcons.barcode_viewfinder,
+                        color: Palette.whiteColor,
+                        size: 45,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(
+                        top: 10.0,
+                        right: 8.0,
+                        left: 8.0,
+                      ),
+                      child: widget.isSiginProcess
+                          ? const Text(
+                              'Pour continuer, veuillez entrer le code de vérification reçu par email',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Palette.whiteColor),
+                            )
+                          : const Text(
+                              'Pour continuer, veuillez entrer le code OTP reçu par email',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Palette.whiteColor),
+                            ),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    )
+                  ],
+                ),
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -183,8 +198,8 @@ class _OtpScreenState extends State<OtpScreen> {
                     decoration: const BoxDecoration(
                       color: Palette.whiteColor,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(90),
-                      ),
+                          //topLeft: Radius.circular(90),
+                          ),
                     ),
                     child: Column(
                       children: [

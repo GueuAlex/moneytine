@@ -13,11 +13,12 @@ class GroupeMembersList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: List.generate(
-          groupe.membrsId.length,
-          (index) => GroupeMember(
-                tontine: tontine,
-                groupe: groupe,
-              )),
+        groupe.membrsId.length,
+        (index) => GroupeMember(
+          tontine: tontine,
+          groupe: groupe,
+        ),
+      ),
     );
   }
 }

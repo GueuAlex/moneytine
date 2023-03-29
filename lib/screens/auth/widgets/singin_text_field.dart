@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
+import '../../../config/pwd.dart';
 import '../../../style/palette.dart';
 
 class SinginTextField extends StatefulWidget {
@@ -23,6 +25,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
   //////////// password visibility ///////////////////
   bool isVisiblePassword = false;
   bool isVisiblePassword1 = false;
+  bool isSucess = false;
 
   @override
   Widget build(BuildContext context) {
@@ -158,6 +161,12 @@ class _SinginTextFieldState extends State<SinginTextField> {
           return ("Veuillez renseigner le mot de passe !");
         }
 
+        if (!RegExp(
+                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+            .hasMatch(value.toString())) {
+          return ('Vuillez correctement rensegner ce champ');
+        }
+
         //email match regEx
 
         return null;
@@ -260,6 +269,27 @@ class _SinginTextFieldState extends State<SinginTextField> {
       ),
     );
 
+    final pwdValidator = FlutterPwValidator(
+      controller: widget.passwordController,
+      minLength: 8,
+      uppercaseCharCount: 1,
+      numericCharCount: 1,
+      specialCharCount: 1,
+      width: 400,
+      height: 150,
+      onSuccess: () {
+        setState(() {
+          isSucess = true;
+        });
+      },
+      onFail: () {
+        setState(() {
+          isSucess = false;
+        });
+      },
+      strings: FrenchStrings(),
+    );
+
     return Column(
       children: [
         Padding(
@@ -280,24 +310,6 @@ class _SinginTextFieldState extends State<SinginTextField> {
         const SizedBox(
           height: 10.0,
         ),
-        /* Padding(
-          padding: const EdgeInsets.only(
-            right: 15.0,
-            left: 15.0,
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            width: double.infinity,
-            height: 55,
-            decoration: BoxDecoration(
-                color: Palette.appPrimaryColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(50.0)),
-            child: lastNameFiel,
-          ),
-        ), */
-        /* const SizedBox(
-          height: 10.0,
-        ), */
         Padding(
           padding: const EdgeInsets.only(
             right: 15.0,
@@ -326,11 +338,22 @@ class _SinginTextFieldState extends State<SinginTextField> {
             width: double.infinity,
             height: 55,
             decoration: BoxDecoration(
-                color: Palette.appPrimaryColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(50.0)),
+              color: Palette.appPrimaryColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(50.0),
+            ),
             child: passwordField,
           ),
         ),
+        !isSucess
+            ? Padding(
+                padding: const EdgeInsets.only(
+                  top: 10,
+                  right: 15,
+                  left: 15,
+                ),
+                child: pwdValidator,
+              )
+            : Container(),
         const SizedBox(
           height: 10.0,
         ),
@@ -349,30 +372,6 @@ class _SinginTextFieldState extends State<SinginTextField> {
             child: confirmPasswordField,
           ),
         ),
-        /*      Container(
-          padding: const EdgeInsets.only(
-            right: 25.0,
-            left: 15.0,
-          ),
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  checker,
-                  const Text(
-                    'Se souvenir de moi',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  )
-                ],
-              ),
-              const Text('| Mot de oublier ?')
-            ],
-          ),
-        ) */
       ],
     );
   }

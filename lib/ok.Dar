@@ -1,0 +1,8 @@
+import 'package:intl/intl.dart';
+
+void main() {
+  var number = 1000000;
+  var formatter = NumberFormat('#,###');
+  var result = formatter.format(number);
+  print(result); // affiche "1,000,000"
+}

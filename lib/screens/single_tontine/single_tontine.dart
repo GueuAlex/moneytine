@@ -1,154 +1,112 @@
 //import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moneytine/models/tontine.dart';
+import 'package:moneytine/models/user.dart';
+import 'package:moneytine/screens/my_tontines/mes_tontines.dart';
 import 'package:moneytine/style/palette.dart';
 
-import 'widgets/list_groupe_card_header.dart';
-import 'widgets/single_tontine_groupe_container.dart';
+import '../../functions/functions.dart';
+import '../groups/groups_screen.dart';
+import '../modify_tontine/mdify_tontine.dart';
+import '../../widgets/generate_groupe_button.dart';
+import '../../widgets/list_groupe_card_header.dart';
+import 'widgets/buttons_row.dart';
 import 'widgets/single_tontine_header.dart';
+import 'widgets/single_tontine_last_transactions.dart';
+import 'widgets/top_box.dart';
 
 //import 'widgets/export_widgets.dart';
 
-class SingleTontine extends StatelessWidget {
-  const SingleTontine({super.key, required this.tontine});
+class SingleTontine extends StatefulWidget {
+  const SingleTontine({
+    super.key,
+    required this.tontine,
+    required this.user,
+    this.isFiret = false,
+  });
   final Tontine tontine;
+  final bool isFiret;
+  final User user;
+
+  @override
+  State<SingleTontine> createState() => _SingleTontineState();
+}
+
+class _SingleTontineState extends State<SingleTontine> {
+  bool isShimmer = false;
+  @override
+  void initState() {
+    setState(() {
+      isShimmer = widget.isFiret;
+    });
+
+    Future.delayed(const Duration(seconds: 3)).then((value) {
+      setState(() {
+        isShimmer = false;
+      });
+      // Navigator.pop(context);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      backgroundColor: const Color.fromARGB(255, 239, 239, 239),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Palette.primaryColor,
-        title: Text(tontine.tontineName),
+        leading: widget.isFiret
+            ? Container()
+            : IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Platform.isIOS
+                      ? CupertinoIcons.chevron_back
+                      : CupertinoIcons.arrow_left,
+                  color: Palette.whiteColor,
+                )),
+        backgroundColor: Palette.secondaryColor,
+        title: Text(widget.tontine.tontineName),
       ),
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            SingleTontineHeader(tontine: tontine),
-            SingleTontineGroupeContainer(tontine: tontine),
-            const Expanded(child: SingleTontineMembersContainer())
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SingleTontineMembersContainer extends StatelessWidget {
-  const SingleTontineMembersContainer({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(top: 2.0),
-      padding: const EdgeInsets.only(
-        left: 10.0,
-        right: 10.0,
-        top: 10.0,
-        // bottom: 20.0,
-      ),
-      decoration: BoxDecoration(
-          //borderRadius: BorderRadius.circular(10.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 0,
-              blurRadius: 1,
-              offset: const Offset(0, 3), // déplace l'ombre vers le bas
-            ),
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 0,
-              blurRadius: 1,
-              offset: const Offset(0, 3), // déplace l'ombre vers le bas
-            ),
-          ],
-          color: Colors.white),
-      child: Column(
-        children: [
-          const ListGroupCardHeader(
-              text: 'Liste des membres', icon: CupertinoIcons.person_3_fill),
-          Container(
-            //height: 8.0,
-            width: double.infinity,
-            margin: const EdgeInsets.only(
-              bottom: 10.0,
-              top: 8.0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  'Nom cmplet',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+        child: Stack(
+          children: [
+            SingleTontineHeader(tontine: widget.tontine),
+            Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 220,
                 ),
-                Text(
-                  'Adresse email',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: ButtonsRow(
+                    widget: widget,
+                  ),
+                ),
+                const Expanded(
+                  /////////// it's last transactions right now ///////////////
+                  child: SingleTontineLastTransactions(),
+                  ////////////////////////////////////////////////////////////
                 )
               ],
             ),
-          ),
-          Expanded(
-            //flex: 3,
-            child: SizedBox(
-              width: double.infinity,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                    children: List.generate(
-                  8,
-                  (index) => TontineMembersList(),
-                )),
+            Positioned(
+                //top: 20,
+                child: Padding(
+              padding: const EdgeInsets.only(right: 55.0, left: 55.0, top: 85),
+              child: TopBox(
+                tontine: widget.tontine,
               ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class TontineMembersList extends StatelessWidget {
-  TontineMembersList({
-    super.key,
-  });
-  final int colorIndex = Random().nextInt(9);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 5.0),
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      width: double.infinity,
-      height: 35,
-      decoration: BoxDecoration(
-        color: Palette.greyColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      /////// faire un condition ici plutard pour voir s'il des membres //////
-      /// child : Row()
-      ///
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          Text(
-            'This tontine user name',
-            style: TextStyle(fontWeight: FontWeight.w500),
-          ),
-          Text(
-            'exemple@gmail.com',
-            style: TextStyle(fontWeight: FontWeight.w500),
-          )
-        ],
+            ))
+          ],
+        ),
       ),
     );
   }

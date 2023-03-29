@@ -1,0 +1,19 @@
+
+
+
+{
+    "id": 1,
+    "type": "Versement",
+    "note": "Versement pour la tontine de mars",
+    "hours": "10 heures",
+    "transactionDate": "2022-03-15T10:30:00Z",
+    "user": {
+      "id": 123,
+      "infos":"suivi de toutes les infons du user"
+    },
+    "tontine": {
+      "id": 456,
+      "infons": "suivi de toutes les infos de la tontine sauf membersId et groups"
+    }
+  }
+  

@@ -70,9 +70,9 @@ class JointTontineSheetContent1 extends StatelessWidget {
               onPress: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                /* Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return HomePageScreen();
-                }));
+                })); */
               }),
         ),
         Padding(

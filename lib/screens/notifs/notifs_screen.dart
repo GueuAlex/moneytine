@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:moneytine/style/palette.dart';
 
+import 'widgets/filter_box.dart';
+import 'widgets/notifications_list.dart';
+
 class NotifsScreen extends StatelessWidget {
   const NotifsScreen({super.key});
 
@@ -14,8 +17,36 @@ class NotifsScreen extends StatelessWidget {
       ),
       body: NotificationListener(
         child: SafeArea(
-          child: Center(
-            child: Text('Notification center'),
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 100,
+                decoration: const BoxDecoration(
+                  color: Palette.secondaryColor,
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.elliptical(200, 10),
+                      bottomLeft: Radius.elliptical(200, 10)),
+                ),
+              ),
+              const Positioned(
+                child: Padding(
+                  padding: EdgeInsets.only(right: 15, left: 15, top: 10),
+                  child: FilterBox(),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 160),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: List.generate(
+                      2,
+                      (index) => const NotificationList(),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       ),

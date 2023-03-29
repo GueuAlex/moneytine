@@ -121,7 +121,9 @@ class GroupeScreenHeader extends StatelessWidget {
                     Text(
                       'Prgression du premier paiement',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, color: groupeColor),
+                        fontWeight: FontWeight.bold,
+                        color: groupeColor,
+                      ),
                     )
                   ],
                 )

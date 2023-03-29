@@ -15,28 +15,38 @@ class SingleTontineHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12.0),
+      height: 150,
+      padding: const EdgeInsets.only(
+          right: 12.0, top: 12.0, bottom: 12.0, left: 50.0),
       margin: const EdgeInsets.only(
         bottom: 8.0,
       ),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
+      decoration: const BoxDecoration(
+        color: Palette.secondaryColor,
+        borderRadius: BorderRadius.only(
+            bottomRight: Radius.elliptical(200, 10),
+            bottomLeft: Radius.elliptical(200, 10)),
+        /*  borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(15.0),
-            bottomRight: Radius.circular(15.0)),
-        gradient: LinearGradient(
+            bottomRight: Radius.circular(15.0)), */
+        /*  gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
             Palette.primaryColor,
             Palette.primaryColor.withOpacity(0.1),
           ],
-        ),
+        ), */
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Contribution ${tontine.type.toLowerCase()} de',
+            tontine.type == 'Mensuel'
+                ? 'Contribution mensuelle de'
+                : tontine.type == 'Journalier'
+                    ? 'Contribution journalière de'
+                    : 'hebdomadaire',
             style: Theme.of(context)
                 .textTheme
                 .headlineMedium!
@@ -55,37 +65,6 @@ class SingleTontineHeader extends StatelessWidget {
           const SizedBox(
             height: 8.0,
           ),
-          Text(
-            'Votre code d\'invitation',
-            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                  color: Palette.whiteColor,
-                  fontSize: 16,
-                ),
-          ),
-          const SizedBox(
-            height: 5.0,
-          ),
-          Row(
-            children: [
-              Text(
-                tontine.uniqueCode.toString(),
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                    color: Palette.whiteColor,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                width: 8.0,
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.copy,
-                  color: Palette.whiteColor,
-                ),
-              )
-            ],
-          )
         ],
       ),
     );

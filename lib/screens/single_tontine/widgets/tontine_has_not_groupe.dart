@@ -1,9 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:moneytine/style/palette.dart';
+
+import '../../../widgets/generate_groupe_button.dart';
 
 class TontineHasNotGroup extends StatelessWidget {
   const TontineHasNotGroup({
     super.key,
+    required this.onTap,
   });
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +22,28 @@ class TontineHasNotGroup extends StatelessWidget {
         top: 10.0,
       ),
       width: double.infinity,
-      child: const Center(
-        child: Text(
-          'Cette tontine ne comporte aucun groupe actuelement. Veuillez générer un groupe',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 16, height: 1.3),
+      child: Center(
+        child: Column(
+          children: [
+            const Text(
+              'Cette tontine ne comporte aucun groupe actuelement.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                height: 1.3,
+              ),
+            ),
+            const SizedBox(
+              height: 30.0,
+            ),
+            GenerateGroupeButton(
+              text: 'Générer un groupe',
+              color: Palette.appPrimaryColor,
+              icon: CupertinoIcons.arrow_2_circlepath,
+              onTap: onTap,
+              isGenerate: true,
+            ),
+          ],
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moneytine/models/user.dart';
 import 'package:moneytine/screens/my_tontines/mes_tontines.dart';
 import 'package:moneytine/screens/notifs/notifs_screen.dart';
 import 'package:moneytine/screens/settings/settings_screen.dart';
@@ -17,7 +18,8 @@ import '../home/widgets/joint_tontine_error_sheet.dart';
 import '../home/widgets/joint_tontine_sheet_contente1.dart';
 
 class HomePageScreen extends StatefulWidget {
-  const HomePageScreen({super.key});
+  const HomePageScreen({super.key, this.user});
+  final User? user;
 
   @override
   State<HomePageScreen> createState() => _HomePageScreenState();
@@ -34,9 +36,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
   List<Widget> _buildScreens(BuildContext context) {
     return [
-      const MesTontinesScreen(),
+      MesTontinesScreen(user: widget.user!),
       const NotifsScreen(),
-      const SettingsScreen()
+      SettingsScreen(user: widget.user!)
     ];
   }
 
@@ -193,14 +195,14 @@ class _HomePageScreenState extends State<HomePageScreen> {
 ////////////////////////////////// main method/////////////////////////////////
   /// call to show alert dialog
   ///
-  rejoindreTontine(BuildContext context) {
+  /* rejoindreTontine(BuildContext context) {
     return Platform.isIOS ? isoInputDialog(context) : androidAlert();
-  }
+  } */
 
 //////////////////////////////// android alert main methode////////////////////
   /// call to show android alert methods
   ///
-  Future<dynamic> androidAlert() {
+/*   Future<dynamic> androidAlert() {
     return QuickAlert.show(
       context: context,
       type: QuickAlertType.custom,
@@ -236,12 +238,12 @@ class _HomePageScreenState extends State<HomePageScreen> {
       title: 'Rejoindre une tontine\n',
       text: 'Veuillez entrer le code de la tontine pour rejoindre\n',
     );
-  }
+  } */
 
   ///////////////////////////////////android success alert////////////////////
   ///
   ///
-  Future<dynamic> androidSuccessAlert() {
+/*   Future<dynamic> androidSuccessAlert() {
     return QuickAlert.show(
       confirmBtnText: 'Rejoindre',
       showCancelBtn: true,
@@ -273,7 +275,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         ),
       ),
     );
-  }
+  } */
 
   ///////////////////android error alert ///////////////////////////
   /// call on join tontine
@@ -350,16 +352,16 @@ class _HomePageScreenState extends State<HomePageScreen> {
 ////////////////////////////////// main method/////////////////////////////////
 // call ton add
 //
-  addTontine() {
+  /* addTontine() {
     return Platform.isIOS
         ? isoInputDialogaddTontine(context)
         : addTontineAndroidAlert();
-  }
+  } */
 
   //////////////////////////////// android alert main methode////////////////////
   /// call to show android alert methods
   ///
-  Future<dynamic> addTontineAndroidAlert() {
+/*   Future<dynamic> addTontineAndroidAlert() {
     return QuickAlert.show(
       context: context,
       type: QuickAlertType.custom,
@@ -402,7 +404,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
       text:
           'Veuillez entrer un nom pour la tontine\n\nLe nom sera «tontine_dateDuJour» si le champ est vide',
     );
-  }
+  } */
 
   ///////////////////android error alert ///////////////////////////
   /// call on create tontine
@@ -421,7 +423,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   //////////////////////// ISO input dialog /////////////////////////////////////
   /// call to show cupertino input dialog on add tontine
   ///
-  Future<List<String>?> isoInputDialogaddTontine(BuildContext context) {
+  /* Future<List<String>?> isoInputDialogaddTontine(BuildContext context) {
     return showTextInputDialog(
       useRootNavigator: true,
       context: context,
@@ -456,7 +458,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
       message:
           'Veuillez entrer un nom pour la tontine\nLe nom par defaut sera «tontine_dateDuJour» si le champ est vide',
     );
-  }
+  } */
 
   ///////////////////////// IOS bottom sheet ///////////////////////////////////
   /// call to show botto sheet on iso wen add tontine as error

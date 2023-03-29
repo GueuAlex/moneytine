@@ -5,6 +5,8 @@ import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/models/user.dart';
 import 'package:moneytine/widgets/custom_button.dart';
 import 'package:intl/intl.dart';
 
@@ -13,9 +15,13 @@ import '../../widgets/custom_text.dart';
 import 'widgets/add_tontine_sheet_content.dart';
 
 class AddTontineScreen extends StatefulWidget {
-  const AddTontineScreen({Key? key, required this.tontineName})
-      : super(key: key);
+  const AddTontineScreen({
+    Key? key,
+    required this.tontineName,
+    required this.user,
+  }) : super(key: key);
   final String tontineName;
+  final User user;
 
   @override
   _AddTontineScreenState createState() => _AddTontineScreenState();
@@ -34,8 +40,20 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
   final TextEditingController _numberOfController = TextEditingController();
   final TextEditingController _contributeAmountController =
       TextEditingController();
+  final TextEditingController _tontineNameController = TextEditingController();
 
+  /////////////////////// selector ////////////////
+  ///
   String _selectedType = '';
+
+  ////////////////////////////// form key /////////////////////////
+  ///
+  final _formKey = GlobalKey<FormState>();
+
+  /////////////////////////// default tontine name ////////////////
+  ///
+  final String defaultTontineName =
+      DateFormat('tontine_dd/MM/yyyy').format(DateTime.now());
 
   @override
   void dispose() {
@@ -200,6 +218,47 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //////////////////////////// tontine name field ////////////////////////
+    ///
+    final tontineNameField = TextFormField(
+      keyboardType: TextInputType.text,
+      cursorColor: Palette.appPrimaryColor,
+      cursorHeight: 20,
+      controller: _tontineNameController,
+      autofocus: false,
+      validator: (value) {
+        if (value!.isNotEmpty && value.length < 3) {
+          return ("Ce nom est trop court !");
+        }
+
+        if (value.isEmpty) {
+          _tontineNameController.text = defaultTontineName;
+        }
+
+        //email match regEx
+
+        return null;
+      },
+      onSaved: (value) {
+        _tontineNameController.text = value!;
+      },
+      textInputAction: TextInputAction.done,
+      decoration: InputDecoration(
+        prefixIcon: const Icon(
+          CupertinoIcons.money_dollar_circle,
+          color: Palette.secondaryColor,
+        ),
+        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        hintText: defaultTontineName,
+        hintStyle: const TextStyle(color: Palette.secondaryColor),
+        //labelText: defaultTontineName,
+        labelStyle: const TextStyle(color: Palette.secondaryColor),
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
     //////////////////// select type form field ///////////////////////////////
     ///
     final selectedField = TextFormField(
@@ -220,19 +279,17 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
         //filled: true,
         suffixIcon: const Icon(
           Icons.arrow_drop_down,
-          //color: Palette.appPrimaryColor,
+          color: Palette.secondaryColor,
         ),
         contentPadding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-
+        hintStyle: const TextStyle(color: Palette.secondaryColor),
         hintText:
             _selectedType.isNotEmpty ? _selectedType : 'Selectionner un type',
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Palette.appPrimaryColor),
-        ),
+        focusedBorder: const UnderlineInputBorder(borderSide: BorderSide.none),
         // les autres propriétés de décoration que vous voulez utiliser
 
         border: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: BorderSide.none,
         ),
         // les autres propriétés de décoration que vous voulez utiliser
       ),
@@ -263,6 +320,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
           color: Palette.appPrimaryColor,
         ), */
         contentPadding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+        hintStyle: const TextStyle(color: Palette.secondaryColor),
 
         hintText: _selectedType == 'Mensuel'
             ? 'Entrer un nombre de mois'
@@ -271,13 +329,13 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                 : _selectedType == 'Hebdomadaire'
                     ? 'Entrer un nombre de semaines'
                     : '',
-        focusedBorder: const UnderlineInputBorder(
+        /* focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Palette.appPrimaryColor),
-        ),
+        ), */
         // les autres propriétés de décoration que vous voulez utiliser
 
         border: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: BorderSide.none,
         ),
         // les autres propriétés de décoration que vous voulez utiliser
       ),
@@ -308,15 +366,16 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
           color: Palette.appPrimaryColor,
         ), */
         contentPadding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+        hintStyle: TextStyle(color: Palette.secondaryColor),
 
         hintText: 'Entrer un montant de contribution',
-        focusedBorder: UnderlineInputBorder(
+        /* focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Palette.appPrimaryColor),
-        ),
+        ), */
         // les autres propriétés de décoration que vous voulez utiliser
 
         border: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: BorderSide.none,
         ),
         // les autres propriétés de décoration que vous voulez utiliser
       ),
@@ -326,230 +385,295 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: Platform.isIOS ? true : false,
-        backgroundColor: Palette.primaryColor,
+        backgroundColor: Palette.secondaryColor,
         title: Text(widget.tontineName),
-        actions: [
-          Container(
-            width: 50,
-            height: 50,
-            padding: const EdgeInsets.all(10.0),
-            margin: const EdgeInsets.only(
-              right: 8.0,
-              bottom: 8.0,
-              top: 4.0,
-            ),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Palette.primaryColor.withOpacity(0.3),
-            ),
-            child: const Icon(CupertinoIcons.check_mark),
-          )
-        ],
       ),
       body: SafeArea(
         child: _mainBody(
-          _selectedType,
-          selectedField,
+          type: _selectedType,
+          selectedField: selectedField,
           //_dateSelector1,
-          numberOfField,
-          contributeAmountField,
+          numberOfField: numberOfField,
+          contributeAmounteField: contributeAmountField,
+          tontineNameField: tontineNameField,
         ),
       ),
     );
   }
 
   /// This is Main Body widget.
-  Widget _mainBody(
-    String type,
-    TextFormField selectedField,
+  Widget _mainBody({
+    required String type,
+    required TextFormField tontineNameField,
+    required TextFormField selectedField,
     //Future<void> Function(BuildContext context) selectDate,
-    TextFormField numberOfField,
-    TextFormField contributeAmounteField,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 10.0,
-            ),
-            const CustomText(
-              text: 'Completer les informations',
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+    required TextFormField numberOfField,
+    required TextFormField contributeAmounteField,
+  }) {
+    return Form(
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 10.0,
+              ),
 
-            const SizedBox(
-              height: 25.0,
-            ),
-            ////////////////////////////////////////////////////////////////////////////////
-            /////////////
-            ////////////////////////////////////// eall textFormField here ///////////////
-            ////////////
-            ///////////////////////////////////////////////////////////////////////////////
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const CustomText(
-                  text: 'Type',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
-                selectedField,
-              ],
-            ),
-            const SizedBox(
-              height: 15.0,
-            ),
-            //////////////////////////////// number of type field /////////////
-            type.isNotEmpty
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const CustomText(
-                        text: 'Nombre',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      numberOfField,
-                    ],
-                  )
-                : Container(),
-            const SizedBox(
-              height: 15.0,
-            ),
-            ///////////////////////////////// both tow date selector///////////////////////:
-            FittedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              const SizedBox(
+                height: 25.0,
+              ),
+              ////////////////////////////////////////////////////////////////////////////////
+              /////////////
+              ////////////////////////////////////// eall textFormField here ///////////////
+              ////////////
+              ///////////////////////////////////////////////////////////////////////////////
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const CustomText(
-                        text: 'Débute le',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          _dateSelector1(context);
-                          //_selectDate(context);
-                        },
-                        child: Container(
-                          height: 50,
-                          width: 200,
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  width: 1, color: Palette.greyColor),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _selectedDate1 != DateTime.now()
-                                  ? Text(DateFormat('dd / MM / yyyy')
-                                      .format(_selectedDate1))
-                                  : const Text('Date de début'),
-                              const Icon(Icons.arrow_drop_down)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  const CustomText(
+                    text: 'Nom',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const CustomText(
-                        text: 'Date limite prémier paiement',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      InkWell(
-                        onTap: () => _dateSelector2(context),
-                        child: Container(
-                          height: 50,
-                          width: 200,
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  width: 1, color: Palette.greyColor),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _selectedDate2 != DateTime.now()
-                                  ? Text(DateFormat('dd / MM / yyyy')
-                                      .format(_selectedDate2))
-                                  : const Text('Date limite'),
-                              const Icon(Icons.arrow_drop_down)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  Container(
+                    width: double.infinity,
+                    height: 50,
+                    margin: const EdgeInsets.only(top: 5.0),
+                    padding: const EdgeInsets.only(right: 8.0, left: 10.0),
+                    decoration: BoxDecoration(
+                        color: Palette.appPrimaryColor.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(50)),
+                    child: tontineNameField,
                   ),
                 ],
               ),
-            ),
-            const SizedBox(
-              height: 25.0,
-            ),
-            /////////////////////////////////////////////////contribute field //////////////
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const CustomText(
-                  text: 'Montant de cotisation',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
+
+              //////////////////////////// selecteor //////////////////////
+              ///
+              ///
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CustomText(
+                    text: 'Type',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 50,
+                    margin: const EdgeInsets.only(top: 5.0),
+                    padding: const EdgeInsets.only(right: 8.0, left: 10.0),
+                    decoration: BoxDecoration(
+                        color: Palette.appPrimaryColor.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(50)),
+                    child: selectedField,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 15.0,
+              ),
+              //////////////////////////////// number of type field /////////////
+              type.isNotEmpty
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const CustomText(
+                          text: 'Nombre',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 50,
+                          margin: const EdgeInsets.only(top: 5.0),
+                          padding:
+                              const EdgeInsets.only(right: 8.0, left: 10.0),
+                          decoration: BoxDecoration(
+                              color: Palette.appPrimaryColor.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(50)),
+                          child: numberOfField,
+                        ),
+                      ],
+                    )
+                  : Container(),
+              const SizedBox(
+                height: 15.0,
+              ),
+              ///////////////////////////////// both tow date selector///////////////////////:
+              FittedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const CustomText(
+                          text: 'Débute le',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            _dateSelector1(context);
+                            //_selectDate(context);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(top: 5.0),
+                            padding:
+                                const EdgeInsets.only(right: 8.0, left: 10.0),
+                            height: 50,
+                            width: 200,
+                            decoration: BoxDecoration(
+                                color: Palette.appPrimaryColor.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(50)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _selectedDate1 != DateTime.now()
+                                    ? Text(
+                                        DateFormat('dd / MM / yyyy')
+                                            .format(_selectedDate1),
+                                        style: const TextStyle(
+                                          color: Palette.secondaryColor,
+                                        ),
+                                      )
+                                    : const Text(
+                                        'Date de début',
+                                        style: TextStyle(
+                                          color: Palette.secondaryColor,
+                                        ),
+                                      ),
+                                const Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Palette.secondaryColor,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const CustomText(
+                          text: 'Date limite prémier paiement',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        InkWell(
+                          onTap: () => _dateSelector2(context),
+                          child: Container(
+                            height: 50,
+                            width: 200,
+                            margin: const EdgeInsets.only(top: 5.0),
+                            padding:
+                                const EdgeInsets.only(right: 8.0, left: 10.0),
+                            decoration: BoxDecoration(
+                                color: Palette.appPrimaryColor.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(50)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _selectedDate2 != DateTime.now()
+                                    ? Text(
+                                        DateFormat('dd / MM / yyyy')
+                                            .format(_selectedDate2),
+                                        style: const TextStyle(
+                                            color: Palette.secondaryColor),
+                                      )
+                                    : const Text(
+                                        'Date limite',
+                                        style: TextStyle(
+                                            color: Palette.secondaryColor),
+                                      ),
+                                const Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Palette.secondaryColor,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                contributeAmounteField,
-              ],
-            ),
-            //////////////////////////////// ////////////////
-            ////////////////////////////////////////////////////////////////////////////////
-            /////////////
-            //////////// ////////////////////////// end of textFormField ///////////////////
-            ////////////
-            ///////////////////////////////////////////////////////////////////////////////
-            const SizedBox(
-              height: 25.0,
-            ),
-            CustomButton(
+              ),
+              const SizedBox(
+                height: 25.0,
+              ),
+              /////////////////////////////////////////////////contribute field //////////////
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CustomText(
+                    text: 'Montant de cotisation',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 50,
+                    margin: const EdgeInsets.only(top: 5.0),
+                    padding: const EdgeInsets.only(right: 8.0, left: 10.0),
+                    decoration: BoxDecoration(
+                        color: Palette.appPrimaryColor.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(50)),
+                    child: contributeAmounteField,
+                  ),
+                ],
+              ),
+              //////////////////////////////// ////////////////
+              ////////////////////////////////////////////////////////////////////////////////
+              /////////////
+              //////////// ////////////////////////// end of textFormField ///////////////////
+              ////////////
+              ///////////////////////////////////////////////////////////////////////////////
+              const SizedBox(
+                height: 25.0,
+              ),
+              CustomButton(
                 color: Palette.appPrimaryColor,
                 width: double.infinity,
                 height: 45,
                 radius: 50.0,
-                text: 'Enregistrer la tontine',
+                text: 'Suivant',
                 onPress: () {
-                  //print(_selectedType.isEmpty);
-                  print('type : ${_selectedType}');
-                  print('nombre type : ${_numberOfController.text}');
-                  print(
-                      'Date debut : ${DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDate1)}');
-                  print(
-                      'Premier paie : ${DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDate2)}');
+                  if (_formKey.currentState!.validate()) {
+                    Functions.showLoadingSheet(ctxt: context);
+                    print('type : ${_selectedType}');
+                    print('nombre type : ${_numberOfController.text}');
+                    print(
+                        'Date debut : ${DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDate1)}');
+                    print(
+                        'Premier paie : ${DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDate2)}');
 
-                  print('montant : ${_contributeAmountController.text}');
-                  print(DateTime.now());
+                    print('montant : ${_contributeAmountController.text}');
+                    print(DateTime.now());
 
-                  double amount =
-                      double.parse(_contributeAmountController.text);
-                  var part = (amount * (1 / 2));
-                  print(part.toString());
+                    double amount =
+                        double.parse(_contributeAmountController.text);
+                    var part = (amount * (1 / 2));
+                    print(part.toString());
 
-                  _showBottomSheet(context);
-                }),
-          ],
+                    Future.delayed(const Duration(seconds: 2)).then((value) {
+                      Navigator.pop(context);
+                      _showBottomSheet(context: context, user: widget.user);
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -595,7 +719,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _showBottomSheet(BuildContext context) {
+  void _showBottomSheet({required BuildContext context, required User user}) {
     int uniqueCode = Random().nextInt(999999);
     DateTime dateDernierPaie =
         calculerDateFin(_selectedDate2, int.parse(_numberOfController.text));
@@ -614,9 +738,9 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
               ),
             ),
             child: AddTontineSheetContent(
-              tontineName: widget.tontineName,
+              tontineName: _tontineNameController.text,
               type: _selectedType,
-              monbreType: double.parse(_numberOfController.text),
+              monbreType: int.parse(_numberOfController.text),
               dateDebut: _selectedDate1,
               datePremierePaie: _selectedDate2,
               dateDernierPaie: dateDernierPaie,
@@ -624,6 +748,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                 _contributeAmountController.text,
               ),
               uniqueCode: uniqueCode,
+              user: user,
             ),
           );
         });

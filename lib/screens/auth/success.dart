@@ -19,7 +19,7 @@ class SucessScreen extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       child: Scaffold(
         extendBody: true,
-        backgroundColor: Palette.secondaryColor,
+        backgroundColor: Palette.whiteColor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // Do something when the button is pressed
@@ -35,7 +35,7 @@ class SucessScreen extends StatelessWidget {
           ), // Background color of the button
         ),
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Palette.secondaryColor,
           leadingWidth: 120,
           leading: CustomLeading(
               contextColor: Palette.whiteColor,
@@ -52,39 +52,54 @@ class SucessScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 2, 18, 42).withOpacity(0.2),
-                  shape: BoxShape.circle,
-                  //border: Border.all(width: 1, color: Colors.white)
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Palette.secondaryColor,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.elliptical(200, 10),
+                    bottomLeft: Radius.elliptical(200, 10),
+                  ),
                 ),
-                child: const Icon(
-                  CupertinoIcons.check_mark,
-                  color: Palette.whiteColor,
-                  size: 45,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(
-                  top: 10.0,
-                  right: 8.0,
-                  left: 8.0,
-                ),
-                child: isSiginProcess
-                    ? const Text(
-                        'Votre compte à bien été créer !',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(color: Palette.whiteColor),
-                      )
-                    : const Text(
-                        'sucess',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(color: Palette.whiteColor),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 2, 18, 42)
+                            .withOpacity(0.2),
+                        shape: BoxShape.circle,
+                        //border: Border.all(width: 1, color: Colors.white)
                       ),
-              ),
-              const SizedBox(
-                height: 100.0,
+                      child: const Icon(
+                        CupertinoIcons.check_mark,
+                        color: Palette.whiteColor,
+                        size: 45,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(
+                        top: 10.0,
+                        right: 8.0,
+                        left: 8.0,
+                      ),
+                      child: isSiginProcess
+                          ? const Text(
+                              'Votre compte à bien été créer !',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(color: Palette.whiteColor),
+                            )
+                          : const Text(
+                              'sucess',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(color: Palette.whiteColor),
+                            ),
+                    ),
+                    const SizedBox(
+                      height: 50.0,
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                 child: Container(

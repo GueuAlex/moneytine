@@ -163,8 +163,9 @@ class _LoginTextFieldState extends State<LoginTextField> {
             width: double.infinity,
             height: 55,
             decoration: BoxDecoration(
-                color: Palette.appPrimaryColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(50.0)),
+              color: Palette.appPrimaryColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(50.0),
+            ),
             child: passwordField,
           ),
         ),
@@ -189,16 +190,17 @@ class _LoginTextFieldState extends State<LoginTextField> {
                 ],
               ),
               InkWell(
-                  onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return const ResetEmailScreen();
-                    }));
-                  },
-                  child: const Text('| Mot de oublier ?'))
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return const ResetEmailScreen();
+                  }));
+                },
+                child: const Text('| Mot de oublié ?'),
+              )
             ],
           ),
-        )
+        ),
       ],
     );
   }

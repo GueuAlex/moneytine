@@ -53,6 +53,10 @@ dependencies:
   flutter_custom_clippers: ^2.1.0
   http: ^0.13.5
   fluttertoast: ^8.2.1
+  timeline_tile: ^2.0.0
+  shared_preferences: ^2.0.18
+  shimmer: ^2.0.0
+  flutter_pw_validator: ^1.5.0
 
   
 dev_dependencies:

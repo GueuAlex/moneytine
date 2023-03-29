@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:moneytine/models/user.dart';
 
 import '../../../style/palette.dart';
 import '../../../widgets/custom_text.dart';
 import 'name_container.dart';
 
 class TopRow extends StatelessWidget {
-  const TopRow({
-    super.key,
-  });
+  const TopRow({super.key, required this.user});
+  final User user;
+
+  String _firstName({required String fullName, required bool isFirstname}) {
+    List<String> parts = fullName.split(' ');
+    String firstName = parts[0];
+    String lastName = parts.sublist(1).join(' ');
+    if (isFirstname) {
+      return firstName;
+    } else {
+      return lastName;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,25 +52,25 @@ class TopRow extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const <Widget>[
-                CustomText(
+              children: <Widget>[
+                const CustomText(
                   text: 'Prénoms',
                   fontSize: 18,
                   fontWeight: FontWeight.normal,
                 ),
                 NameContainer(
-                  text: 'Koffi Franck',
+                  text: _firstName(fullName: user.fullName, isFirstname: false),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 25.0,
                 ),
-                CustomText(
+                const CustomText(
                   text: 'Nom de famille',
                   fontSize: 18,
                   fontWeight: FontWeight.normal,
                 ),
                 NameContainer(
-                  text: 'KOUAMÉ',
+                  text: _firstName(fullName: user.fullName, isFirstname: true),
                 ),
               ],
             ),

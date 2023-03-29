@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/screens/add_tontine/add_tontine.dart';
+import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/models/tontine.dart';
+import 'package:moneytine/models/user.dart';
+import 'package:moneytine/remote_services/remote_services.dart';
+import 'package:moneytine/screens/single_tontine/single_tontine.dart';
 
 import '../../../style/palette.dart';
 import '../../../widgets/custom_button.dart';
 
 class CreatetontineSheetContent extends StatefulWidget {
-  const CreatetontineSheetContent({
-    super.key,
-    this.isCreatTontine = true,
-  });
-  final bool isCreatTontine;
+  const CreatetontineSheetContent({super.key, required this.user});
+
+  final User user;
 
   @override
   State<CreatetontineSheetContent> createState() =>
@@ -22,7 +25,7 @@ class _CreatetontineSheetContentState extends State<CreatetontineSheetContent> {
   /////////////////// tontine name editing controller//////////////////////////
   ///
   ///
-  final TextEditingController tontineNameController = TextEditingController();
+  //final TextEditingController tontineNameController = TextEditingController();
   final TextEditingController joinCodeController = TextEditingController();
 
   //////////////////////// form key /////////////////////////////
@@ -33,25 +36,20 @@ class _CreatetontineSheetContentState extends State<CreatetontineSheetContent> {
   ///
   final String defaultTontineName =
       DateFormat('tontine_dd/MM/yyyy').format(DateTime.now());
-  ///////
+  ///////////////////////////////////////////
+  ///
+  bool isLoadin = false;
   @override
   Widget build(BuildContext context) {
     final tontineNameField = TextFormField(
-      keyboardType:
-          widget.isCreatTontine ? TextInputType.text : TextInputType.number,
+      keyboardType: TextInputType.number,
       cursorColor: Palette.appPrimaryColor,
       cursorHeight: 20,
-      controller:
-          widget.isCreatTontine ? tontineNameController : joinCodeController,
+      controller: joinCodeController,
       autofocus: false,
       validator: (value) {
-        if (value!.isNotEmpty && value.length < 3) {
-          return widget.isCreatTontine
-              ? ("Ce nom est trop court !")
-              : ('Entrez un code valide');
-        }
-
-        if (widget.isCreatTontine == false && value.isEmpty) {
+        var code = value!.trim();
+        if (code.isEmpty || code.length < 3) {
           return ('Entrez un code valide');
         }
 
@@ -60,20 +58,16 @@ class _CreatetontineSheetContentState extends State<CreatetontineSheetContent> {
         return null;
       },
       onSaved: (value) {
-        widget.isCreatTontine
-            ? tontineNameController.text = value!
-            : joinCodeController.text = value!;
+        joinCodeController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
-        prefixIcon: Icon(
-          widget.isCreatTontine
-              ? CupertinoIcons.money_dollar_circle
-              : CupertinoIcons.link,
+        prefixIcon: const Icon(
+          CupertinoIcons.link,
           color: Palette.secondaryColor,
         ),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        hintText: widget.isCreatTontine ? defaultTontineName : 'Code',
+        hintText: 'Code',
         hintStyle: const TextStyle(color: Palette.secondaryColor),
         //labelText: defaultTontineName,
         labelStyle: const TextStyle(color: Palette.secondaryColor),
@@ -116,15 +110,10 @@ class _CreatetontineSheetContentState extends State<CreatetontineSheetContent> {
             ),
             Container(
               margin: const EdgeInsets.only(top: 11.0),
-              child: widget.isCreatTontine
-                  ? Text(
-                      'Veuillez entrer un nom pour la tontine\nLe nom par defaut sera $defaultTontineName si n\'est pas renseigner!',
-                      textAlign: TextAlign.center,
-                    )
-                  : const Text(
-                      'Pour rejoindre une tontine, veuillez le code d\'invitation',
-                      textAlign: TextAlign.center,
-                    ),
+              child: const Text(
+                'Pour rejoindre une tontine, veuillez le code d\'invitation',
+                textAlign: TextAlign.center,
+              ),
             ),
             Container(
               width: double.infinity,
@@ -151,18 +140,72 @@ class _CreatetontineSheetContentState extends State<CreatetontineSheetContent> {
                 left: 10.0,
                 right: 10.0,
               ),
-              child: CustomButton(
-                color: Palette.appPrimaryColor,
-                width: double.infinity,
-                height: 45,
-                radius: 50,
-                text: widget.isCreatTontine
-                    ? 'Continuer la création'
-                    : 'Rejoindre',
-                onPress: () {
-                  verify();
-                },
-              ),
+              child: !isLoadin
+                  ? CustomButton(
+                      color: Palette.appPrimaryColor,
+                      width: double.infinity,
+                      height: 45,
+                      radius: 50,
+                      text: 'Rejoindre',
+                      onPress: () async {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            isLoadin = true;
+                          });
+                          String tontineID = await Functions.joinResponse(
+                            code: joinCodeController.text,
+                            userId: widget.user.id.toString(),
+                          );
+
+                          if (tontineID != 'err') {
+                            var response =
+                                await RemoteServices().getSingleTontine(
+                              id: int.parse(tontineID),
+                            );
+                            if (response != null) {
+                              Tontine tontine = response;
+                              // ignore: use_build_context_synchronously
+                              allTontineWhereCurrentUserParticipe.add(tontine);
+                              Future.delayed(const Duration(seconds: 3))
+                                  .then((value) {
+                                setState(() {
+                                  isLoadin = false;
+                                });
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return SingleTontine(
+                                        tontine: tontine,
+                                        user: widget.user,
+                                        isFiret: true,
+                                      );
+                                    },
+                                  ),
+                                );
+                              });
+                              //return tontine;
+                            } else {
+                              setState(() {
+                                isLoadin = false;
+                              });
+                            }
+                          } else {
+                            setState(() {
+                              isLoadin = false;
+                            });
+                            Fluttertoast.showToast(
+                              msg: 'Cette tontine n\'est existe pas',
+                              backgroundColor: Palette.appPrimaryColor,
+                            );
+                          }
+                        }
+                      },
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(
+                          backgroundColor: Palette.appPrimaryColor),
+                    ),
             )
           ],
         ),
@@ -170,19 +213,7 @@ class _CreatetontineSheetContentState extends State<CreatetontineSheetContent> {
     );
   }
 
-  void verify() {
-    if (_formKey.currentState!.validate()) {
-      if (widget.isCreatTontine) {
-        Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return AddTontineScreen(
-              tontineName: tontineNameController.text.isNotEmpty
-                  ? tontineNameController.text
-                  : defaultTontineName);
-        }));
-      } else {
-        print('joind');
-      }
-    }
+  Future<Tontine?> verify() async {
+    return null;
   }
 }

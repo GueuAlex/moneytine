@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moneytine/functions/functions.dart';
 import 'package:moneytine/models/user.dart';
 import 'package:moneytine/remote_services/remote_services.dart';
@@ -81,22 +82,38 @@ class _SinginScreenState extends State<SinginScreen> {
               email: emailController.text,
             );
 
-            Future.delayed(const Duration(seconds: 4)).then((value) {
-              User user = User(
-                  fullName: firstNameController.text,
-                  email: emailController.text,
-                  password: passwordController.text);
+            if (code == 422) {
               setState(() {
                 isLoading = false;
               });
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return OtpScreen(
-                  otp: code,
-                  user: user,
-                  email: emailController.text,
-                );
-              }));
-            });
+              Fluttertoast.showToast(
+                  msg: 'Cette adresse email existe déjà',
+                  backgroundColor: Palette.appPrimaryColor);
+            } else if (code == 0) {
+              setState(() {
+                isLoading = false;
+              });
+              Fluttertoast.showToast(
+                  msg: 'Veuillez réessayer plutard',
+                  backgroundColor: Palette.appPrimaryColor);
+            } else {
+              Future.delayed(const Duration(seconds: 4)).then((value) {
+                User user = User(
+                    fullName: firstNameController.text,
+                    email: emailController.text,
+                    password: passwordController.text);
+                setState(() {
+                  isLoading = false;
+                });
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return OtpScreen(
+                    otp: code,
+                    user: user,
+                    email: emailController.text,
+                  );
+                }));
+              });
+            }
           }
         }, // Icon to display on the button
         backgroundColor: Palette.secondaryColor.withOpacity(0.9),
@@ -128,13 +145,14 @@ class _SinginScreenState extends State<SinginScreen> {
                 children: <Widget>[
                   const LogoContainer(),
                   Form(
-                      key: _formKey,
-                      child: SinginTextField(
-                          firstNameController: firstNameController,
-                          emailController: emailController,
-                          passwordController: passwordController,
-                          confirmPasswordController:
-                              confirmPasswordController)),
+                    key: _formKey,
+                    child: SinginTextField(
+                      firstNameController: firstNameController,
+                      emailController: emailController,
+                      passwordController: passwordController,
+                      confirmPasswordController: confirmPasswordController,
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 30.0),
                     child: GestureDetector(

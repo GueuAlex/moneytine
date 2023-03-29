@@ -8,8 +8,11 @@ import '../../../style/palette.dart';
 import '../../../widgets/custom_text.dart';
 
 class RegisterUserPaiement extends StatefulWidget {
-  const RegisterUserPaiement(
-      {super.key, required this.groupe, required this.tontine});
+  const RegisterUserPaiement({
+    super.key,
+    required this.groupe,
+    required this.tontine,
+  });
   final Groupe groupe;
   final Tontine tontine;
 

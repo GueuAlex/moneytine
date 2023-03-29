@@ -42,6 +42,7 @@ class Palette {
   static const Color blackColor = Color(0xFF000000);
   static const Color greyColor = Color(0xFF757575);
   static const Color greyWhiteColor = Color(0xFFE6E6E6);
+  static const Color greySecondaryColor = Color(0xFF696969);
 
   /////////////////////////////////////////////////////
 }

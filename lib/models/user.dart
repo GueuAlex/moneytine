@@ -13,7 +13,7 @@ class User {
     this.id,
     required this.fullName,
     required this.email,
-    required this.password,
+    this.password,
     this.gender,
     this.birthDate,
   });
@@ -21,7 +21,7 @@ class User {
   int? id;
   String fullName;
   String email;
-  String password;
+  String? password;
   String? gender;
   DateTime? birthDate;
 
@@ -31,7 +31,7 @@ class User {
         email: json["email"],
         password: json["password"],
         gender: json["gender"],
-        birthDate: DateTime.parse(json["birthDate"]),
+        // birthDate: DateTime.parse(json["birthDate"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,3 +43,13 @@ class User {
         "birthDate": birthDate?.toIso8601String(),
       };
 }
+
+List<User> creatorList = [];
+
+List<User> groupMembres = [
+  User(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+  User(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+  User(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+  User(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+  User(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+];

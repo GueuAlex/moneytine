@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:moneytine/config/prefs.dart';
+import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/models/user.dart';
+import 'package:moneytine/screens/auth/login.dart';
 import 'package:moneytine/style/palette.dart';
 import 'package:moneytine/widgets/custom_button.dart';
 import 'package:moneytine/widgets/custom_text.dart';
@@ -9,7 +14,8 @@ import 'widgets/name_container.dart';
 import 'widgets/top_row.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({super.key, required this.user});
+  final User user;
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -23,6 +29,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   ///
   DateTime birthDate = DateTime(2100);
 
+  ////////////////////// date de naissance from Prefs()////////////
+  ///
+  String? birthDateFromPrefs;
   ///////////////////////////// selected option////////////////////
   ///
   String? _selectedOption;
@@ -34,6 +43,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
     'Femme',
     'Autre',
   ];
+
+  @override
+  void initState() {
+    _getGender();
+    _getBirthdate();
+    super.initState();
+  }
+
+  void _getGender() async {
+    if (await Prefs().gender != null) {
+      String gender = await Prefs().gender;
+      setState(() {
+        _selectedOption = gender;
+      });
+    }
+  }
+
+  void _getBirthdate() async {
+    if (await Prefs().birthdate != null) {
+      String birthDate1 = await Prefs().birthdate;
+      setState(() {
+        birthDateFromPrefs = birthDate1;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,13 +83,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const TopRow(),
+              TopRow(user: widget.user),
               const CustomText(
                 text: 'email',
                 fontSize: 18,
                 fontWeight: FontWeight.normal,
               ),
-              const NameContainer(text: 'koffikouame@gmail.com'),
+              NameContainer(text: widget.user.email),
               const SizedBox(
                 height: 25.0,
               ),
@@ -87,7 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                birthDate == DateTime(2100)
+                                birthDateFromPrefs == null
                                     ? Text(
                                         'Aucune',
                                         style: TextStyle(
@@ -97,16 +132,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                               .withOpacity(0.6),
                                         ),
                                       )
-                                    : Text(
-                                        DateFormat('dd / MM / yyyy')
-                                            .format(birthDate),
-                                        style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                          color: Palette.blackColor
-                                              .withOpacity(0.6),
-                                        ),
-                                      ),
+                                    : birthDateFromPrefs != null
+                                        ? Text(
+                                            birthDateFromPrefs.toString(),
+                                            style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold,
+                                              color: Palette.blackColor
+                                                  .withOpacity(0.6),
+                                            ),
+                                          )
+                                        : Text(
+                                            DateFormat('dd / MM / yyyy')
+                                                .format(birthDate),
+                                            style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold,
+                                              color: Palette.blackColor
+                                                  .withOpacity(0.6),
+                                            ),
+                                          ),
                                 const Icon(Icons.arrow_drop_down)
                               ],
                             ),
@@ -175,7 +220,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 height: 45,
                 radius: 50,
                 text: 'Enregistrer les modifications',
-                onPress: () {},
+                onPress: () async {
+                  await Prefs().setGender(gender: _selectedOption);
+                  if (birthDate != DateTime(2100)) {
+                    await Prefs().setBithDate(
+                      birthdate: DateFormat('dd / MM / yyyy').format(birthDate),
+                    );
+                  }
+                  Fluttertoast.showToast(
+                    msg: 'Enregistrées !',
+                    backgroundColor: Palette.appPrimaryColor,
+                  );
+                },
               ),
               const SizedBox(
                 height: 15,
@@ -186,13 +242,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 height: 45,
                 radius: 50,
                 text: 'Se déconnecter',
-                onPress: () {},
+                onPress: () async {
+                  Functions.showLoadingSheet(ctxt: context);
+                  //////////// if (await _sigout()) { commenter //////////////
+                  if (await _sigout()) {
+                    Future.delayed(const Duration(seconds: 3)).then((value) {
+                      Navigator.pop(context);
+                      Fluttertoast.showToast(
+                        msg: 'À bientôt',
+                        backgroundColor: Palette.appPrimaryColor,
+                      );
+                      Navigator.of(context, rootNavigator: true)
+                          .pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (context) {
+                        return const LoginScreen();
+                      }), (route) => false);
+                    });
+                  }
+                  ///////////////////// } commenter ///////////////
+                },
               )
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<bool> _sigout() async {
+    if (await Prefs().removeId()) {
+      return true;
+    }
+    return false;
   }
 
 //////////////////// gender selector //////////////////////
@@ -282,6 +363,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onDateTimeChanged: (DateTime newDate) {
                       setState(() {
                         birthDate = newDate;
+                        birthDateFromPrefs =
+                            DateFormat('dd / MM/ yyyy').format(newDate);
                         print(newDate.toString());
                       });
                     },

@@ -28,8 +28,8 @@ class Tontine {
     required this.startDate,
     required this.firstPaiemntDate,
     required this.creatorId,
-    required this.membersId,
-    required this.groupes,
+    this.membersId = const [],
+    this.groupes = const [],
   });
 
   int id;
@@ -46,29 +46,29 @@ class Tontine {
 
   factory Tontine.fromJson(Map<String, dynamic> json) => Tontine(
         id: json["id"],
-        uniqueCode: json["uniqueCode"],
+        uniqueCode: int.parse(json["uniqueCode"]),
         tontineName: json["tontineName"],
         type: json["type"],
-        numberOfType: json["numberOfType"],
+        numberOfType: int.parse(json["numberOfType"]),
         contribution: json["contribution"]?.toDouble(),
         startDate: DateTime.parse(json["startDate"]),
-        firstPaiemntDate: DateTime.parse(json["firstPaiemntDate"]),
+        firstPaiemntDate: DateTime.parse(json["firstPaymentDate"]),
         creatorId: json["creatorId"],
         membersId: List<int>.from(json["membersId"].map((x) => x)),
         groupes:
-            List<Groupe>.from(json["groupes"].map((x) => Groupe.fromJson(x))),
+            List<Groupe>.from(json["groups"].map((x) => Groupe.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "uniqueCode": uniqueCode,
-        "tontineName": tontineName,
-        "type": type,
-        "numberOfType": numberOfType,
-        "contribution": contribution,
-        "startDate": startDate.toIso8601String(),
-        "firstPaiemntDate": firstPaiemntDate.toIso8601String(),
-        "creatorId": creatorId,
+        "unique_code": uniqueCode,
+        "name": tontineName,
+        "contribution_type": type,
+        "duration": numberOfType,
+        "amount": contribution,
+        "start_date": startDate.toIso8601String(),
+        "first_payment_deadline": firstPaiemntDate.toIso8601String(),
+        "user_id": creatorId,
         "membersId": List<dynamic>.from(membersId.map((x) => x)),
         "groupes": List<dynamic>.from(groupes.map((x) => x.toJson())),
       };
@@ -76,16 +76,16 @@ class Tontine {
 
 class Groupe {
   Groupe({
-    required this.id,
+    this.id = 0,
     required this.nom,
-    required this.membrsId,
-    required this.cretat,
+    this.membrsId = const [],
+    //required this.cretat,
   });
 
   int id;
   String nom;
   List<int> membrsId;
-  DateTime cretat;
+  //DateTime cretat;
 
   static List<Color> colorList = [
     const Color.fromARGB(255, 92, 174, 117),
@@ -101,16 +101,16 @@ class Groupe {
 
   factory Groupe.fromJson(Map<String, dynamic> json) => Groupe(
         id: json["id"],
-        nom: json["nom"],
-        membrsId: List<int>.from(json["membrsId"].map((x) => x)),
-        cretat: DateTime.parse(json["cretat"]),
+        nom: json["groupName"],
+        membrsId: List<int>.from(json["memberIds"].map((x) => x)),
+        //cretat: DateTime.parse(json["cretat"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "nom": nom,
         "membrsId": List<dynamic>.from(membrsId.map((x) => x)),
-        "cretat": cretat.toIso8601String(),
+        //"cretat": cretat.toIso8601String(),
       };
 }
 
@@ -135,25 +135,25 @@ List<Tontine> tontineList = [
         id: 1,
         nom: 'Groupe_1',
         membrsId: [1, 2, 3],
-        cretat: DateTime.now(),
+        //cretat: DateTime.now(),
       ),
       Groupe(
         id: 2,
         nom: 'Groupe_2',
         membrsId: [1],
-        cretat: DateTime.now(),
+        //cretat: DateTime.now(),
       ),
       Groupe(
         id: 3,
         nom: 'Groupe_3',
         membrsId: [1, 2],
-        cretat: DateTime.now(),
+        //cretat: DateTime.now(),
       ),
       Groupe(
         id: 4,
         nom: 'Groupe_4',
         membrsId: [1, 2, 3],
-        cretat: DateTime.now(),
+        //cretat: DateTime.now(),
       )
     ],
   ),
@@ -181,7 +181,7 @@ List<Tontine> tontineList = [
         id: 5,
         nom: 'Groupe_1',
         membrsId: [1, 2, 3, 5],
-        cretat: DateTime.now(),
+        //cretat: DateTime.now(),
       )
     ],
   ),
@@ -267,3 +267,6 @@ List<Tontine> tontineList = [
     groupes: [],
   ),
 ];
+
+List<Tontine> currentUSerTontineList = [];
+List<Tontine> allTontineWhereCurrentUserParticipe = [];

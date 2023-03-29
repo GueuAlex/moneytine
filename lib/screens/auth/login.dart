@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moneytine/config/prefs.dart';
 import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/models/user.dart';
 import 'package:moneytine/screens/auth/singin.dart';
 import 'package:moneytine/screens/home_page/home_page.dart';
 import 'package:moneytine/style/palette.dart';
@@ -37,7 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
           leadingWidth: 100,
-          leading: GestureDetector(
+          leading: InkWell(
+            splashColor: Colors.transparent,
             onTap: () {
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
@@ -71,6 +74,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     email: emailController.text,
                     password: passwordController.text) !=
                 null) {
+              User logUser = await Functions.postLoginDetails(
+                  email: emailController.text,
+                  password: passwordController.text);
+
+              print('dans login id : ${logUser.id}');
+              //////////////////////////// a mettre en commentaire plutard ////
+              ///
+              await Prefs().setId(logUser.id);
+              int id = await Prefs().id;
+              print(' prefs id : $id');
+              //////////////////////////////////////////////////////////////
               Future.delayed(const Duration(seconds: 4)).then((value) {
                 setState(() {
                   isLoading = false;
@@ -80,7 +94,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     backgroundColor: Palette.appPrimaryColor);
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) {
-                  return const HomePageScreen();
+                  return HomePageScreen(
+                    user: logUser,
+                  );
                 }), (route) => false);
               });
             } else {
@@ -88,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 isLoading = false;
               });
               Fluttertoast.showToast(
-                  msg: 'email ou mot passe incorect',
+                  msg: 'Email ou mot de passe incorrect',
                   backgroundColor: Palette.appPrimaryColor);
             }
           }

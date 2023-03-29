@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moneytine/config/prefs.dart';
 import 'package:moneytine/screens/auth/login.dart';
 import 'package:moneytine/screens/auth/singin.dart';
 import 'package:moneytine/style/palette.dart';
@@ -63,8 +64,10 @@ class IntroScreen extends StatelessWidget {
                   height: 45,
                   radius: 50,
                   text: 'Commencer ici',
-                  onPress: () {
+                  onPress: () async {
+                    _setIntroView();
                     _showBottomSheet(context);
+                    //print(await Prefs().introIsView);
                   }),
               const SizedBox(
                 height: 100,
@@ -74,6 +77,10 @@ class IntroScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _setIntroView() async {
+    await Prefs().setIntroIsView(isView: true);
   }
 
   void _showBottomSheet(BuildContext context) {
@@ -106,10 +113,10 @@ class SheetContent extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            width: 70,
-            height: 10,
+            width: 60,
+            height: 5,
             decoration: BoxDecoration(
-              color: Palette.greyColor,
+              color: Palette.greyColor.withOpacity(0.6),
               borderRadius: BorderRadius.circular(30),
             ),
           ),

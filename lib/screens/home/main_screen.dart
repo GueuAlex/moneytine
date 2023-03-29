@@ -103,7 +103,7 @@ class _MainScreenState extends State<MainScreen> {
                               text: 'Créer une tontine',
                               icon: Icons.create_new_folder,
                               onTap: () {
-                                addTontine();
+                                //addTontine();
                               },
                             ),
                             MunuButton(
@@ -119,10 +119,10 @@ class _MainScreenState extends State<MainScreen> {
                               text: 'Mes tontines',
                               icon: CupertinoIcons.person_3_fill,
                               onTap: () {
-                                Navigator.of(context)
+                                /* Navigator.of(context)
                                     .push(MaterialPageRoute(builder: (context) {
                                   return HomePageScreen();
-                                }));
+                                })); */
                               },
                             ),
                             /* MunuButton(
@@ -230,9 +230,9 @@ class _MainScreenState extends State<MainScreen> {
       //text: "the code '$code' has been saved!.",
       onConfirmBtnTap: () {
         Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
+        /*  Navigator.push(context, MaterialPageRoute(builder: (context) {
           return HomePageScreen();
-        }));
+        })); */
       },
       widget: SizedBox(
         width: double.infinity,
@@ -327,16 +327,16 @@ class _MainScreenState extends State<MainScreen> {
 ////////////////////////////////// main method/////////////////////////////////
 // call ton add
 //
-  addTontine() {
+  /* addTontine() {
     return Platform.isIOS
         ? isoInputDialogaddTontine(context)
         : addTontineAndroidAlert();
-  }
+  } */
 
   //////////////////////////////// android alert main methode////////////////////
   /// call to show android alert methods
   ///
-  Future<dynamic> addTontineAndroidAlert() {
+  /*  Future<dynamic> addTontineAndroidAlert() {
     return QuickAlert.show(
       context: context,
       type: QuickAlertType.custom,
@@ -379,7 +379,7 @@ class _MainScreenState extends State<MainScreen> {
       text:
           'Veuillez entrer un nom pour la tontine\n\nLe nom sera «tontine_dateDuJour» si le champ est vide',
     );
-  }
+  } */
 
   ///////////////////android error alert ///////////////////////////
   /// call on create tontine
@@ -398,7 +398,7 @@ class _MainScreenState extends State<MainScreen> {
   //////////////////////// ISO input dialog /////////////////////////////////////
   /// call to show cupertino input dialog on add tontine
   ///
-  Future<List<String>?> isoInputDialogaddTontine(BuildContext context) {
+  /* Future<List<String>?> isoInputDialogaddTontine(BuildContext context) {
     return showTextInputDialog(
       useRootNavigator: true,
       context: context,
@@ -433,7 +433,7 @@ class _MainScreenState extends State<MainScreen> {
       message:
           'Veuillez entrer un nom pour la tontine\nLe nom par defaut sera «tontine_dateDuJour» si le champ est vide',
     );
-  }
+  } */
 
   ///////////////////////// IOS bottom sheet ///////////////////////////////////
   /// call to show botto sheet on iso wen add tontine as error

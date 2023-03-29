@@ -44,15 +44,18 @@ class SingleGroupeScreen extends StatelessWidget {
               onPressed: () {
                 //print('add new membre to this groupe');
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) {
-                          return AddUserToGroupe(
-                              groupColor: groupeColor,
-                              groupe: groupe,
-                              tontine: tontine);
-                        },
-                        fullscreenDialog: true));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return AddUserToGroupe(
+                        groupColor: groupeColor,
+                        groupe: groupe,
+                        tontine: tontine,
+                      );
+                    },
+                    fullscreenDialog: true,
+                  ),
+                );
               },
               icon: const Icon(CupertinoIcons.person_add),
             ),
