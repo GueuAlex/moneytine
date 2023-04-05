@@ -17,6 +17,7 @@ class GroupsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Palette.secondaryColor,
         title: const Text(

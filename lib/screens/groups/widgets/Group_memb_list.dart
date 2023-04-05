@@ -1,22 +1,50 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moneytine/models/single_group_data.dart';
+import 'package:moneytine/remote_services/remote_services.dart';
 
 import '../../../models/tontine.dart';
 import '../../../models/user.dart';
 import '../../../style/palette.dart';
 import 'member_infos_container.dart';
 
-class GroupMembList extends StatelessWidget {
+class GroupMembList extends StatefulWidget {
   const GroupMembList({
     super.key,
     required this.groupe,
-    required this.user,
+    //required this.user,
+    required this.data,
     required this.tontine,
+    required this.currentUser,
   });
 
   final Groupe groupe;
-  final User user;
+  //final User user;
   final Tontine tontine;
+  final SingleGroupData data;
+  final User currentUser;
+
+  @override
+  State<GroupMembList> createState() => _GroupMembListState();
+}
+
+class _GroupMembListState extends State<GroupMembList> {
+  User user = User(fullName: '', email: '');
+  @override
+  void initState() {
+    getUser();
+    //
+    super.initState();
+  }
+
+  getUser() async {
+    User? apiUser = await RemoteServices().getSingleUser(id: widget.data.id);
+    if (apiUser != null) {
+      setState(() {
+        user = apiUser;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +58,10 @@ class GroupMembList extends StatelessWidget {
           memberInfos(
             context: context,
             user: user,
-            groupe: groupe,
-            tontine: tontine,
+            groupe: widget.groupe,
+            tontine: widget.tontine,
+            data: widget.data,
+            currentUser: widget.currentUser,
           );
         },
         leading: Container(
@@ -49,8 +79,8 @@ class GroupMembList extends StatelessWidget {
             ),
           ),
         ),
-        title: Text(user.fullName),
-        subtitle: Text(user.email),
+        title: Text(widget.data.name),
+        subtitle: Text(widget.data.email),
         trailing: const Icon(
           CupertinoIcons.chevron_forward,
         ),
@@ -63,6 +93,8 @@ class GroupMembList extends StatelessWidget {
     required User user,
     required Tontine tontine,
     required Groupe groupe,
+    required SingleGroupData data,
+    required User currentUser,
   }) {
     return showBottomSheet(
         backgroundColor: Colors.transparent,
@@ -95,6 +127,8 @@ class GroupMembList extends StatelessWidget {
               tontine: tontine,
               groupe: groupe,
               user: user,
+              data: data,
+              currentUser: currentUser,
             ),
           );
         });

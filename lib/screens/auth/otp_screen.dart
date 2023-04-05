@@ -12,6 +12,7 @@ import 'login.dart';
 import 'reset_password_screen.dart';
 import 'widgets/otp_text_field.dart';
 
+// ignore: must_be_immutable
 class OtpScreen extends StatefulWidget {
   OtpScreen({
     super.key,

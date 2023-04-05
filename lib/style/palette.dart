@@ -45,4 +45,20 @@ class Palette {
   static const Color greySecondaryColor = Color(0xFF696969);
 
   /////////////////////////////////////////////////////
+  ///
+  static const MaterialColor primarySwatch = MaterialColor(
+    0xFF9A1921, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
+    <int, Color>{
+      50: Color(0x02e7b641), //10%
+      100: Color(0x02e7bc3a), //20%
+      200: Color(0x02e7b332), //30%
+      300: Color(0x02e7b92b), //40%
+      400: Color(0x02e7b024), //50%
+      500: Color(0x02e7b61d), //60%
+      600: Color(0x02e7bc16), //70%
+      700: Color(0x02e7b30e), //80%
+      800: Color(0x02e7b907), //90%
+      900: Color(0x02e7b000), //100%
+    },
+  );
 }

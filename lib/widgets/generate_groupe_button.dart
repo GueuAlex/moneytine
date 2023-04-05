@@ -54,7 +54,7 @@ class GenerateGroupeButton extends StatelessWidget {
             ),
             Center(
               child: Text(
-                text.toLowerCase(),
+                text,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: color,
                       fontWeight: FontWeight.bold,

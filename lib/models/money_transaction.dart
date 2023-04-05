@@ -29,41 +29,45 @@ String moneyTransactionListToJson(List<MoneyTransaction> data) =>
 
 class MoneyTransaction {
   MoneyTransaction({
-    required this.id,
+    this.id,
     required this.type,
     required this.amunt,
     required this.hours,
-    required this.transactionDate,
-    required this.user,
-    required this.groupe,
+    required this.date,
+    required this.userId,
+    required this.groupeId,
+    required this.tontineId,
   });
 
-  int id;
+  int? id;
   String type;
   double amunt;
   String hours;
-  DateTime transactionDate;
-  User user;
-  Groupe groupe;
+  DateTime date;
+  int userId;
+  int groupeId;
+  int tontineId;
 
   factory MoneyTransaction.fromJson(Map<String, dynamic> json) =>
       MoneyTransaction(
         id: json["id"],
         type: json["type"],
-        amunt: json["amunt"]?.toDouble(),
-        hours: json["hours"],
-        transactionDate: DateTime.parse(json["transactionDate"]),
-        user: User.fromJson(json["user"]),
-        groupe: Groupe.fromJson(json["groupe"]),
+        amunt: json["amount"]?.toDouble(),
+        hours: json["time"],
+        date: DateTime.parse(json["date"]),
+        userId: json["user_id"],
+        groupeId: json["group_id"],
+        tontineId: json["tontine_id"],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
+        //"id": id,
         "type": type,
-        "amunt": amunt,
-        "hours": hours,
-        "transactionDate": transactionDate.toIso8601String(),
-        "user": user.toJson(),
-        "groupe": groupe.toJson(),
+        "amount": amunt,
+        "time": hours,
+        "date": date.toIso8601String(),
+        "user_id": userId,
+        "group_id": groupeId,
+        "tontine_id": tontineId,
       };
 }

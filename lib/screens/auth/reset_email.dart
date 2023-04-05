@@ -128,7 +128,7 @@ class _ResetEmailScreenState extends State<ResetEmailScreen> {
                         left: 8.0,
                       ),
                       child: Text(
-                        'Pour mettre à jour votre mot de passe, veuillez entrer votre adresse email. You will receive a OTP code via email to creat a new password',
+                        'Pour mettre à jour votre mot de passe, veuillez entrer votre adresse email. Vous recevrez un code OTP par email pour créer un nouveau mot de passe.',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: Palette.whiteColor,

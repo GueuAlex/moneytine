@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:moneytine/models/tontine.dart';
+import 'package:moneytine/models/transation_by_date.dart';
+import 'package:moneytine/models/user.dart';
 
 import '../style/palette.dart';
 import 'transactions_type_container.dart';
@@ -6,10 +10,20 @@ import 'transactions_type_container.dart';
 class TransactionsWidget extends StatelessWidget {
   const TransactionsWidget({
     super.key,
+    required this.trasansactionsByDate,
+    //required this.user,
+    //required this.groupe,
+    //required this.tontine,
   });
+
+  final TransactionsByDate trasansactionsByDate;
+  //final User user;
+  //final Groupe groupe;
+  //final Tontine tontine;
 
   @override
   Widget build(BuildContext context) {
+    //print('testeseset :: ${user.fullName}\n');
     return Container(
       margin: const EdgeInsets.only(left: 0.0, top: 5.0, bottom: 0.0),
       constraints: const BoxConstraints(
@@ -57,18 +71,18 @@ class TransactionsWidget extends StatelessWidget {
                   const SizedBox(
                     width: 4.0,
                   ),
-                  const Text(
-                    '16',
-                    style: TextStyle(
+                  Text(
+                    DateFormat('dd').format(trasansactionsByDate.date),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(
                     width: 4.0,
                   ),
-                  const Text(
-                    'Oct',
-                    style: TextStyle(
+                  Text(
+                    DateFormat.MMM('fr_FR').format(trasansactionsByDate.date),
+                    style: const TextStyle(
                       color: Colors.grey,
                     ),
                   )
@@ -79,38 +93,28 @@ class TransactionsWidget extends StatelessWidget {
               height: 10,
             ),
             /////////////////////
-            const TransactionsTypeContainer(
-              transactionType: 'versement',
-              color: Palette.appPrimaryColor,
-            ),
-            //////////////////
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 50, right: 50.0, top: 5.0, bottom: 5.0),
-              child: Divider(
-                color: Colors.grey.withOpacity(0.5),
-                thickness: 1.5,
+            Column(
+              children: List.generate(
+                trasansactionsByDate.mTransaction.length,
+                (index) => TransactionsTypeContainer(
+                  color: trasansactionsByDate.mTransaction[index].type ==
+                          'Versement'
+                      ? Palette.appPrimaryColor
+                      : trasansactionsByDate.mTransaction[index].type ==
+                              'Retrait'
+                          ? Palette.secondaryColor
+                          : Palette.appSecondaryColor,
+                  mTransactions: trasansactionsByDate.mTransaction[index],
+                  //groupe: groupe,
+                  //tontine: tontine,
+                  //user: user,
+                  lastIndex: trasansactionsByDate.mTransaction.length,
+                  index: index,
+                ),
               ),
             ),
-            /////////////////////
-            const TransactionsTypeContainer(
-              transactionType: 'Reception',
-              color: Palette.appSecondaryColor,
-            ),
             //////////////////
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 50, right: 50.0, top: 5.0, bottom: 5.0),
-              child: Divider(
-                color: Colors.grey.withOpacity(0.5),
-                thickness: 1.5,
-              ),
-            ),
-            /////////////////////
-            const TransactionsTypeContainer(
-              transactionType: 'Retrait',
-              color: Palette.secondaryColor,
-            ),
+
             /////////////////
             const SizedBox(
               height: 15.0,

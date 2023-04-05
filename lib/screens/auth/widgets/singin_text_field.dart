@@ -4,6 +4,7 @@ import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 import '../../../config/pwd.dart';
 import '../../../style/palette.dart';
+import '../login.dart';
 
 class SinginTextField extends StatefulWidget {
   const SinginTextField({
@@ -25,7 +26,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
   //////////// password visibility ///////////////////
   bool isVisiblePassword = false;
   bool isVisiblePassword1 = false;
-  bool isSucess = false;
+  bool isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +153,11 @@ class _SinginTextFieldState extends State<SinginTextField> {
 
     //////////////////// password field ///////////////
     final passwordField = TextFormField(
+      onTap: () {
+        setState(() {
+          isVisible = true;
+        });
+      },
       cursorColor: Palette.appPrimaryColor,
       controller: widget.passwordController,
       autofocus: false,
@@ -279,12 +285,12 @@ class _SinginTextFieldState extends State<SinginTextField> {
       height: 150,
       onSuccess: () {
         setState(() {
-          isSucess = true;
+          isVisible = false;
         });
       },
       onFail: () {
         setState(() {
-          isSucess = false;
+          isVisible = true;
         });
       },
       strings: FrenchStrings(),
@@ -344,13 +350,16 @@ class _SinginTextFieldState extends State<SinginTextField> {
             child: passwordField,
           ),
         ),
-        !isSucess
-            ? Padding(
+        isVisible
+            ? Container(
+                width: double.infinity,
+                height: 90,
                 padding: const EdgeInsets.only(
                   top: 10,
-                  right: 15,
-                  left: 15,
+                  right: 25,
+                  left: 25,
                 ),
+                // color: Colors.amber,
                 child: pwdValidator,
               )
             : Container(),
@@ -372,6 +381,28 @@ class _SinginTextFieldState extends State<SinginTextField> {
             child: confirmPasswordField,
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const LoginScreen();
+                  },
+                  //fullscreenDialog: true,
+                ),
+              );
+            },
+            child: const Text(
+              'J\'ai déjà un compte',
+              style: TextStyle(
+                color: Palette.secondaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        )
       ],
     );
   }

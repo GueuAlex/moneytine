@@ -3,13 +3,16 @@ import 'package:moneytine/models/transation_by_date.dart';
 import 'package:moneytine/style/palette.dart';
 import 'package:moneytine/widgets/transactions_widget.dart';
 
-class AllTransactionsHistory extends StatelessWidget {
-  const AllTransactionsHistory({
-    super.key,
-    required this.trasansactionsByDate,
-  });
+import '../../../models/user.dart';
 
-  final List<TransactionsByDate> trasansactionsByDate;
+class TransactionsOfThisTontine extends StatelessWidget {
+  const TransactionsOfThisTontine({
+    super.key,
+    required this.transactionsByDate,
+    required this.menbers,
+  });
+  final List<TransactionsByDate> transactionsByDate;
+  final List<User> menbers;
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +27,10 @@ class AllTransactionsHistory extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8.0),
             child: Column(
               children: List.generate(
-                2,
+                transactionsByDate.length,
                 (index) => TransactionsWidget(
-                  trasansactionsByDate: trasansactionsByDate[index],
+                  trasansactionsByDate: transactionsByDate[index],
+                  // user: menbers[index],
                 ),
               ),
             ),

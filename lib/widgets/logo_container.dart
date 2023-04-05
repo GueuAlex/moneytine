@@ -6,11 +6,12 @@ class LogoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
-      height: 300,
+      width: 200,
+      height: 200,
       //margin: const EdgeInsets.only(top: 20.0),
       foregroundDecoration: const BoxDecoration(
-          //color: Colors.red,
+          //color: Colors.green,
+          //border: Border.all(width: 2, color: Colors.black),
           image: DecorationImage(
               image: AssetImage('assets/images/logo.jpg'), fit: BoxFit.cover)),
     );

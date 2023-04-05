@@ -30,6 +30,7 @@ class Tontine {
     required this.creatorId,
     this.membersId = const [],
     this.groupes = const [],
+    this.isActive = 1,
   });
 
   int id;
@@ -43,6 +44,7 @@ class Tontine {
   int creatorId;
   List<int> membersId;
   List<Groupe> groupes;
+  int isActive;
 
   factory Tontine.fromJson(Map<String, dynamic> json) => Tontine(
         id: json["id"],
@@ -54,6 +56,7 @@ class Tontine {
         startDate: DateTime.parse(json["startDate"]),
         firstPaiemntDate: DateTime.parse(json["firstPaymentDate"]),
         creatorId: json["creatorId"],
+        isActive: json["is_active"],
         membersId: List<int>.from(json["membersId"].map((x) => x)),
         groupes:
             List<Groupe>.from(json["groups"].map((x) => Groupe.fromJson(x))),
@@ -69,6 +72,7 @@ class Tontine {
         "start_date": startDate.toIso8601String(),
         "first_payment_deadline": firstPaiemntDate.toIso8601String(),
         "user_id": creatorId,
+        "is_active": isActive,
         "membersId": List<dynamic>.from(membersId.map((x) => x)),
         "groupes": List<dynamic>.from(groupes.map((x) => x.toJson())),
       };

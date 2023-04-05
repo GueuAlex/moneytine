@@ -4,11 +4,11 @@ class FrenchStrings implements FlutterPwValidatorStrings {
   @override
   final String atLeast = 'Au moins - caractères';
   @override
-  final String uppercaseLetters = '- Lettres majuscules';
+  final String uppercaseLetters = '- Lettre majuscule';
   @override
-  final String normalLetters = '- Lettres normales';
+  final String normalLetters = '- Lettre normale';
   @override
-  final String numericCharacters = '- Chiffres';
+  final String numericCharacters = '- Chiffre';
   @override
-  final String specialCharacters = '- Caractères spéciaux';
+  final String specialCharacters = '- Caractère spécial';
 }

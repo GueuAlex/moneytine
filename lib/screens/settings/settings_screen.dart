@@ -86,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               TopRow(user: widget.user),
               const CustomText(
                 text: 'email',
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.normal,
               ),
               NameContainer(text: widget.user.email),
@@ -126,10 +126,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     ? Text(
                                         'Aucune',
                                         style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500,
                                           color: Palette.blackColor
-                                              .withOpacity(0.6),
+                                              .withOpacity(0.5),
                                         ),
                                       )
                                     : birthDateFromPrefs != null
@@ -164,8 +164,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const CustomText(
+                      children: const [
+                        /* const CustomText(
                           text: 'Selectinner le genre',
                           fontSize: 18,
                           fontWeight: FontWeight.normal,
@@ -185,7 +185,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 buildDropDown(),
                                 const Icon(Icons.arrow_drop_down),
                               ]),
-                        ),
+                        ), */
+                        SizedBox(
+                          height: 50,
+                          width: 200,
+                        )
                       ],
                     ),
                   ],
@@ -198,9 +202,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const CustomText(
-                      text: 'Autoriser les notifications',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
+                    text: 'Autoriser les notifications',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    //color: Palette.greyColor,
+                  ),
                   Switch.adaptive(
                       activeColor: Palette.appPrimaryColor,
                       value: isAllow,
@@ -215,9 +221,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 height: 25.0,
               ),
               CustomButton(
+                isSetting: true,
+                fontsize: 14,
                 color: Palette.appPrimaryColor,
                 width: double.infinity,
-                height: 45,
+                height: 40,
                 radius: 50,
                 text: 'Enregistrer les modifications',
                 onPress: () async {
@@ -237,9 +245,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 height: 15,
               ),
               CustomButton(
+                isSetting: true,
+                fontsize: 14,
                 color: Palette.primaryColor,
                 width: double.infinity,
-                height: 45,
+                height: 40,
                 radius: 50,
                 text: 'Se déconnecter',
                 onPress: () async {
@@ -381,6 +391,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } else {
       final DateTime? picked = await showDatePicker(
         context: context,
+        locale: const Locale('fr', 'FR'),
         initialDate: DateTime.now(),
         firstDate: DateTime(1900),
         lastDate: DateTime(2100),

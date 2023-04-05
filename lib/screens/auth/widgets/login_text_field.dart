@@ -196,7 +196,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
                     return const ResetEmailScreen();
                   }));
                 },
-                child: const Text('| Mot de oublié ?'),
+                child: const Text(' Mot de passe oublié ?'),
               )
             ],
           ),

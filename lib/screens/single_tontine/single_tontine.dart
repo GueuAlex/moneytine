@@ -1,20 +1,12 @@
 //import 'package:flutter/cupertino.dart';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moneytine/models/tontine.dart';
 import 'package:moneytine/models/user.dart';
-import 'package:moneytine/screens/my_tontines/mes_tontines.dart';
 import 'package:moneytine/style/palette.dart';
 
-import '../../functions/functions.dart';
-import '../groups/groups_screen.dart';
-import '../modify_tontine/mdify_tontine.dart';
-import '../../widgets/generate_groupe_button.dart';
-import '../../widgets/list_groupe_card_header.dart';
 import 'widgets/buttons_row.dart';
 import 'widgets/single_tontine_header.dart';
 import 'widgets/single_tontine_last_transactions.dart';
@@ -90,9 +82,11 @@ class _SingleTontineState extends State<SingleTontine> {
                     widget: widget,
                   ),
                 ),
-                const Expanded(
+                Expanded(
                   /////////// it's last transactions right now ///////////////
-                  child: SingleTontineLastTransactions(),
+                  child: SingleTontineLastTransactions(
+                    tontine: widget.tontine,
+                  ),
                   ////////////////////////////////////////////////////////////
                 )
               ],

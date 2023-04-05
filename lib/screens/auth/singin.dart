@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -47,7 +49,8 @@ class _SinginScreenState extends State<SinginScreen> {
     return Scaffold(
       appBar: AppBar(
           leadingWidth: 100,
-          leading: GestureDetector(
+          leading: InkWell(
+            splashColor: Colors.transparent,
             onTap: () {
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) {
@@ -55,13 +58,18 @@ class _SinginScreenState extends State<SinginScreen> {
               }), (route) => false);
             },
             child: Row(
-              children: const [
+              children: [
+                const SizedBox(
+                  width: 5.0,
+                ),
                 Icon(
-                  CupertinoIcons.chevron_back,
+                  Platform.isIOS
+                      ? CupertinoIcons.chevron_back
+                      : CupertinoIcons.arrow_left,
                   color: Palette.blackColor,
                   size: 25,
                 ),
-                Text(
+                const Text(
                   'connexion',
                   style: TextStyle(
                     color: Palette.blackColor,
@@ -144,37 +152,19 @@ class _SinginScreenState extends State<SinginScreen> {
               child: Column(
                 children: <Widget>[
                   const LogoContainer(),
-                  Form(
-                    key: _formKey,
-                    child: SinginTextField(
-                      firstNameController: firstNameController,
-                      emailController: emailController,
-                      passwordController: passwordController,
-                      confirmPasswordController: confirmPasswordController,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const LoginScreen();
-                            },
-                            //fullscreenDialog: true,
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'J\'ai déjà un compte',
-                        style: TextStyle(
-                          color: Palette.secondaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height / 1.5,
+                    child: Form(
+                      key: _formKey,
+                      child: SinginTextField(
+                        firstNameController: firstNameController,
+                        emailController: emailController,
+                        passwordController: passwordController,
+                        confirmPasswordController: confirmPasswordController,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

@@ -58,9 +58,11 @@ class JeParticipe extends StatelessWidget {
                                   fontSize: 35,
                                 ),
                               ),
-                              const Text(
-                                '  Tontines',
-                                style: TextStyle(
+                              Text(
+                                tontineList.length <= 1
+                                    ? '  Tontine'
+                                    : '  Tontines',
+                                style: const TextStyle(
                                   color: Palette.whiteColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,

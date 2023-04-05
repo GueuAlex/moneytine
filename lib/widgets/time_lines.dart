@@ -36,7 +36,7 @@ class TimeLines extends StatelessWidget {
         ),
       ),
       lineXY: 0.1,
-      endChild: const TransactionsWidget(),
+      // endChild: const TransactionsWidget(),
       startChild: SizedBox(
         width: 20,
         child: Column(

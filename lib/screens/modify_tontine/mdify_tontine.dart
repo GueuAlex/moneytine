@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
@@ -25,6 +24,7 @@ class ModifyTontineScreen extends StatefulWidget {
   final User user;
 
   @override
+  // ignore: library_private_types_in_public_api
   _ModifyTontineScreenState createState() => _ModifyTontineScreenState();
 }
 
@@ -130,6 +130,7 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
     } else {
       final DateTime? picked = await showDatePicker(
         context: context,
+        locale: const Locale('fr', 'FR'),
         initialDate: _selectedDate1,
         firstDate: DateTime(1900),
         lastDate: DateTime(2100),
@@ -205,6 +206,7 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
     } else {
       final DateTime? picked = await showDatePicker(
         context: context,
+        locale: const Locale('fr', 'FR'),
         initialDate: _selectedDate2,
         firstDate: DateTime(1900),
         lastDate: DateTime(2100),
@@ -449,13 +451,17 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
                 children: [
                   const CustomText(
                     text: 'Nom',
-                    fontSize: 16,
+                    fontSize: 13,
+                    color: Palette.greyColor,
                     fontWeight: FontWeight.w600,
                   ),
                   Container(
                     width: double.infinity,
                     height: 50,
-                    margin: const EdgeInsets.only(top: 5.0),
+                    margin: const EdgeInsets.only(
+                      top: 5.0,
+                      bottom: 8.0,
+                    ),
                     padding: const EdgeInsets.only(right: 8.0, left: 10.0),
                     decoration: BoxDecoration(
                         color: Palette.appPrimaryColor.withOpacity(0.3),
@@ -473,8 +479,9 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
                 children: [
                   const CustomText(
                     text: 'Type',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
+                    color: Palette.greyColor,
                   ),
                   Container(
                     width: double.infinity,
@@ -498,8 +505,9 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
                       children: [
                         const CustomText(
                           text: 'Nombre',
-                          fontSize: 16,
+                          fontSize: 13,
                           fontWeight: FontWeight.w600,
+                          color: Palette.greyColor,
                         ),
                         Container(
                           width: double.infinity,
@@ -528,10 +536,12 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
                       children: [
                         const CustomText(
                           text: 'Débute le',
-                          fontSize: 16,
+                          fontSize: 13,
                           fontWeight: FontWeight.w600,
+                          color: Palette.greyColor,
                         ),
                         InkWell(
+                          borderRadius: BorderRadius.circular(50),
                           onTap: () {
                             _dateSelector1(context);
                             //_selectDate(context);
@@ -579,11 +589,13 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const CustomText(
-                          text: 'Date limite prémier paiement',
-                          fontSize: 16,
+                          text: 'Date limite premier paiement',
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
+                          color: Palette.greyColor,
                         ),
                         InkWell(
+                          borderRadius: BorderRadius.circular(50),
                           onTap: () => _dateSelector2(context),
                           child: Container(
                             height: 50,
@@ -631,8 +643,9 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
                 children: [
                   const CustomText(
                     text: 'Montant de cotisation',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
+                    color: Palette.greyColor,
                   ),
                   Container(
                     width: double.infinity,

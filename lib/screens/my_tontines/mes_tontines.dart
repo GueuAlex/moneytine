@@ -8,9 +8,12 @@ import 'package:moneytine/remote_services/remote_services.dart';
 import 'package:moneytine/screens/add_tontine/add_tontine.dart';
 import 'package:moneytine/screens/all_transactions_history/all_transations_history.dart';
 
+import '../../models/money_transaction.dart';
+import '../../models/transation_by_date.dart';
 import '../../style/palette.dart';
 import '../../widgets/transactions_widget.dart';
 import 'widgets/create_tontine_sheet_content.dart';
+import '../../widgets/empty_transaction.dart';
 import 'widgets/join_create_buttons.dart';
 import 'widgets/mes_tontines_top_box.dart';
 
@@ -39,6 +42,51 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
   //List<Tontine> tontineList = [];
   ///////////////////
   ///
+  ///
+  ////////////////////////////// all transaction and filter by user id ::///////
+  ///
+  final List<MoneyTransaction> _allTransactions = [];
+  List<TransactionsByDate> _trasansactionsByDate = [];
+
+  getAllTransactions() async {
+    List<MoneyTransaction> allTransactions =
+        await RemoteServices().getTransactionsList();
+
+    if (allTransactions.isNotEmpty) {
+      _allTransactions.clear();
+      for (MoneyTransaction element in allTransactions) {
+        if (element.userId == widget.user.id) {
+          setState(() {
+            _allTransactions.add(element);
+          });
+        }
+      }
+      _allTransactions.sort(
+        (a, b) => a.date.compareTo(b.date),
+      );
+      // Créer une liste de TransactionsByDate à partir de la liste triée
+      List<TransactionsByDate> transactionsByDate = [];
+      for (var t in _allTransactions) {
+        TransactionsByDate? last =
+            transactionsByDate.isNotEmpty ? transactionsByDate.last : null;
+        if (last == null || last.date != t.date) {
+          transactionsByDate.add(TransactionsByDate(
+            date: t.date,
+            mTransaction: [t],
+          ));
+        } else {
+          last.mTransaction.add(t);
+        }
+      }
+      setState(() {
+        _trasansactionsByDate = transactionsByDate;
+      });
+    }
+  }
+
+  ////////////////////////////// end filter //////////////////////////////////
+  ///
+  ///////////////////////////////
   @override
   void initState() {
     _scrolleController.addListener(() {
@@ -56,6 +104,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
     });
     getOwnTontineList();
     getAllTontineListWhereCurrentUserParticiped();
+    getAllTransactions();
     super.initState();
   }
 
@@ -151,7 +200,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                             horizontalTitleGap: 0,
 
                             leading: Container(
-                              padding: const EdgeInsets.only(),
+                              // padding: const EdgeInsets.only(bottom: 28.0),
                               height: 100,
                               width: 100,
                               decoration: BoxDecoration(
@@ -167,7 +216,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                                 child: Icon(
                                   CupertinoIcons.person_fill,
                                   color: Palette.greyColor,
-                                  size: 50,
+                                  size: 40,
                                 ),
                               ),
                             ),
@@ -185,10 +234,11 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                                   .textTheme
                                   .bodyMedium!
                                   .copyWith(
-                                      height: 1.5,
-                                      color: Palette.whiteColor,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
+                                    height: 1.5,
+                                    color: Palette.whiteColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ),
                         )
@@ -219,7 +269,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     JoinCreateButton(
-                                      text: 'Créée',
+                                      text: 'Créer',
                                       svg: 'assets/icons/create.svg',
                                       color: Palette.secondaryColor,
                                       onTap: () {
@@ -255,51 +305,69 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                             Padding(
                               padding:
                                   const EdgeInsets.only(bottom: 8.0, top: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Dernières transactions',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .copyWith(
-                                          color: Palette.greySecondaryColor,
-                                          fontSize: 14,
+                              child: _trasansactionsByDate.isNotEmpty
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Dernières transactions',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(
+                                                color:
+                                                    Palette.greySecondaryColor,
+                                                fontSize: 14,
+                                              ),
                                         ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .push(MaterialPageRoute(
-                                              builder: (context) {
-                                        return const AllTransactionsHistory();
-                                      }));
-                                    },
-                                    child: Text(
-                                      'Tout afficher',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(
-                                              color: Palette.greySecondaryColor,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .push(MaterialPageRoute(
+                                                    builder: (context) {
+                                              return AllTransactionsHistory(
+                                                trasansactionsByDate:
+                                                    _trasansactionsByDate,
+                                              );
+                                            }));
+                                          },
+                                          child: Text(
+                                            'Tout afficher',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .copyWith(
+                                                    color: Palette
+                                                        .greySecondaryColor,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                            ),
+                            _trasansactionsByDate.isNotEmpty
+                                ? Padding(
+                                    padding: const EdgeInsets.only(right: 0.0),
+                                    child: Column(
+                                      children: List.generate(
+                                        _trasansactionsByDate.length,
+                                        ////////// decommenter plutard pour voir tout les transaction du user connecter /////////////
+                                        ///
+                                        (index) => TransactionsWidget(
+                                          // user: widget.user,
+                                          trasansactionsByDate:
+                                              _trasansactionsByDate[index],
+                                        ),
+                                        //(index) => Container(),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 0.0),
-                              child: Column(
-                                children: List.generate(
-                                  3,
-                                  (index) => const TransactionsWidget(),
-                                ),
-                              ),
-                            ),
+                                  )
+                                : const EmptyTransactios(),
                           ],
                         ),
                       ),

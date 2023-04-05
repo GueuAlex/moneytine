@@ -85,7 +85,7 @@ class SucessScreen extends StatelessWidget {
                       ),
                       child: isSiginProcess
                           ? const Text(
-                              'Votre compte à bien été créer !',
+                              'Votre compte a bien été créer !',
                               textAlign: TextAlign.left,
                               style: TextStyle(color: Palette.whiteColor),
                             )

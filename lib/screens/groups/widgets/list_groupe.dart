@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moneytine/models/user.dart';
 import 'package:moneytine/remote_services/remote_services.dart';
+import 'package:moneytine/screens/groups/widgets/add_user_to_group.dart';
+import 'package:moneytine/screens/single_tontine/widgets/export_widgets.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../functions/functions.dart';
+import '../../../models/single_group_data.dart';
 import '../../../models/tontine.dart';
 import '../../../style/palette.dart';
-import '../../../widgets/list_groupe_card_header.dart';
 import 'Group_memb_list.dart';
 import 'group_card.dart';
 
@@ -22,16 +25,40 @@ class ListGroup extends StatefulWidget {
 }
 
 class _ListGroupState extends State<ListGroup> {
+  ////////////////////////// selected index //////////////////
+  ///
   int seletedIndex = 0;
+
+  //////////////////////// default selected group ///////////////////////
+  ///
   Groupe selectedGroupe = Groupe(
     nom: 'nom', //cretat: DateTime.now(),
   );
+
+  /////////////////////////////// selected group data //////////////////////
+  ///
+  List<SingleGroupData> selectedGroupData = [];
+
   @override
   void initState() {
     setState(() {
       selectedGroupe = widget.tontine.groupes[seletedIndex];
     });
+    getselectedGroupData();
     super.initState();
+  }
+
+  getselectedGroupData() async {
+    List<SingleGroupData> data = await RemoteServices()
+        .getSingleGroupData(seletedGroupId: selectedGroupe.id);
+    if (data.isNotEmpty) {
+      selectedGroupData.clear();
+      for (SingleGroupData element in data) {
+        setState(() {
+          selectedGroupData.add(element);
+        });
+      }
+    }
   }
 
   @override
@@ -41,18 +68,35 @@ class _ListGroupState extends State<ListGroup> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            ListGroupCardHeader(
-              text: 'Liste des groupes',
-              icon: CupertinoIcons.arrow_2_circlepath_circle,
-              onTap: () {
-                Functions.showLoadingSheet(ctxt: context);
-                generateGroup(
-                  userId: widget.user.id,
-                  creatorId: widget.tontine.creatorId,
-                  tontineId: widget.tontine.id,
-                );
-              },
-              isTransaction: false,
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 10.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Liste des groupes',
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black.withOpacity(0.6),
+                        ),
+                  ),
+                  GenerateGroupeButton(
+                    text: 'Générer',
+                    color: Palette.appSecondaryColor,
+                    icon: CupertinoIcons.arrow_2_circlepath_circle,
+                    onTap: () {
+                      generateGroup(
+                        creatorId: widget.tontine.creatorId,
+                        tontineId: widget.tontine.id,
+                        userId: widget.user.id,
+                      );
+                    },
+                  )
+                ],
+              ),
             ),
             const SizedBox(
               height: 10.0,
@@ -86,41 +130,67 @@ class _ListGroupState extends State<ListGroup> {
             const SizedBox(
               height: 10.0,
             ),
-            ListGroupCardHeader(
-              text: 'Groupe_1',
-              icon: CupertinoIcons.person_add,
-              onTap: () {
-                Functions.showLoadingSheet(ctxt: context);
-                print("add");
-              },
-              isTransaction: false,
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 15,
+              ),
+              child: selectedGroupe.membrsId.isNotEmpty
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          selectedGroupe.nom,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black.withOpacity(0.6),
+                                  ),
+                        ),
+                        GenerateGroupeButton(
+                          text: 'Ajouter',
+                          color: Palette.secondaryColor,
+                          icon: CupertinoIcons.person_add,
+                          onTap: () {
+                            addMemberToGroupe();
+                          },
+                        )
+                      ],
+                    )
+                  : Container(),
             ),
             const SizedBox(
               height: 10.0,
             ),
             SingleChildScrollView(
               child: SizedBox(
-                  width: double.infinity,
-                  /////////////// decommnter apres cela permet de verifier si le groupe selectionner compte des membres
-                  ///
-                  child: /* selectedGroupe.membrsId.isNotEmpty
-                    ? */
-                      Column(
-                    children: List.generate(
-                      ///////////:: bientot selectedGroupe.membersId.length /////////
-                      ///
-                      groupMembres.length,
-                      (index) => GroupMembList(
-                        groupe: selectedGroupe,
-                        user: groupMembres[index],
-                        tontine: widget.tontine,
-                      ),
-                    ),
-                  )
+                width: double.infinity,
+                /////////////// decommnter apres cela permet de verifier si le groupe selectionner compte des membres
+                ///
+                child: selectedGroupe.membrsId.isNotEmpty
+                    ? Column(
+                        children: List.generate(
+                          ///////////:: bientot selectedGroupe.membersId.length /////////
+                          ///
+                          selectedGroupe.membrsId.length,
+                          (index) => selectedGroupData.isEmpty
+                              ? Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade200,
+                                  highlightColor: Colors.grey.shade300,
+                                  child: const GroupMemberShimmer(),
+                                )
+                              : GroupMembList(
+                                  groupe: selectedGroupe,
+                                  data: selectedGroupData[index],
+                                  tontine: widget.tontine,
+                                  currentUser: widget.user,
+                                ),
+                        ),
+                      )
 
-                  /////////////////////// decommanter apres ////////////////
-                  ///
-                  /* : Column(
+                    /////////////////////// decommanter apres ////////////////
+                    ///
+                    : Column(
                         children: [
                           const SizedBox(
                             height: 30.0,
@@ -133,11 +203,13 @@ class _ListGroupState extends State<ListGroup> {
                             text: 'Ajouter',
                             color: Palette.appPrimaryColor,
                             icon: CupertinoIcons.person_add,
-                            onTap: () {},
+                            onTap: () {
+                              addMemberToGroupe();
+                            },
                           )
                         ],
-                      ), */
-                  ),
+                      ),
+              ),
             )
           ],
         ),
@@ -155,6 +227,7 @@ class _ListGroupState extends State<ListGroup> {
     required int tontineId,
   }) async {
     if (userId == creatorId) {
+      Functions.showLoadingSheet(ctxt: context);
       Groupe newGroupe = Groupe(
         nom: 'Groupe_${(widget.tontine.groupes.length + 1)}',
         // cretat: DateTime.now(),
@@ -192,5 +265,72 @@ class _ListGroupState extends State<ListGroup> {
         backgroundColor: Palette.appPrimaryColor,
       );
     }
+  }
+
+  addMemberToGroupe() {
+    Functions.showLoadingSheet(ctxt: context);
+    Future.delayed(const Duration(seconds: 3)).then((value) {
+      if (widget.tontine.creatorId == widget.user.id) {
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return AddUserScreen(
+                  groupe: selectedGroupe, tontine: widget.tontine);
+            },
+          ),
+        );
+      } else {
+        Navigator.pop(context);
+        Fluttertoast.showToast(
+          msg: 'Vous n\'est pas l\'administrateur de cette tontine !',
+          backgroundColor: Palette.appPrimaryColor,
+        );
+      }
+    });
+  }
+}
+
+class GroupMemberShimmer extends StatelessWidget {
+  const GroupMemberShimmer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(
+        bottom: 5.0,
+      ),
+      child: ListTile(
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: Colors.grey,
+          ),
+          child: const Center(
+            child: Icon(
+              CupertinoIcons.person_fill,
+              size: 20,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        title: Container(
+          height: 4,
+          width: 50,
+          color: Colors.grey,
+        ),
+        subtitle: Container(
+          height: 2,
+          width: 100,
+          color: Colors.grey,
+        ),
+      ),
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+//import 'package:intl/date_symbol_data_http_request.dart';
 import 'package:moneytine/splash.dart';
 import 'package:moneytine/style/palette.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,6 +11,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
+  //initializeDateFormatting().then((_) => runApp(const MyApp()));
   runApp(const MyApp());
 }
 
@@ -21,10 +23,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: const [
+        GlobalCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate, // This is required
       ],
+      supportedLocales: const [
+        Locale('fr'),
+        Locale('en'),
+      ],
+      locale: const Locale('eu', 'FR'),
       title: 'MoneyTine',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
@@ -34,15 +40,20 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
         textTheme: const TextTheme(
-            bodyMedium: TextStyle(
-              color: Colors.black,
-            ),
-            bodyLarge: TextStyle(
-                color: Palette.whiteColor,
-                fontSize: 18,
-                fontWeight: FontWeight.w600)),
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
-            .copyWith(secondary: Palette.appPrimaryColor),
+          bodyMedium: TextStyle(
+            color: Colors.black,
+          ),
+          bodyLarge: TextStyle(
+            color: Palette.whiteColor,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Palette.primarySwatch,
+        ).copyWith(
+          secondary: Palette.appPrimaryColor,
+        ),
       ),
       darkTheme: ThemeData(
         cupertinoOverrideTheme: const CupertinoThemeData(

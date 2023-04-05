@@ -14,25 +14,35 @@ class PaiementNotication extends StatelessWidget {
     return Container(
       width: double.infinity,
       //height: 50,
-      margin: const EdgeInsets.only(top: 5.0),
-      // padding: const EdgeInsets.only(top: 10.0, left: 10.0),
+      margin: const EdgeInsets.only(
+        top: 5.0,
+        right: 8.0,
+        left: 8.0,
+      ),
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       //color: Colors.red,
+      decoration: BoxDecoration(
+        color: Palette.greyColor.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(5.0),
+      ),
       child: Row(
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.only(right: 25, left: 25),
+            padding: const EdgeInsets.only(right: 31, left: 31),
             width: 100,
             // height: 120,
             child: Container(
-              padding: const EdgeInsets.all(13.0),
-              width: 50,
-              height: 50,
+              //padding: const EdgeInsets.all(13.0),
+              width: 35,
+              height: 35,
               decoration: BoxDecoration(
-                  color: Palette.appSecondaryColor.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(10)),
+                color: Palette.appSecondaryColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(5),
+              ),
               child: const Icon(
                 CupertinoIcons.arrow_up,
                 color: Palette.appSecondaryColor,
+                size: 14,
               ),
             ),
           ),
@@ -47,7 +57,7 @@ class PaiementNotication extends StatelessWidget {
                     text: TextSpan(
                       text: 'Paiment d\'un montant de ',
                       style: const TextStyle(
-                        //fontSize: 16.0,
+                        fontSize: 12.0,
                         color: Colors.black,
                       ),
                       children: <TextSpan>[
@@ -55,7 +65,8 @@ class PaiementNotication extends StatelessWidget {
                           text: '70000 FCFA ',
                           style: TextStyle(
                             color: Palette.appPrimaryColor,
-                            fontSize: 18,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         const TextSpan(
@@ -85,6 +96,9 @@ class PaiementNotication extends StatelessWidget {
                         fontSize: 12,
                       ),
                     ),
+                  ),
+                  const SizedBox(
+                    height: 8.0,
                   )
                 ],
               ),

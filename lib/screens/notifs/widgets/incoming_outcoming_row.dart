@@ -21,18 +21,19 @@ class IncomingOutcomingRow extends StatelessWidget {
             padding: const EdgeInsets.only(left: 5.0, right: 5.0),
             decoration: BoxDecoration(
                 color: Palette.appSecondaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10.0)),
+                borderRadius: BorderRadius.circular(5.0)),
             child: Row(
               children: [
                 Container(
-                  width: 50,
-                  height: 50,
+                  width: 30,
+                  height: 30,
                   decoration: BoxDecoration(
                       color: Palette.appSecondaryColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(4)),
                   child: const Icon(
                     CupertinoIcons.arrow_up,
                     color: Palette.appSecondaryColor,
+                    size: 12,
                   ),
                 ),
                 const SizedBox(
@@ -46,18 +47,18 @@ class IncomingOutcomingRow extends StatelessWidget {
                     Text(
                       'Paiement',
                       style: TextStyle(
-                        // fontSize: 20,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(
-                      height: 10.0,
+                      height: 4.0,
                     ),
                     FittedBox(
                       child: Text(
                         '150000 FCFA',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -79,20 +80,22 @@ class IncomingOutcomingRow extends StatelessWidget {
             ),
             padding: const EdgeInsets.only(left: 5.0, right: 5.0),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(5.0),
                 color: Palette.primaryColor.withOpacity(0.1)),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(13.0),
-                  width: 50,
-                  height: 50,
+                  //padding: const EdgeInsets.all(13.0),
+                  width: 30,
+                  height: 30,
                   decoration: BoxDecoration(
-                      color: Palette.primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10)),
+                    color: Palette.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
                   child: const Icon(
                     CupertinoIcons.arrow_down,
                     color: Palette.primaryColor,
+                    size: 12,
                   ),
                 ),
                 const SizedBox(
@@ -106,18 +109,18 @@ class IncomingOutcomingRow extends StatelessWidget {
                     Text(
                       'Reception',
                       style: TextStyle(
-                        //fontSize: 20,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 3,
                     ),
                     FittedBox(
                       child: Text(
                         '150000 FCFA',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

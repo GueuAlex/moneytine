@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moneytine/functions/functions.dart';
 
 import '../../../models/tontine.dart';
 import '../../../style/palette.dart';
@@ -26,17 +27,6 @@ class SingleTontineHeader extends StatelessWidget {
         borderRadius: BorderRadius.only(
             bottomRight: Radius.elliptical(200, 10),
             bottomLeft: Radius.elliptical(200, 10)),
-        /*  borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(15.0),
-            bottomRight: Radius.circular(15.0)), */
-        /*  gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Palette.primaryColor,
-            Palette.primaryColor.withOpacity(0.1),
-          ],
-        ), */
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,6 +46,7 @@ class SingleTontineHeader extends StatelessWidget {
             height: 10.0,
           ),
           Text(
+            //Functions.numberFormat(tontine.contribution.toString()),
             '${tontine.contribution.toString()} FCFA',
             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                 color: Palette.whiteColor,

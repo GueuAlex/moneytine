@@ -31,9 +31,6 @@ class NotificationList extends StatelessWidget {
           children: const [
             RapelNotification(),
             PaiementNotication(),
-            SizedBox(
-              height: 8.0,
-            ),
             ReceptionNotication(),
           ],
         ),

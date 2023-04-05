@@ -55,7 +55,7 @@ class TopRow extends StatelessWidget {
               children: <Widget>[
                 const CustomText(
                   text: 'Prénoms',
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.normal,
                 ),
                 NameContainer(
@@ -66,7 +66,7 @@ class TopRow extends StatelessWidget {
                 ),
                 const CustomText(
                   text: 'Nom de famille',
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.normal,
                 ),
                 NameContainer(

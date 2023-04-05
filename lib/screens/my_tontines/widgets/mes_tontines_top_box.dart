@@ -89,9 +89,12 @@ class MesTontinesTopBox extends StatelessWidget {
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                const Text(
-                                  ' tontines',
-                                  style: TextStyle(
+                                Text(
+                                  allTontineWhereCurrentUserParticipe.length <=
+                                          1
+                                      ? ' tontine'
+                                      : 'tontines',
+                                  style: const TextStyle(
                                       color: Palette.greySecondaryColor),
                                 ),
                               ],
@@ -164,9 +167,12 @@ class MesTontinesTopBox extends StatelessWidget {
                                 const SizedBox(
                                   width: 5.0,
                                 ),
-                                const Text(
-                                  'tontines',
-                                  style: TextStyle(
+                                Text(
+                                  allTontineWhereCurrentUserParticipe.length <=
+                                          1
+                                      ? ' tontine'
+                                      : 'tontines',
+                                  style: const TextStyle(
                                       color: Palette.greySecondaryColor),
                                 ),
                               ],

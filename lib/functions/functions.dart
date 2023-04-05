@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:moneytine/models/user.dart';
 
+import '../models/money_transaction.dart';
+import '../models/transation_by_date.dart';
 import '../remote_services/remote_services.dart';
 
 class Functions {
@@ -105,4 +108,32 @@ class Functions {
           );
         });
   }
+
+  static bool isAdmin({required int creatorId, required int currentUserId}) {
+    if (creatorId == currentUserId) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* static String numberFormat({ required double number}){
+    final formatter = NumberFormat('#,##0');
+  
+  formatter.symbols = SymbolSet(
+    decimalSeparator: ',',
+    groupSeparator: ' ',
+  );
+  final formattedNumber = formatter.format(number);
+  } */
+
+  /* static String numberFormat(String numberString) {
+    //final number = int.tryParse(numberString.replaceAll(RegExp(r'\D'), ''));
+    final number = int.parse(numberString);
+    if (number != null) {
+      final formatter = NumberFormat('#,###');
+      return formatter.format(number);
+    }
+    return numberString;
+  } */
 }

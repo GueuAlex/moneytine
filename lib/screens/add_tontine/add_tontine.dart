@@ -24,6 +24,7 @@ class AddTontineScreen extends StatefulWidget {
   final User user;
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddTontineScreenState createState() => _AddTontineScreenState();
 }
 
@@ -109,10 +110,12 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                 ),
                 Expanded(
                   child: CupertinoDatePicker(
+                    use24hFormat: true,
                     initialDateTime: _selectedDate1,
                     onDateTimeChanged: (DateTime newDate) {
                       setState(() {
                         _selectedDate1 = newDate;
+                        _selectedDate2 = newDate;
                         print(newDate.toString());
                       });
                     },
@@ -128,6 +131,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
       );
     } else {
       final DateTime? picked = await showDatePicker(
+        locale: const Locale('fr', 'FR'),
         context: context,
         initialDate: _selectedDate1,
         firstDate: DateTime(1900),
@@ -136,6 +140,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
       if (picked != null && picked != _selectedDate1) {
         setState(() {
           _selectedDate1 = picked;
+          _selectedDate2 = picked;
         });
       }
     }
@@ -204,6 +209,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
     } else {
       final DateTime? picked = await showDatePicker(
         context: context,
+        locale: const Locale('fr', 'FR'),
         initialDate: _selectedDate2,
         firstDate: DateTime(1900),
         lastDate: DateTime(2100),
@@ -386,7 +392,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
       appBar: AppBar(
         centerTitle: Platform.isIOS ? true : false,
         backgroundColor: Palette.secondaryColor,
-        title: Text(widget.tontineName),
+        title: const Text('Nouvelle tontine'),
       ),
       body: SafeArea(
         child: _mainBody(
@@ -435,13 +441,17 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                 children: [
                   const CustomText(
                     text: 'Nom',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
+                    color: Palette.greyColor,
                   ),
                   Container(
                     width: double.infinity,
                     height: 50,
-                    margin: const EdgeInsets.only(top: 5.0),
+                    margin: const EdgeInsets.only(
+                      top: 5.0,
+                      bottom: 8.0,
+                    ),
                     padding: const EdgeInsets.only(right: 8.0, left: 10.0),
                     decoration: BoxDecoration(
                         color: Palette.appPrimaryColor.withOpacity(0.3),
@@ -459,8 +469,9 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                 children: [
                   const CustomText(
                     text: 'Type',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
+                    color: Palette.greyColor,
                   ),
                   Container(
                     width: double.infinity,
@@ -484,8 +495,9 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                       children: [
                         const CustomText(
                           text: 'Nombre',
-                          fontSize: 16,
+                          fontSize: 13,
                           fontWeight: FontWeight.w600,
+                          color: Palette.greyColor,
                         ),
                         Container(
                           width: double.infinity,
@@ -514,8 +526,9 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                       children: [
                         const CustomText(
                           text: 'Débute le',
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
+                          color: Palette.greyColor,
                         ),
                         InkWell(
                           onTap: () {
@@ -565,9 +578,10 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const CustomText(
-                          text: 'Date limite prémier paiement',
-                          fontSize: 16,
+                          text: 'Date limite premier paiement',
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
+                          color: Palette.greyColor,
                         ),
                         InkWell(
                           onTap: () => _dateSelector2(context),
@@ -593,7 +607,8 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                                     : const Text(
                                         'Date limite',
                                         style: TextStyle(
-                                            color: Palette.secondaryColor),
+                                          color: Palette.secondaryColor,
+                                        ),
                                       ),
                                 const Icon(
                                   Icons.arrow_drop_down,
@@ -617,8 +632,9 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                 children: [
                   const CustomText(
                     text: 'Montant de cotisation',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
+                    color: Palette.greyColor,
                   ),
                   Container(
                     width: double.infinity,
@@ -650,7 +666,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                 onPress: () {
                   if (_formKey.currentState!.validate()) {
                     Functions.showLoadingSheet(ctxt: context);
-                    print('type : ${_selectedType}');
+                    print('type : $_selectedType');
                     print('nombre type : ${_numberOfController.text}');
                     print(
                         'Date debut : ${DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDate1)}');

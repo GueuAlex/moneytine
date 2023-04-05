@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/remote_services/remote_services.dart';
 
+import '../../../models/single_group_data.dart';
 import '../../../models/tontine.dart';
 import '../../../models/user.dart';
 import '../../../style/palette.dart';
@@ -7,17 +11,26 @@ import '../../../widgets/custom_button.dart';
 import 'group_user_contribution.dart';
 import 'register_user_versement.dart';
 
-class MemberInfosContainer extends StatelessWidget {
+class MemberInfosContainer extends StatefulWidget {
   const MemberInfosContainer({
     super.key,
     required this.groupe,
     required this.tontine,
     required this.user,
+    required this.data,
+    required this.currentUser,
   });
   final Tontine tontine;
   final Groupe groupe;
   final User user;
+  final SingleGroupData data;
+  final User currentUser;
 
+  @override
+  State<MemberInfosContainer> createState() => _MemberInfosContainerState();
+}
+
+class _MemberInfosContainerState extends State<MemberInfosContainer> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -38,7 +51,7 @@ class MemberInfosContainer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: Text(
-              user.fullName,
+              widget.user.fullName,
               style: const TextStyle(
                 fontSize: 20,
               ),
@@ -46,12 +59,14 @@ class MemberInfosContainer extends StatelessWidget {
           ),
           rowInfos(
             text1: 'Part de contribution :',
-            text2: '70000 FCFA',
+            text2:
+                '${widget.data.part} => ${widget.data.part * widget.tontine.contribution}',
             // onTap: () {},
           ),
           rowInfos(
             text1: 'Gain après retrait:',
-            text2: '${(70000 * groupe.membrsId.length)} FCFA',
+            text2:
+                '${(widget.tontine.contribution * double.parse(widget.tontine.numberOfType.toString()) * widget.data.part)} FCFA',
             //onTap: () {},
           ),
           rowInfos(
@@ -66,7 +81,11 @@ class MemberInfosContainer extends StatelessWidget {
             onTap: () {
               // print('contribution historique ');
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return GroupUserContribution(groupe: groupe, tontine: tontine);
+                return GroupUserContribution(
+                  groupe: widget.groupe,
+                  tontine: widget.tontine,
+                  user: widget.user,
+                );
               }));
             },
           ),
@@ -77,8 +96,32 @@ class MemberInfosContainer extends StatelessWidget {
                 width: double.infinity,
                 height: 45,
                 radius: 50,
+                isSetting: true,
+                fontsize: 14,
                 text: 'Faire un retrait',
-                onPress: () {}),
+                onPress: () {
+                  if (widget.currentUser.id == widget.tontine.creatorId) {
+                    // todo something///////////////////////////
+                    if (widget.tontine.isActive == 1) {
+                      //////////////// on peut faire retrait///////////////////
+                      ///
+
+                      ///
+                      /////////////////////////////////////////////////////////
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: 'Veuillez réactivée la tontine !',
+                        backgroundColor: Palette.appPrimaryColor,
+                      );
+                    }
+                    //////////////////
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: 'Action non autorisée !',
+                      backgroundColor: Palette.appPrimaryColor,
+                    );
+                  }
+                }),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
@@ -86,26 +129,69 @@ class MemberInfosContainer extends StatelessWidget {
               color: Palette.appSecondaryColor,
               width: double.infinity,
               height: 45,
+              isSetting: true,
+              fontsize: 14,
               radius: 50,
               text: 'Enregistrer un versement',
               onPress: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return RegisterUserVersement(
-                      groupe: groupe, tontine: tontine);
-                }));
+                if (widget.currentUser.id == widget.tontine.creatorId) {
+                  if (widget.tontine.isActive == 1) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return RegisterUserVersement(
+                            groupe: widget.groupe,
+                            tontine: widget.tontine,
+                            user: widget.user,
+                          );
+                        },
+                      ),
+                    );
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: 'Veuillez réactivée la tontine !',
+                      backgroundColor: Palette.appPrimaryColor,
+                    );
+                  }
+                } else {
+                  Fluttertoast.showToast(
+                    msg: 'Action non autorisée !',
+                    backgroundColor: Palette.appPrimaryColor,
+                  );
+                }
               },
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
             child: CustomButton(
-                color: Palette.greyColor,
-                width: double.infinity,
-                height: 45,
-                radius: 50,
-                text: 'Retirer ce membre',
-                onPress: () {}),
+              color: Palette.greyColor,
+              width: double.infinity,
+              height: 45,
+              radius: 50,
+              isSetting: true,
+              fontsize: 14,
+              text: 'Retirer ce membre',
+              onPress: () {
+                if (widget.currentUser.id == widget.tontine.creatorId) {
+                  // do something /////////////////////////
+                  if (widget.tontine.isActive == 1) {
+                    removeUser();
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: 'Veuillez reactivée la tontine !',
+                      backgroundColor: Palette.appPrimaryColor,
+                    );
+                  }
+                  /////////////////////////////////////////
+                } else {
+                  Fluttertoast.showToast(
+                    msg: 'Action non autorisée !',
+                    backgroundColor: Palette.appPrimaryColor,
+                  );
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -151,5 +237,36 @@ class MemberInfosContainer extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void removeUser() async {
+    Functions.showLoadingSheet(ctxt: context);
+    int response = await RemoteServices().deleteUserToGroup(
+      groupId: widget.groupe.id,
+      userId: widget.user.id!,
+    );
+    if (response == 200 || response == 201) {
+      setState(() {
+        widget.groupe.membrsId
+            .removeWhere((element) => element == widget.user.id);
+      });
+      Future.delayed(const Duration(seconds: 3)).then((value) {
+        Navigator.pop(context);
+        Fluttertoast.showToast(
+          msg: 'Membre retiré !',
+          backgroundColor: Palette.appPrimaryColor,
+        );
+        Navigator.pop(context);
+      });
+    } else {
+      Future.delayed(const Duration(seconds: 3)).then((value) {
+        Navigator.pop(context);
+        Fluttertoast.showToast(
+          msg: 'Ce membre ne peut-être retiré !',
+          backgroundColor: Palette.appPrimaryColor,
+        );
+        Navigator.pop(context);
+      });
+    }
   }
 }

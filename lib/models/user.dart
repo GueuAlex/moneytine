@@ -8,6 +8,14 @@ User userFromJson(String str) => User.fromJson(json.decode(str));
 
 String userToJson(User data) => json.encode(data.toJson());
 
+///////////////////// user list ///////////////////////////////////////////
+///
+List<User> userListFromJson(String str) =>
+    List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
+
+String userListToJson(List<User> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 class User {
   User({
     this.id,

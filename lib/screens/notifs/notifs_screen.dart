@@ -4,9 +4,14 @@ import 'package:moneytine/style/palette.dart';
 import 'widgets/filter_box.dart';
 import 'widgets/notifications_list.dart';
 
-class NotifsScreen extends StatelessWidget {
+class NotifsScreen extends StatefulWidget {
   const NotifsScreen({super.key});
 
+  @override
+  State<NotifsScreen> createState() => _NotifsScreenState();
+}
+
+class _NotifsScreenState extends State<NotifsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +36,11 @@ class NotifsScreen extends StatelessWidget {
               ),
               const Positioned(
                 child: Padding(
-                  padding: EdgeInsets.only(right: 15, left: 15, top: 10),
+                  padding: EdgeInsets.only(
+                    right: 25,
+                    left: 25,
+                    top: 25,
+                  ),
                   child: FilterBox(),
                 ),
               ),
@@ -40,7 +49,7 @@ class NotifsScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: List.generate(
-                      2,
+                      3,
                       (index) => const NotificationList(),
                     ),
                   ),

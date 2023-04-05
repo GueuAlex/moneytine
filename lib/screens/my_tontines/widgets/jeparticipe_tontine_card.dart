@@ -172,7 +172,8 @@ class _JeParticipeTontineCardState extends State<JeParticipeTontineCard> {
               highlightColor: Colors.grey.shade300,
               child: ShimmerChild(
                 widget: widget,
-              )),
+              ),
+            ),
     );
   }
 }
