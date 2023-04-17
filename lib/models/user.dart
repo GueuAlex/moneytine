@@ -4,26 +4,27 @@
 
 import 'dart:convert';
 
-User userFromJson(String str) => User.fromJson(json.decode(str));
+MyUser userFromJson(String str) => MyUser.fromJson(json.decode(str));
 
-String userToJson(User data) => json.encode(data.toJson());
+String userToJson(MyUser data) => json.encode(data.toJson());
 
 ///////////////////// user list ///////////////////////////////////////////
 ///
-List<User> userListFromJson(String str) =>
-    List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
+List<MyUser> userListFromJson(String str) =>
+    List<MyUser>.from(json.decode(str).map((x) => MyUser.fromJson(x)));
 
-String userListToJson(List<User> data) =>
+String userListToJson(List<MyUser> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class User {
-  User({
+class MyUser {
+  MyUser({
     this.id,
     required this.fullName,
     required this.email,
     this.password,
     this.gender,
     this.birthDate,
+    this.uid,
   });
 
   int? id;
@@ -32,8 +33,9 @@ class User {
   String? password;
   String? gender;
   DateTime? birthDate;
+  String? uid;
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory MyUser.fromJson(Map<String, dynamic> json) => MyUser(
         id: json["id"],
         fullName: json["name"],
         email: json["email"],
@@ -49,15 +51,16 @@ class User {
         "password": password,
         "gender": gender,
         "birthDate": birthDate?.toIso8601String(),
+        "uid": uid,
       };
 }
 
-List<User> creatorList = [];
+List<MyUser> creatorList = [];
 
-List<User> groupMembres = [
-  User(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
-  User(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
-  User(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
-  User(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
-  User(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+List<MyUser> groupMembres = [
+  MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+  MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+  MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+  MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+  MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
 ];

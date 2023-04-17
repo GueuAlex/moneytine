@@ -3,6 +3,8 @@ import 'package:moneytine/models/tontine.dart';
 import 'package:moneytine/models/user.dart';
 import 'package:moneytine/style/palette.dart';
 
+import 'widgets/group_header.dart';
+import 'widgets/group_top_box.dart';
 import 'widgets/single_tontine_groupe_container.dart';
 
 class GroupsScreen extends StatelessWidget {
@@ -12,7 +14,7 @@ class GroupsScreen extends StatelessWidget {
     required this.user,
   });
   final Tontine tontine;
-  final User user;
+  final MyUser user;
 
   @override
   Widget build(BuildContext context) {
@@ -48,59 +50,6 @@ class GroupsScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class GroupHeader extends StatelessWidget {
-  const GroupHeader({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 100,
-      decoration: const BoxDecoration(
-        color: Palette.secondaryColor,
-        borderRadius: BorderRadius.only(
-          bottomRight: Radius.elliptical(200, 10),
-          bottomLeft: Radius.elliptical(200, 10),
-        ),
-      ),
-    );
-  }
-}
-
-class GroupTopBox extends StatelessWidget {
-  const GroupTopBox({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 100,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.0),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 1), // déplace l'ombre vers le bas
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, -1), // déplace l'ombre vers le haut
-          )
-        ],
-        color: Palette.whiteColor,
-        borderRadius: BorderRadius.circular(10),
       ),
     );
   }

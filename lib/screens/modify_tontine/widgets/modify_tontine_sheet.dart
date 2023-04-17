@@ -34,7 +34,7 @@ class ModifyTontineSheetContent extends StatefulWidget {
   final double amount;
   final int uniqueCode;
   final int tontineID;
-  final User user;
+  final MyUser user;
   final Tontine tontine;
 
   @override

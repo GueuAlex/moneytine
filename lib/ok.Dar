@@ -6,3 +6,55 @@ void main() {
   var result = formatter.format(number);
   print(result); // affiche "1,000,000"
 }
+
+
+
+ SingleChildScrollView(
+              child: SizedBox(
+                width: double.infinity,
+                /////////////// decommnter apres cela permet de verifier si le groupe selectionner compte des membres
+                ///
+                child: selectedGroupe.membrsId.isNotEmpty
+                    ? Column(
+                        children: List.generate(
+                          ///////////:: bientot selectedGroupe.membersId.length /////////
+                          ///
+                          selectedGroupe.membrsId.length,
+                          (index) => selectedGroupData.isEmpty
+                              ? Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade200,
+                                  highlightColor: Colors.grey.shade300,
+                                  child: const GroupMemberShimmer(),
+                                )
+                              : GroupMembList(
+                                  groupe: selectedGroupe,
+                                  data: selectedGroupData[index],
+                                  tontine: widget.tontine,
+                                  currentUser: widget.user,
+                                ),
+                        ),
+                      )
+
+                    /////////////////////// decommanter apres ////////////////
+                    ///
+                    : Column(
+                        children: [
+                          const SizedBox(
+                            height: 30.0,
+                          ),
+                          const Text('Veuillez ajouter des membres à groupe'),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          GenerateGroupeButton(
+                            text: 'Ajouter',
+                            color: Palette.appPrimaryColor,
+                            icon: CupertinoIcons.person_add,
+                            onTap: () {
+                              addMemberToGroupe();
+                            },
+                          )
+                        ],
+                      ),
+              ),
+            )

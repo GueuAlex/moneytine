@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,6 +11,7 @@ import 'package:moneytine/screens/auth/singin.dart';
 import 'package:moneytine/screens/home_page/home_page.dart';
 import 'package:moneytine/style/palette.dart';
 
+import '../../config/firebase_const.dart';
 import '../../widgets/logo_container.dart';
 import 'widgets/login_text_field.dart';
 
@@ -28,6 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   /////////////////form key ////////////////////////////
   final _formKey = GlobalKey<FormState>();
+
+  final _auth = FirebaseAuth.instance;
 
   ///////////////////// bools //////////////////////////
   ///
@@ -81,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     email: emailController.text,
                     password: passwordController.text) !=
                 null) {
-              User logUser = await Functions.postLoginDetails(
+              MyUser logUser = await Functions.postLoginDetails(
                   email: emailController.text,
                   password: passwordController.text);
 
@@ -92,10 +96,24 @@ class _LoginScreenState extends State<LoginScreen> {
               int id = await Prefs().id;
               print(' prefs id : $id');
               //////////////////////////////////////////////////////////////
-              Future.delayed(const Duration(seconds: 4)).then((value) {
+              Future.delayed(const Duration(seconds: 4)).then((value) async {
                 setState(() {
                   isLoading = false;
                 });
+                /////////////////////////// authentification vers firestore////
+                ///
+                await _auth
+                    .signInWithEmailAndPassword(
+                      email: emailController.text,
+                      password: FirebaseConst.authPwd,
+                    )
+                    .then((uid) => {})
+                    .catchError((e) async {
+                  Fluttertoast.showToast(msg: await e!.message);
+                });
+
+                ///
+                ///////////////////////////////////////////////////////////////
                 Fluttertoast.showToast(
                     msg: 'Connecté !',
                     backgroundColor: Palette.appPrimaryColor);

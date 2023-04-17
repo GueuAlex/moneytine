@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytine/config/prefs.dart';
 import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/models/tontine.dart';
 import 'package:moneytine/models/user.dart';
 import 'package:moneytine/screens/auth/login.dart';
 import 'package:moneytine/style/palette.dart';
@@ -15,7 +17,7 @@ import 'widgets/top_row.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, required this.user});
-  final User user;
+  final MyUser user;
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -256,7 +258,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Functions.showLoadingSheet(ctxt: context);
                   //////////// if (await _sigout()) { commenter //////////////
                   if (await _sigout()) {
-                    Future.delayed(const Duration(seconds: 3)).then((value) {
+                    Future.delayed(const Duration(seconds: 3))
+                        .then((value) async {
+                      //await FirebaseAuth.instance.signOut();
+                      currentUSerTontineList.clear();
+                      allTontineWhereCurrentUserParticipe.clear();
                       Navigator.pop(context);
                       Fluttertoast.showToast(
                         msg: 'À bientôt',

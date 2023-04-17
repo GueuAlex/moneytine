@@ -24,7 +24,7 @@ class _JeParticipeTontineCardState extends State<JeParticipeTontineCard> {
   /////////////////////////: tontine creator ////////////////////
   ///
   ///
-  User? user;
+  MyUser? user;
 
   ///////////////////////////////////
   ///

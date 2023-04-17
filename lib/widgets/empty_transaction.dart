@@ -7,11 +7,19 @@ class EmptyTransactios extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return /* Column(
       children: [
         Image.asset('assets/images/empty.png'),
         const Text('Aucune trnasaction pour le moment'),
       ],
+    ) */
+
+        Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height / 3,
+      child: Center(
+        child: Text('Aucune trnasaction pour le moment'),
+      ),
     );
   }
 }

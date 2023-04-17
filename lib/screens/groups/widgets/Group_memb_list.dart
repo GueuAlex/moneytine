@@ -22,14 +22,14 @@ class GroupMembList extends StatefulWidget {
   //final User user;
   final Tontine tontine;
   final SingleGroupData data;
-  final User currentUser;
+  final MyUser currentUser;
 
   @override
   State<GroupMembList> createState() => _GroupMembListState();
 }
 
 class _GroupMembListState extends State<GroupMembList> {
-  User user = User(fullName: '', email: '');
+  MyUser user = MyUser(fullName: '', email: '');
   @override
   void initState() {
     getUser();
@@ -38,11 +38,13 @@ class _GroupMembListState extends State<GroupMembList> {
   }
 
   getUser() async {
-    User? apiUser = await RemoteServices().getSingleUser(id: widget.data.id);
+    MyUser? apiUser = await RemoteServices().getSingleUser(id: widget.data.id);
     if (apiUser != null) {
-      setState(() {
-        user = apiUser;
-      });
+      setState(
+        () {
+          user = apiUser;
+        },
+      );
     }
   }
 
@@ -90,47 +92,48 @@ class _GroupMembListState extends State<GroupMembList> {
 
   memberInfos({
     required BuildContext context,
-    required User user,
+    required MyUser user,
     required Tontine tontine,
     required Groupe groupe,
     required SingleGroupData data,
-    required User currentUser,
+    required MyUser currentUser,
   }) {
     return showBottomSheet(
-        backgroundColor: Colors.transparent,
-        elevation: 5,
-        context: context,
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.only(
-              right: 10.0,
-              left: 10.0,
-            ),
-            width: double.infinity,
-            height: 380,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-              color: Palette.whiteColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0),
+      backgroundColor: Colors.transparent,
+      elevation: 5,
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.only(
+            right: 10.0,
+            left: 10.0,
+          ),
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
               ),
+            ],
+            color: Palette.whiteColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(20.0),
             ),
-            child: MemberInfosContainer(
-              tontine: tontine,
-              groupe: groupe,
-              user: user,
-              data: data,
-              currentUser: currentUser,
-            ),
-          );
-        });
+          ),
+          child: MemberInfosContainer(
+            tontine: tontine,
+            groupe: groupe,
+            user: user,
+            data: data,
+            currentUser: currentUser,
+          ),
+        );
+      },
+    );
   }
 }

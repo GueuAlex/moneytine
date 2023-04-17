@@ -9,74 +9,72 @@ class CheickContainer extends StatelessWidget {
     required this.text1,
     required this.text2,
     required this.numberOf,
+    required this.paddingLeft,
+    required this.paddingRigth,
   });
 
   final String text1;
   final String text2;
   final String numberOf;
+  final double paddingLeft;
+  final double paddingRigth;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //color: Colors.blue,
-      padding: const EdgeInsets.all(8.0),
-      decoration: const BoxDecoration(
-          /*  border: Border(
-          right: BorderSide(width: 1, color: Colors.grey),
-        ), */
-          ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    numberOf,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  numberOf,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
-                  Text(
-                    text2,
-                    style: TextStyle(
-                        color: Colors.black.withOpacity(0.6), fontSize: 17),
-                  ),
-                ],
-              ),
-              Text(
-                '      $text1',
-                // textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black.withOpacity(0.6),
                 ),
+                Text(
+                  text2,
+                  style: TextStyle(
+                    color: Colors.black.withOpacity(0.6),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              '      $text1',
+              // textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black.withOpacity(0.6),
+                fontSize: 12,
               ),
-              const SizedBox(
-                height: 8.0,
-              ),
-            ],
+            ),
+            const SizedBox(
+              height: 8.0,
+            ),
+          ],
+        ),
+        Container(
+          height: 28,
+          width: 28,
+          decoration: const BoxDecoration(
+            color: Palette.secondaryColor,
+            shape: BoxShape.circle,
           ),
-          Container(
-            height: 28,
-            width: 28,
-            decoration: const BoxDecoration(
-              color: Palette.secondaryColor,
-              shape: BoxShape.circle,
+          child: const Center(
+            child: Icon(
+              CupertinoIcons.right_chevron,
+              color: Colors.white,
+              size: 17,
             ),
-            child: const Center(
-              child: Icon(
-                CupertinoIcons.right_chevron,
-                color: Colors.white,
-                size: 17,
-              ),
-            ),
-          )
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 }

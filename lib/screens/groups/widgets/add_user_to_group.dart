@@ -11,6 +11,7 @@ import 'package:moneytine/widgets/custom_button.dart';
 import '../../../models/user.dart';
 import '../../../style/palette.dart';
 import '../../../widgets/custom_text.dart';
+import 'createMemberContainer.dart';
 
 class AddUserScreen extends StatefulWidget {
   const AddUserScreen({
@@ -67,10 +68,12 @@ class _AddUserScreenState extends State<AddUserScreen> {
   }
 
   getTontineMemberList() async {
-    List<User> apiUserList =
+    //print('okkkkkkkkkkkkkkkkkkkkkkkkkkkk');
+    List<MyUser> apiUserList =
         await RemoteServices().getTontineUserList(id: widget.tontine.id);
     if (apiUserList.isNotEmpty) {
-      for (User element in apiUserList) {
+      _userList.clear();
+      for (MyUser element in apiUserList) {
         _userList.add(
           SelectedListItem(
             name: element.fullName,
@@ -184,8 +187,35 @@ class _AddUserScreenState extends State<AddUserScreen> {
         backgroundColor: Palette.secondaryColor,
         elevation: 0,
         title: Text(
-          'Ajout d\'un membre au ${widget.groupe.nom}',
+          'Ajout d\'un membre',
         ),
+        actions: [
+          InkWell(
+            borderRadius: BorderRadius.circular(50),
+            onTap: () {
+              _showBottomSheet(
+                ctxt: context,
+                groupe: widget.groupe,
+                tontine: widget.tontine,
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.all(8),
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Palette.blackColor.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Icon(
+                  CupertinoIcons.person_add_solid,
+                  color: Palette.whiteColor,
+                ),
+              ),
+            ),
+          )
+        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -201,7 +231,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
               children: <Widget>[
                 const CustomText(
                   text: 'Part restant',
-                  fontSize: 16,
+                  fontSize: 12,
+                  color: Palette.greyColor,
                   fontWeight: FontWeight.w700,
                 ),
                 Container(
@@ -211,7 +242,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     bottom: 10.0,
                   ),
                   width: double.infinity,
-                  height: 55,
+                  height: 45,
                   decoration: BoxDecoration(
                     color: Palette.greyColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(
@@ -228,15 +259,16 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 ),
                 const CustomText(
                   text: 'Membre',
-                  fontSize: 16,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
+                  color: Palette.greyColor,
                 ),
                 Container(
                   margin: const EdgeInsets.only(
                     top: 10.0,
                   ),
                   width: double.infinity,
-                  height: 55,
+                  height: 45,
                   decoration: BoxDecoration(
                       color: Palette.appPrimaryColor.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(
@@ -251,15 +283,16 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 ),
                 const CustomText(
                   text: 'Selectionner une part',
-                  fontSize: 16,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
+                  color: Palette.greyColor,
                 ),
                 Container(
                   margin: const EdgeInsets.only(
                     top: 10.0,
                   ),
                   width: double.infinity,
-                  height: 55,
+                  height: 45,
                   decoration: BoxDecoration(
                     color: Palette.appPrimaryColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(
@@ -279,8 +312,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   child: CustomButton(
                     color: Palette.appPrimaryColor,
                     width: double.infinity,
-                    height: 45,
+                    height: 40,
                     radius: 50,
+                    isSetting: true,
+                    fontsize: 12,
                     text: 'Ajouter',
                     onPress: () async {
                       if (_formKey.currentState!.validate()) {
@@ -410,5 +445,47 @@ class _AddUserScreenState extends State<AddUserScreen> {
   void showSnackBar(String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  _showBottomSheet({
+    required BuildContext ctxt,
+    required Tontine tontine,
+    required Groupe groupe,
+  }) {
+    return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      elevation: 5,
+      context: ctxt,
+      builder: (ctxt) => Container(
+        padding: const EdgeInsets.only(
+          right: 10.0,
+          left: 10.0,
+        ),
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height / 2.6,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+          color: Palette.whiteColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+        ),
+        child: CreateMemberContainer(
+          tontine: tontine,
+          groupe: groupe,
+          callback: () {
+            getTontineMemberList();
+          },
+        ),
+      ),
+    );
   }
 }

@@ -12,7 +12,7 @@ class TransactionsOfThisTontine extends StatelessWidget {
     required this.menbers,
   });
   final List<TransactionsByDate> transactionsByDate;
-  final List<User> menbers;
+  final List<MyUser> menbers;
 
   @override
   Widget build(BuildContext context) {

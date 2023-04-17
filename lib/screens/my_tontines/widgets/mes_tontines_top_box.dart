@@ -67,63 +67,78 @@ class MesTontinesTopBox extends StatelessWidget {
                     );
                   }
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, top: 10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Vous participez à ',
-                            style: TextStyle(color: Palette.greySecondaryColor),
-                          ),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text(
-                                  allTontineWhereCurrentUserParticipe.length
-                                      .toString(),
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  allTontineWhereCurrentUserParticipe.length <=
-                                          1
-                                      ? ' tontine'
-                                      : 'tontines',
-                                  style: const TextStyle(
-                                      color: Palette.greySecondaryColor),
-                                ),
-                              ],
+                child: Container(
+                  padding: const EdgeInsets.only(
+                    right: 8.0,
+                    left: 8.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Palette.greyColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Vous participez à ',
+                              style:
+                                  TextStyle(color: Palette.greySecondaryColor),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 30,
-                      height: 30,
-                      decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Palette.secondaryColor),
-                      child: const Center(
-                        child: Icon(
-                          CupertinoIcons.chevron_right,
-                          color: Colors.white,
-                          size: 16,
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    allTontineWhereCurrentUserParticipe.length
+                                        .toString(),
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    allTontineWhereCurrentUserParticipe
+                                                .length <=
+                                            1
+                                        ? ' tontine'
+                                        : 'tontines',
+                                    style: const TextStyle(
+                                        color: Palette.greySecondaryColor),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                    )
-                  ],
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Palette.secondaryColor),
+                        child: const Center(
+                          child: Icon(
+                            CupertinoIcons.chevron_right,
+                            color: Colors.white,
+                            size: 16,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-            Divider(
+            /* Divider(
               color: Palette.greyColor.withOpacity(0.5),
               thickness: 1.5,
+            ), */
+            const SizedBox(
+              height: 4.0,
             ),
             Expanded(
               child: InkWell(
@@ -143,59 +158,71 @@ class MesTontinesTopBox extends StatelessWidget {
                     );
                   }
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, top: 10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Vous organisez ',
-                            style: TextStyle(color: Palette.greySecondaryColor),
-                          ),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text(
-                                  currentUSerTontineList.length.toString(),
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  allTontineWhereCurrentUserParticipe.length <=
-                                          1
-                                      ? ' tontine'
-                                      : 'tontines',
-                                  style: const TextStyle(
-                                      color: Palette.greySecondaryColor),
-                                ),
-                              ],
+                child: Container(
+                  padding: const EdgeInsets.only(
+                    right: 8.0,
+                    left: 8.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Palette.greyColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Vous organisez ',
+                              style:
+                                  TextStyle(color: Palette.greySecondaryColor),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 30,
-                      height: 30,
-                      decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Palette.secondaryColor),
-                      child: const Center(
-                        child: Icon(
-                          CupertinoIcons.chevron_right,
-                          color: Colors.white,
-                          size: 16,
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    currentUSerTontineList.length.toString(),
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(
+                                    allTontineWhereCurrentUserParticipe
+                                                .length <=
+                                            1
+                                        ? ' tontine'
+                                        : 'tontines',
+                                    style: const TextStyle(
+                                        color: Palette.greySecondaryColor),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                    )
-                  ],
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Palette.secondaryColor),
+                        child: const Center(
+                          child: Icon(
+                            CupertinoIcons.chevron_right,
+                            color: Colors.white,
+                            size: 16,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             )

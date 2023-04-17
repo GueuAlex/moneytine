@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,6 +13,7 @@ import 'package:moneytine/screens/all_transactions_history/all_transations_histo
 import '../../models/money_transaction.dart';
 import '../../models/transation_by_date.dart';
 import '../../style/palette.dart';
+import '../../widgets/loading_container.dart';
 import '../../widgets/transactions_widget.dart';
 import 'widgets/create_tontine_sheet_content.dart';
 import '../../widgets/empty_transaction.dart';
@@ -20,7 +23,7 @@ import 'widgets/mes_tontines_top_box.dart';
 class MesTontinesScreen extends StatefulWidget {
   const MesTontinesScreen({super.key, required this.user});
 
-  final User user;
+  final MyUser user;
 
   @override
   State<MesTontinesScreen> createState() => _MesTontinesScreenState();
@@ -35,6 +38,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
   /////////////////////////////////// bool show elements //////////////
   ///
   bool isHiden = false;
+  bool isVisible = false;
   ////////////////////////
   ///
   ///////////// its work but i need to try som thing //////////////////
@@ -44,6 +48,9 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
   ///
   ///
   ////////////////////////////// all transaction and filter by user id ::///////
+  ///
+  Timer? _timer;
+  //////////////////////////
   ///
   final List<MoneyTransaction> _allTransactions = [];
   List<TransactionsByDate> _trasansactionsByDate = [];
@@ -102,20 +109,30 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
         });
       }
     });
-    getOwnTontineList();
+    getUserOwnTontineList();
+    //getOwnTontineList();
     getAllTontineListWhereCurrentUserParticiped();
     getAllTransactions();
     super.initState();
+    _timer = Timer.periodic(Duration(seconds: 30), (timer) {
+      getAllTransactions();
+    });
+    Future.delayed(const Duration(seconds: 5)).then((_) {
+      setState(() {
+        isVisible = true;
+      });
+    });
   }
 
   @override
   void dispose() {
     _scrolleController.dispose();
+    _timer!.cancel();
     super.dispose();
   }
 
   ////////////////// tontine list from api //////////////////
-  void getOwnTontineList() async {
+/*   void getOwnTontineList() async {
     List<Tontine?> tontineList1 = await RemoteServices()
         .getCurrentUserTontineList(id: int.parse(widget.user.id.toString()));
     if (tontineList1.isNotEmpty) {
@@ -127,9 +144,50 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
         });
       }
     }
+  } */
+
+  StreamController<List<Tontine>> _userOwntontineListController =
+      StreamController<List<Tontine>>.broadcast();
+
+  void getUserOwnTontineList() async {
+    List<Tontine?> tontineList1 = await RemoteServices()
+        .getCurrentUserTontineList(id: int.parse(widget.user.id.toString()));
+    if (tontineList1.isNotEmpty) {
+      //currentUSerTontineList.clear();
+      for (var element in tontineList1) {
+        setState(() {
+          // tontineList.add(element!);
+          setState(() {
+            currentUSerTontineList.add(element!);
+          });
+        });
+      }
+    }
+    _userOwntontineListController.add(currentUSerTontineList);
+
+    // ecouter la mise a jour du flux
+    Stream.periodic(Duration(seconds: 30)).asyncMap((_) async {
+      List<Tontine?> updateResponse = await RemoteServices()
+          .getCurrentUserTontineList(id: int.parse(widget.user.id.toString()));
+
+      List<Tontine> ownTontineListUpdated = [];
+      if (updateResponse.isNotEmpty) {
+        //currentUSerTontineList.clear();
+        for (var element in updateResponse) {
+          ownTontineListUpdated.add(element!);
+        }
+      }
+      return ownTontineListUpdated;
+    }).listen((updatedTontinee) {
+      setState(() {
+        currentUSerTontineList = updatedTontinee;
+      });
+      _userOwntontineListController.add(currentUSerTontineList);
+    });
   }
 
   ////////////////// tontine list from api //////////////////
+  /*  List<Tontine> allTontineWhereCurrentUserParticipe = [];
   void getAllTontineListWhereCurrentUserParticiped() async {
     List<Tontine?> tontineList1 = await RemoteServices().getAllTontineList();
     if (tontineList1.isNotEmpty) {
@@ -145,18 +203,73 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
       }
       print('je participe à : $allTontineWhereCurrentUserParticipe');
     }
+  } */
+
+  StreamController<List<Tontine>> _tontineListController =
+      StreamController<List<Tontine>>.broadcast();
+
+  void getAllTontineListWhereCurrentUserParticiped() async {
+    List<Tontine?> tontineList1 = await RemoteServices().getAllTontineList();
+    //List<Tontine> allTontineWhereCurrentUserParticipe = [];
+
+    if (tontineList1.isNotEmpty) {
+      //allTontineWhereCurrentUserParticipe.clear();
+      for (var element in tontineList1) {
+        if (element?.creatorId != widget.user.id &&
+            element!.membersId.contains(widget.user.id)) {
+          setState(() {
+            allTontineWhereCurrentUserParticipe.add(element);
+          });
+        }
+      }
+      print('je participe à : $allTontineWhereCurrentUserParticipe');
+    }
+
+    _tontineListController.add(allTontineWhereCurrentUserParticipe);
+
+    // Écouter les mises à jour du flux
+    Stream.periodic(Duration(seconds: 30)).asyncMap((_) async {
+      List<Tontine?> updatedTontineList =
+          await RemoteServices().getAllTontineList();
+      List<Tontine> updatedAllTontineWhereCurrentUserParticipe = [];
+
+      if (updatedTontineList.isNotEmpty) {
+        //allTontineWhereCurrentUserParticipe.clear();
+        for (var element in updatedTontineList) {
+          if (element?.creatorId != widget.user.id &&
+              element!.membersId.contains(widget.user.id)) {
+            updatedAllTontineWhereCurrentUserParticipe.add(element);
+          }
+        }
+        print(
+            'je participe à (updated): $updatedAllTontineWhereCurrentUserParticipe');
+      }
+
+      return updatedAllTontineWhereCurrentUserParticipe;
+    }).listen((updatedList) {
+      if (updatedList.isNotEmpty) {
+        setState(() {
+          allTontineWhereCurrentUserParticipe = updatedList;
+        });
+        _tontineListController.add(allTontineWhereCurrentUserParticipe);
+      }
+    });
   }
+
+  Stream<List<Tontine>> get allTontineWhereCurrentUserParticipedStream =>
+      _tontineListController.stream;
 
   ///////////////////////////////////
   void _showBottomSheet(BuildContext context, bool isCreateTontine) {
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (context) {
-          return CreatetontineSheetContent(
-            user: widget.user,
-          );
-        });
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return CreatetontineSheetContent(
+          user: widget.user,
+        );
+      },
+    );
   }
 
   @override
@@ -350,24 +463,27 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                                     )
                                   : Container(),
                             ),
-                            _trasansactionsByDate.isNotEmpty
-                                ? Padding(
-                                    padding: const EdgeInsets.only(right: 0.0),
-                                    child: Column(
-                                      children: List.generate(
-                                        _trasansactionsByDate.length,
-                                        ////////// decommenter plutard pour voir tout les transaction du user connecter /////////////
-                                        ///
-                                        (index) => TransactionsWidget(
-                                          // user: widget.user,
-                                          trasansactionsByDate:
-                                              _trasansactionsByDate[index],
+                            isVisible
+                                ? _trasansactionsByDate.isNotEmpty
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 0.0),
+                                        child: Column(
+                                          children: List.generate(
+                                            _trasansactionsByDate.length,
+                                            ////////// decommenter plutard pour voir tout les transaction du user connecter /////////////
+                                            ///
+                                            (index) => TransactionsWidget(
+                                              // user: widget.user,
+                                              trasansactionsByDate:
+                                                  _trasansactionsByDate[index],
+                                            ),
+                                            //(index) => Container(),
+                                          ),
                                         ),
-                                        //(index) => Container(),
-                                      ),
-                                    ),
-                                  )
-                                : const EmptyTransactios(),
+                                      )
+                                    : const EmptyTransactios()
+                                : LoadingContainer(),
                           ],
                         ),
                       ),

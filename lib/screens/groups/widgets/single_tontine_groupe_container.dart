@@ -17,7 +17,7 @@ class SingleTontineGroupeContainer extends StatefulWidget {
   });
 
   final Tontine tontine;
-  final User user;
+  final MyUser user;
 
   @override
   State<SingleTontineGroupeContainer> createState() =>
@@ -46,7 +46,7 @@ class _SingleTontineGroupeContainerState
             )
           : TontineHasNotGroup(
               onTap: () {
-                Functions.showLoadingSheet(ctxt: context);
+                // Functions.showLoadingSheet(ctxt: context);
                 generateGroup(
                   userId: widget.user.id,
                   creatorId: widget.tontine.creatorId,

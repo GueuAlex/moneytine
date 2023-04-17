@@ -4,7 +4,6 @@ import 'package:moneytine/functions/functions.dart';
 import 'package:moneytine/models/tontine.dart';
 import 'package:moneytine/models/user.dart';
 import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/screens/home_page/home_page.dart';
 import 'package:moneytine/screens/single_tontine/single_tontine.dart';
 import 'package:moneytine/widgets/custom_button.dart';
 import 'package:moneytine/widgets/custom_text.dart';
@@ -32,7 +31,7 @@ class AddTontineSheetContent extends StatefulWidget {
   final DateTime dateDernierPaie;
   final double amount;
   final int uniqueCode;
-  final User user;
+  final MyUser user;
 
   @override
   State<AddTontineSheetContent> createState() => _AddTontineSheetContentState();

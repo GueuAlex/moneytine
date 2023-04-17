@@ -2,10 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:intl/date_symbol_data_http_request.dart';
-import 'package:moneytine/splash.dart';
-import 'package:moneytine/style/palette.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'splash.dart';
+import 'style/palette.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

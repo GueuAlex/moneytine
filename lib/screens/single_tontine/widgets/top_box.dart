@@ -17,8 +17,9 @@ class TopBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.only(bottom: 8.0),
       width: double.infinity,
-      height: 120,
+      height: 110,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -40,91 +41,173 @@ class TopBox extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(8.0),
+            //color: Colors.red,
+            padding: const EdgeInsets.only(
+              right: 8.0,
+              left: 8.0,
+              top: 8.0,
+            ),
             //color: Colors.amber,
             height: 55,
-            child: FittedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Votre code d\'invitation  ',
-                        style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                      ),
-                      Text(
-                        tontine.uniqueCode.toString(),
-                        style: const TextStyle(
-                            fontSize: 20,
-                            height: 1.2,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                  Container(
-                      //padding: const EdgeInsets.only(bottom: 10.0),
-                      height: 28,
-                      width: 28,
-                      decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Palette.secondaryColor),
-                      child: Center(
-                        child: IconButton(
-                          onPressed: () {
-                            Functions.copyToClipboard(
-                                text: tontine.uniqueCode.toString());
-                            Fluttertoast.showToast(
-                              msg: 'Copié !',
-                              backgroundColor: Palette.appPrimaryColor,
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.copy,
-                            size: 14,
-                            color: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      right: 8.0,
+                      left: 8.0,
+                      top: 8.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Palette.greyColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Votre code d\'invitation  ',
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.6),
+                            fontSize: 11,
                           ),
                         ),
-                      ))
-                ],
-              ),
+                        Text(
+                          tontine.uniqueCode.toString(),
+                          style: const TextStyle(
+                              fontSize: 16,
+                              height: 1.2,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 4.0,
+                ),
+                Container(
+                  width: 80,
+                  padding: const EdgeInsets.only(left: 8.0),
+                  decoration: BoxDecoration(
+                    color: Palette.appPrimaryColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(right: 5.0),
+                        //padding: const EdgeInsets.only(bottom: 10.0),
+                        //height: 28,
+                        width: 28,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Palette.secondaryColor),
+                        child: Center(
+                          child: IconButton(
+                            onPressed: () {
+                              Functions.copyToClipboard(
+                                  text: tontine.uniqueCode.toString());
+                              Fluttertoast.showToast(
+                                msg: 'Copié !',
+                                backgroundColor: Palette.appPrimaryColor,
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.copy,
+                              size: 14,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'Copié',
+                        style: TextStyle(
+                          color: Palette.secondaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
+          ),
+          const SizedBox(
+            height: 2.0,
           ),
           Expanded(
             child: Container(
               //color: Colors.black,
               decoration: const BoxDecoration(
-                border: Border(
+                  /* border: Border(
                   top: BorderSide(
                     width: 1,
                     color: Colors.grey,
                   ),
-                ),
-              ),
+                ), */
+
+                  ),
               child: Row(
                 children: [
-                  const Expanded(
-                    child: CheickContainer(
-                      text1: 'En retard',
-                      text2: 'membres',
-                      numberOf: '2 ',
+                  Expanded(
+                    //child: FittedBox(
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        left: 8.0,
+                        right: 2.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Palette.greyColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      padding: const EdgeInsets.only(
+                        top: 3.0,
+                        right: 8.0,
+                        left: 8.0,
+                      ),
+                      child: CheickContainer(
+                        text1: 'En retard',
+                        text2: 'membres',
+                        numberOf: '2 ',
+                        paddingLeft: 8.0,
+                        paddingRigth: 8.0,
+                      ),
                     ),
+                    //),
                   ),
-                  Container(
+                  /* Container(
                     height: MediaQuery.of(context).size.height,
                     width: 1,
                     color: Colors.grey,
-                  ),
-                  const Expanded(
-                    child: CheickContainer(
-                      text1: 'A jour',
-                      text2: 'membres',
-                      numberOf: '5 ',
+                  ), */
+                  Expanded(
+                    //child: FittedBox(
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        right: 8.0,
+                      ),
+                      padding: const EdgeInsets.only(
+                        top: 3.0,
+                        right: 8.0,
+                        left: 8.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Palette.greyColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: CheickContainer(
+                        paddingLeft: 8.0,
+                        paddingRigth: 8.0,
+                        text1: 'A jour',
+                        text2: 'membres',
+                        numberOf: '5 ',
+                      ),
                     ),
-                  )
+                  ),
+                  //)
                 ],
               ),
             ),

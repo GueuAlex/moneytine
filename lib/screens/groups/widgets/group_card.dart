@@ -33,7 +33,7 @@ class GroupeCard extends StatelessWidget {
       width: 150,
       height: 60,
       decoration: BoxDecoration(
-        color: index == selectedIndex
+        color: index != selectedIndex
             ? Palette.secondaryColor.withOpacity(0.2)
             : Palette.appPrimaryColor,
         /* border: Border.all(
@@ -51,7 +51,7 @@ class GroupeCard extends StatelessWidget {
               Text(
                 '${groupe.membrsId.length}/${tontine.numberOfType}',
                 style: TextStyle(
-                  color: selectedIndex == index
+                  color: selectedIndex != index
                       ? Palette.secondaryColor
                       : Palette.whiteColor,
                   fontWeight: FontWeight.bold,
@@ -65,7 +65,7 @@ class GroupeCard extends StatelessWidget {
               Text(
                 groupe.nom,
                 style: TextStyle(
-                  color: selectedIndex == index
+                  color: selectedIndex != index
                       ? Palette.secondaryColor
                       : Palette.whiteColor,
                   fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class GroupeCard extends StatelessWidget {
               ),
               Icon(
                 CupertinoIcons.person_3_fill,
-                color: selectedIndex == index
+                color: selectedIndex != index
                     ? Palette.secondaryColor
                     : Palette.whiteColor,
                 size: 30,

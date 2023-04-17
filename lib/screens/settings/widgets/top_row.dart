@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moneytine/functions/functions.dart';
 import 'package:moneytine/models/user.dart';
 
 import '../../../style/palette.dart';
@@ -7,18 +8,7 @@ import 'name_container.dart';
 
 class TopRow extends StatelessWidget {
   const TopRow({super.key, required this.user});
-  final User user;
-
-  String _firstName({required String fullName, required bool isFirstname}) {
-    List<String> parts = fullName.split(' ');
-    String firstName = parts[0];
-    String lastName = parts.sublist(1).join(' ');
-    if (isFirstname) {
-      return firstName;
-    } else {
-      return lastName;
-    }
-  }
+  final MyUser user;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +49,10 @@ class TopRow extends StatelessWidget {
                   fontWeight: FontWeight.normal,
                 ),
                 NameContainer(
-                  text: _firstName(fullName: user.fullName, isFirstname: false),
+                  text: Functions.nameFormater(
+                    fullName: user.fullName,
+                    isFirstname: false,
+                  ),
                 ),
                 const SizedBox(
                   height: 25.0,
@@ -70,7 +63,10 @@ class TopRow extends StatelessWidget {
                   fontWeight: FontWeight.normal,
                 ),
                 NameContainer(
-                  text: _firstName(fullName: user.fullName, isFirstname: true),
+                  text: Functions.nameFormater(
+                    fullName: user.fullName,
+                    isFirstname: true,
+                  ),
                 ),
               ],
             ),

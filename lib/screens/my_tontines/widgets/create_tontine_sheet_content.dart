@@ -14,7 +14,7 @@ import '../../../widgets/custom_button.dart';
 class CreatetontineSheetContent extends StatefulWidget {
   const CreatetontineSheetContent({super.key, required this.user});
 
-  final User user;
+  final MyUser user;
 
   @override
   State<CreatetontineSheetContent> createState() =>

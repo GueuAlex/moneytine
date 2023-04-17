@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:moneytine/models/tontine.dart';
 import 'package:moneytine/models/user.dart';
 import 'package:moneytine/screens/single_tontine/widgets/transactions_of_this_tontine.dart';
 import 'package:moneytine/widgets/empty_transaction.dart';
+import 'package:moneytine/widgets/loading_container.dart';
 
 import '../../../models/money_transaction.dart';
 import '../../../models/transation_by_date.dart';
@@ -32,8 +35,14 @@ class _SingleTontineLastTransactionsState
   List<TransactionsByDate> _trasansactionsByDate = [];
   /////////////////////////////////////////////////////////////
   ///
-  List<User> members = [];
-
+  List<MyUser> members = [];
+  ///////////////////////////////////////////////////////
+  /// nous permet d'executer getAlltransaction chaque quleque second
+  Timer? _timer;
+  ///////////////////////////////////////////////////////
+  ///nous permet d'afficher un indicateur de chargement ///////
+  ///
+  bool isVisible = false;
   //////////////////////////////////
   getAllTransactions() async {
     List<MoneyTransaction> allTransactions =
@@ -43,18 +52,19 @@ class _SingleTontineLastTransactionsState
       _allTransactions.clear();
       for (MoneyTransaction element in allTransactions) {
         if (element.tontineId == widget.tontine.id) {
-          print('idddd : ${element.userId}\n');
+          //print('idddd : ${element.userId}\n');
 
           setState(() {
             _allTransactions.add(element);
           });
         }
-        User? member = await RemoteServices().getSingleUser(id: element.userId);
+        MyUser? member =
+            await RemoteServices().getSingleUser(id: element.userId);
         if (member != null) {
           setState(() {
             members.add(member);
           });
-          print(member.fullName);
+          // print(member.fullName);
         }
       }
       _allTransactions.sort(
@@ -78,7 +88,7 @@ class _SingleTontineLastTransactionsState
         _trasansactionsByDate = transactionsByDate;
       });
     }
-    print(members);
+    //print(members);
   }
 
   ////////////////////////////// end filter //////////////////////////////////
@@ -88,7 +98,21 @@ class _SingleTontineLastTransactionsState
   @override
   void initState() {
     getAllTransactions();
+    _timer = Timer.periodic(Duration(seconds: 30), (timer) {
+      getAllTransactions();
+    });
+    Future.delayed(const Duration(seconds: 5)).then((_) {
+      setState(() {
+        isVisible = true;
+      });
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer!.cancel();
+    super.dispose();
   }
 
   @override
@@ -119,46 +143,49 @@ class _SingleTontineLastTransactionsState
             ),
           ],
           color: Colors.white),
-      child: _trasansactionsByDate.isNotEmpty
-          ? Column(
-              children: [
-                ListGroupCardHeader(
-                  isTransaction: true,
-                  text: 'Dernière transactions',
-                  icon: CupertinoIcons.arrow_right_arrow_left,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return TransactionsOfThisTontine(
-                              transactionsByDate: _trasansactionsByDate,
-                              menbers: members);
-                        },
-                      ),
-                    );
-                  },
-                ),
-                Expanded(
-                  //flex: 3,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Column(
-                          children: List.generate(
-                        _trasansactionsByDate.length,
-                        (index) => TransactionsWidget(
-                          trasansactionsByDate: _trasansactionsByDate[index],
-                          //user: members[index],
-                        ),
-                      )),
+      child: isVisible
+          ? _trasansactionsByDate.isNotEmpty
+              ? Column(
+                  children: [
+                    ListGroupCardHeader(
+                      isTransaction: true,
+                      text: 'Dernière transactions',
+                      icon: CupertinoIcons.arrow_right_arrow_left,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return TransactionsOfThisTontine(
+                                  transactionsByDate: _trasansactionsByDate,
+                                  menbers: members);
+                            },
+                          ),
+                        );
+                      },
                     ),
-                  ),
+                    Expanded(
+                      //flex: 3,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(
+                              children: List.generate(
+                            _trasansactionsByDate.length,
+                            (index) => TransactionsWidget(
+                              trasansactionsByDate:
+                                  _trasansactionsByDate[index],
+                              //user: members[index],
+                            ),
+                          )),
+                        ),
+                      ),
+                    )
+                  ],
                 )
-              ],
-            )
-          : const EmptyTransactios(),
+              : const EmptyTransactios()
+          : LoadingContainer(),
     );
   }
 }

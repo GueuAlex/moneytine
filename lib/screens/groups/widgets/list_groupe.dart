@@ -13,12 +13,13 @@ import '../../../models/tontine.dart';
 import '../../../style/palette.dart';
 import 'Group_memb_list.dart';
 import 'group_card.dart';
+import 'group_member_shimmer.dart';
 
 class ListGroup extends StatefulWidget {
   const ListGroup({super.key, required this.tontine, required this.user});
 
   final Tontine tontine;
-  final User user;
+  final MyUser user;
 
   @override
   State<ListGroup> createState() => _ListGroupState();
@@ -48,7 +49,7 @@ class _ListGroupState extends State<ListGroup> {
     super.initState();
   }
 
-  getselectedGroupData() async {
+  void getselectedGroupData() async {
     List<SingleGroupData> data = await RemoteServices()
         .getSingleGroupData(seletedGroupId: selectedGroupe.id);
     if (data.isNotEmpty) {
@@ -59,6 +60,23 @@ class _ListGroupState extends State<ListGroup> {
         });
       }
     }
+
+    Stream.periodic(Duration(seconds: 5)).asyncMap((_) async {
+      List<SingleGroupData> periodicData = await RemoteServices()
+          .getSingleGroupData(seletedGroupId: selectedGroupe.id);
+      List<SingleGroupData> updatedselectedGroupData = [];
+      if (periodicData.isNotEmpty) {
+        selectedGroupData.clear();
+        for (SingleGroupData element in periodicData) {
+          updatedselectedGroupData.add(element);
+        }
+      }
+      return updatedselectedGroupData;
+    }).listen((updateList) {
+      //setState(() {
+      selectedGroupData = updateList;
+      //});
+    });
   }
 
   @override
@@ -68,7 +86,7 @@ class _ListGroupState extends State<ListGroup> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
+            /* Padding(
               padding: const EdgeInsets.only(
                 bottom: 10.0,
               ),
@@ -76,7 +94,7 @@ class _ListGroupState extends State<ListGroup> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Liste des groupes',
+                    'Liste de grupe',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -96,32 +114,78 @@ class _ListGroupState extends State<ListGroup> {
                     },
                   )
                 ],
-              ),
-            ),
+              ), 
+            ),*/
             const SizedBox(
               height: 10.0,
             ),
             SizedBox(
               width: double.infinity,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                child: Row(
-                  children: List.generate(
-                    widget.tontine.groupes.length,
-                    (index) => InkWell(
-                      onTap: () {
-                        setState(() {
-                          seletedIndex = index;
-                          selectedGroupe = widget.tontine.groupes[index];
-                        });
-                      },
-                      child: GroupeCard(
-                        index: index,
-                        selectedIndex: seletedIndex,
-                        groupe: widget.tontine.groupes[index],
-                        tontine: widget.tontine,
-                      ),
+              child: Scrollbar(
+                //thumbVisibility: true,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10.0),
+                          width: 60,
+                          height: 60,
+                          margin: const EdgeInsets.only(right: 8.0),
+                          decoration: BoxDecoration(
+                            color: Palette.appPrimaryColor.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              generateGroup(
+                                creatorId: widget.tontine.creatorId,
+                                tontineId: widget.tontine.id,
+                                userId: widget.user.id,
+                              );
+                            },
+                            child: Container(
+                              //padding: const EdgeInsets.all(8.0),
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Palette.secondaryColor,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  CupertinoIcons.add,
+                                  color: Palette.whiteColor,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          children: List.generate(
+                            widget.tontine.groupes.length,
+                            (index) => InkWell(
+                              onTap: () {
+                                setState(() {
+                                  seletedIndex = index;
+                                  selectedGroupe =
+                                      widget.tontine.groupes[index];
+                                });
+                              },
+                              child: GroupeCard(
+                                index: index,
+                                selectedIndex: seletedIndex,
+                                groupe: widget.tontine.groupes[index],
+                                tontine: widget.tontine,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -139,7 +203,8 @@ class _ListGroupState extends State<ListGroup> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          selectedGroupe.nom,
+                          //selectedGroupe.nom,
+                          '',
                           style:
                               Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     fontSize: 16,
@@ -228,10 +293,6 @@ class _ListGroupState extends State<ListGroup> {
   }) async {
     if (userId == creatorId) {
       Functions.showLoadingSheet(ctxt: context);
-      Groupe newGroupe = Groupe(
-        nom: 'Groupe_${(widget.tontine.groupes.length + 1)}',
-        // cretat: DateTime.now(),
-      );
 
       String groupeName = 'Groupe_${(widget.tontine.groupes.length + 1)}';
       var response = await RemoteServices().postGeneratGroupeDetails(
@@ -241,6 +302,10 @@ class _ListGroupState extends State<ListGroup> {
       );
       if (response != null) {
         Future.delayed(const Duration(seconds: 3)).then((value) {
+          Groupe newGroupe = Groupe(
+            nom: groupeName,
+            id: int.parse(response),
+          );
           setState(() {
             widget.tontine.groupes.add(newGroupe);
           });
@@ -277,7 +342,9 @@ class _ListGroupState extends State<ListGroup> {
           MaterialPageRoute(
             builder: (context) {
               return AddUserScreen(
-                  groupe: selectedGroupe, tontine: widget.tontine);
+                groupe: selectedGroupe,
+                tontine: widget.tontine,
+              );
             },
           ),
         );
@@ -289,48 +356,5 @@ class _ListGroupState extends State<ListGroup> {
         );
       }
     });
-  }
-}
-
-class GroupMemberShimmer extends StatelessWidget {
-  const GroupMemberShimmer({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(
-        bottom: 5.0,
-      ),
-      child: ListTile(
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            color: Colors.grey,
-          ),
-          child: const Center(
-            child: Icon(
-              CupertinoIcons.person_fill,
-              size: 20,
-              color: Colors.grey,
-            ),
-          ),
-        ),
-        title: Container(
-          height: 4,
-          width: 50,
-          color: Colors.grey,
-        ),
-        subtitle: Container(
-          height: 2,
-          width: 100,
-          color: Colors.grey,
-        ),
-      ),
-    );
   }
 }

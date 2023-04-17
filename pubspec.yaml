@@ -36,6 +36,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   firebase_core: ^2.7.0
+  cloud_firestore: ^4.5.0
+  firebase_auth: ^4.4.0
   pin_code_fields: ^7.4.0
   flutter_svg: ^2.0.2
   adaptive_dialog: ^1.8.2
@@ -58,10 +60,25 @@ dependencies:
   shimmer: ^2.0.0
   flutter_pw_validator: ^1.5.0
 
+
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.12.0
+  flutter_native_splash: ^2.2.19
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: "assets/images/iconn.png"
+  android: true
+  ios: true
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo1198.jpg"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

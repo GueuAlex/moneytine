@@ -14,7 +14,7 @@ class JeParticipe extends StatelessWidget {
   });
 
   final List<Tontine> tontineList;
-  final User user;
+  final MyUser user;
 
   @override
   Widget build(BuildContext context) {

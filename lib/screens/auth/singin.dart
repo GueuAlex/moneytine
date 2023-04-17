@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moneytine/functions/functions.dart';
 import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
 import 'package:moneytine/screens/auth/login.dart';
 import 'package:moneytine/screens/auth/otp_screen.dart';
 import 'package:moneytine/screens/auth/widgets/singin_text_field.dart';
@@ -106,10 +105,11 @@ class _SinginScreenState extends State<SinginScreen> {
                   backgroundColor: Palette.appPrimaryColor);
             } else {
               Future.delayed(const Duration(seconds: 4)).then((value) {
-                User user = User(
-                    fullName: firstNameController.text,
-                    email: emailController.text,
-                    password: passwordController.text);
+                MyUser user = MyUser(
+                  fullName: firstNameController.text,
+                  email: emailController.text,
+                  password: passwordController.text,
+                );
                 setState(() {
                   isLoading = false;
                 });

@@ -308,8 +308,9 @@ class _SinginTextFieldState extends State<SinginTextField> {
             width: double.infinity,
             height: 55,
             decoration: BoxDecoration(
-                color: Palette.appPrimaryColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(50.0)),
+              color: Palette.appPrimaryColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(50.0),
+            ),
             child: firstNameFiel,
           ),
         ),
@@ -376,8 +377,9 @@ class _SinginTextFieldState extends State<SinginTextField> {
             width: double.infinity,
             height: 55,
             decoration: BoxDecoration(
-                color: Palette.appPrimaryColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(50.0)),
+              color: Palette.appPrimaryColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(50.0),
+            ),
             child: confirmPasswordField,
           ),
         ),

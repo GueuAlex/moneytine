@@ -1,10 +1,11 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:moneytine/models/user.dart';
 
-import '../models/money_transaction.dart';
-import '../models/transation_by_date.dart';
 import '../remote_services/remote_services.dart';
 
 class Functions {
@@ -19,9 +20,12 @@ class Functions {
     return 0;
   }
 
-  static Future<dynamic> postUser(User? user) async {
-    var response =
-        await RemoteServices().postUserDetails(api: 'users', user: user!);
+  static Future<dynamic> postUser(
+      {required MyUser? user, bool isSingin = true}) async {
+    var response = await RemoteServices().postUserDetails(
+      api: isSingin ? 'users' : 'users/create_by_admin',
+      user: user!,
+    );
 
     return response;
   }
@@ -136,4 +140,80 @@ class Functions {
     }
     return numberString;
   } */
+
+  static String generatePassword() {
+    // Liste des caractères possibles pour chaque type de caractère
+    final letters = 'abcdefghijklmnopqrstuvwxyz';
+    final numbers = '0123456789';
+    final uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    final specialCharacters = '@\$!%*?&';
+
+    // Générer un caractère aléatoire pour chaque type de caractère
+    final random = Random();
+    final letter = letters[random.nextInt(letters.length)];
+    final number = numbers[random.nextInt(numbers.length)];
+    final uppercaseLetter =
+        uppercaseLetters[random.nextInt(uppercaseLetters.length)];
+    final specialCharacter =
+        specialCharacters[random.nextInt(specialCharacters.length)];
+
+    // Concaténer les caractères aléatoires pour former le mot de passe
+    String password = '$letter$number$uppercaseLetter$specialCharacter';
+
+    // Générer des caractères aléatoires supplémentaires pour atteindre une longueur de 8 caractères
+    while (password.length < 8) {
+      final type = random.nextInt(4);
+      switch (type) {
+        case 0:
+          password += letters[random.nextInt(letters.length)];
+          break;
+        case 1:
+          password += numbers[random.nextInt(numbers.length)];
+          break;
+        case 2:
+          password += uppercaseLetters[random.nextInt(uppercaseLetters.length)];
+          break;
+        case 3:
+          password +=
+              specialCharacters[random.nextInt(specialCharacters.length)];
+          break;
+      }
+    }
+
+    return password;
+  }
+
+  static String nameFormater(
+      {required String fullName, required bool isFirstname}) {
+    List<String> parts = fullName.split(' ');
+    String firstName = parts[0];
+    String lastName = parts.sublist(1).join(' ');
+    if (isFirstname) {
+      return firstName;
+    } else {
+      return lastName;
+    }
+  }
+
+  static postDetailToFiresotre(
+      {required String email,
+      required String fullName,
+      required String password,
+      required}) async {
+    //calling our firestore
+    //calling our UserModel
+    //sending these values
+    final _auth = FirebaseAuth.instance;
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+    MyUser userModel = MyUser(
+        fullName: fullName, email: email, password: password, uid: user!.uid);
+
+    //wrtting all the values
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .set(userModel.toJson());
+  }
 }

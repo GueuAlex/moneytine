@@ -21,7 +21,7 @@ class AddTontineScreen extends StatefulWidget {
     required this.user,
   }) : super(key: key);
   final String tontineName;
-  final User user;
+  final MyUser user;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -735,7 +735,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _showBottomSheet({required BuildContext context, required User user}) {
+  void _showBottomSheet({required BuildContext context, required MyUser user}) {
     int uniqueCode = Random().nextInt(999999);
     DateTime dateDernierPaie =
         calculerDateFin(_selectedDate2, int.parse(_numberOfController.text));

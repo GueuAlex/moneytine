@@ -23,7 +23,7 @@ class SingleTontine extends StatefulWidget {
   });
   final Tontine tontine;
   final bool isFiret;
-  final User user;
+  final MyUser user;
 
   @override
   State<SingleTontine> createState() => _SingleTontineState();

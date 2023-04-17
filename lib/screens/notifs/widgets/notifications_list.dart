@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../style/palette.dart';
-import '../notifs_screen.dart';
 import 'paiement_notification.dart';
 import 'rapel_notification.dart';
 import 'reception_notification.dart';
 
-class NotificationList extends StatelessWidget {
+class NotificationList extends StatefulWidget {
   const NotificationList({
     super.key,
   });
 
+  @override
+  State<NotificationList> createState() => _NotificationListState();
+}
+
+class _NotificationListState extends State<NotificationList> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,7 +24,7 @@ class NotificationList extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 5.0, top: 15.0),
           child: Text(
-            'Date de notifs',
+            DateFormat('EE MM yyyy', 'fr').format(DateTime.now()),
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Palette.greyColor.withOpacity(0.7),
                   fontSize: 14,

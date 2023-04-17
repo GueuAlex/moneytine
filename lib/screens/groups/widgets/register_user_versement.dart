@@ -21,7 +21,7 @@ class RegisterUserVersement extends StatefulWidget {
   });
   final Groupe groupe;
   final Tontine tontine;
-  final User user;
+  final MyUser user;
 
   @override
   State<RegisterUserVersement> createState() => _RegisterUserVersementState();
@@ -348,6 +348,7 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                           if (await postTransatcionDetails(
                               moneyTransaction: moneyTransaction)) {
                             // ignore: use_build_context_synchronously
+                            Navigator.pop(context);
                             Navigator.pop(context);
                             Fluttertoast.showToast(
                               msg: 'Versement enregistré !',

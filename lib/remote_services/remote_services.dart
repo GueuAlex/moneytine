@@ -34,8 +34,8 @@ class RemoteServices {
     };
 
     var response = await client.post(url, body: payload, headers: headers);
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       return jsonDecode(response.body);
     } else if (response.statusCode == 422) {
@@ -48,7 +48,7 @@ class RemoteServices {
   ///////////////// post user detail when otp code is verify//////////////////
   ///
   Future<dynamic> postUserDetails(
-      {required String api, required User user}) async {
+      {required String api, required MyUser user}) async {
     ////////// parse our url /////////////////////
     var url = Uri.parse(baseUri + api);
 
@@ -67,7 +67,11 @@ class RemoteServices {
     print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       return response.body;
-    } else {
+    } else if (response.statusCode == 422) {
+      var result = jsonDecode(response.body);
+      if (result.containsKey("email")) {
+        return 'emailError';
+      }
       return null;
     }
   }
@@ -96,10 +100,10 @@ class RemoteServices {
     //////////////// post user ////////////
     var response = await client.post(url, body: payload, headers: headers);
 
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
-      User logUser = userFromJson(response.body);
+      MyUser logUser = userFromJson(response.body);
       return logUser;
     } else {
       return null;
@@ -108,15 +112,15 @@ class RemoteServices {
 
   //////////////////////////////// get single user by id //////////////////////
   ///
-  Future<User?> getSingleUser({required int id}) async {
+  Future<MyUser?> getSingleUser({required int id}) async {
     var uri = Uri.parse(baseUri + 'users/$id');
     var response = await client.get(uri);
-    print('Dans remote : ${response.body}');
-    print('Dans remote : ${response.statusCode}');
+    //print('Dans remote : ${response.body}');
+    //print('Dans remote : ${response.statusCode}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       var json = response.body;
       //print(response.body);
-      User user = userFromJson(json);
+      MyUser user = userFromJson(json);
       return user;
     }
     return null;
@@ -124,16 +128,16 @@ class RemoteServices {
 
   //////////////////////////////// get single user by id //////////////////////
   ///
-  Future<List<User>> getTontineUserList({required int id}) async {
+  Future<List<MyUser>> getTontineUserList({required int id}) async {
     var uri = Uri.parse('${baseUri}tontines/$id/users');
     var response = await client.get(uri);
-    print('Dans remote user liste : ${response.body}');
-    print('Dans remote : ${response.statusCode}');
+    //print('Dans remote user liste : ${response.body}');
+    //print('Dans remote : ${response.statusCode}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       var json = response.body;
       //print(response.body);
-      List<User> userList = userListFromJson(json);
-      print(userList);
+      List<MyUser> userList = userListFromJson(json);
+      //print(userList);
 
       return userList;
     }
@@ -145,11 +149,11 @@ class RemoteServices {
   Future<double?> getGroupPart({required int groupeId}) async {
     var uri = Uri.parse('${baseUri}groups/$groupeId/part_remaining');
     var response = await client.get(uri);
-    print('Dans remote user liste : ${response.body}');
-    print('Dans remote : ${response.statusCode}');
+    //print('Dans remote user liste : ${response.body}');
+    //print('Dans remote : ${response.statusCode}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       var json = jsonDecode(response.body);
-      print(json["Part_remaining"]);
+      //print(json["Part_remaining"]);
       double part = double.parse(json["Part_remaining"].toString());
 
       return part;
@@ -173,12 +177,12 @@ class RemoteServices {
     };
 
     var response = await client.post(url, body: payload, headers: headers);
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       //Tontine tontine = tontineFromJson(response.body);
       var jsdecod = jsonDecode(response.body);
-      print('idididiidi : ${jsdecod['id']}');
+      // print('idididiidi : ${jsdecod['id']}');
       return jsdecod['id'];
     } else {
       return null;
@@ -201,12 +205,12 @@ class RemoteServices {
     };
 
     var response = await client.post(url, body: payload, headers: headers);
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       //Tontine tontine = tontineFromJson(response.body);
       var jsdecod = jsonDecode(response.body);
-      print('transactions id : ${jsdecod['id']}');
+      //print('transactions id : ${jsdecod['id']}');
       return jsdecod['id'];
     } else {
       return null;
@@ -237,8 +241,8 @@ class RemoteServices {
     };
 
     var response = await client.post(url, body: payload, headers: headers);
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       //Tontine tontine = tontineFromJson(response.body);
       //var jsdecod = jsonDecode(response.body);
@@ -246,11 +250,11 @@ class RemoteServices {
       if (json.containsKey("error")) {
         return false;
       } else {
-        print('when add user to group if sucess ${response.body}');
+        //print('when add user to group if sucess ${response.body}');
         return true;
       }
     } else {
-      print('when add user to group if faild ${response.body}');
+      //print('when add user to group if faild ${response.body}');
 
       return false;
     }
@@ -272,12 +276,12 @@ class RemoteServices {
     };
 
     var response = await client.put(url, body: payload, headers: headers);
-    print(response.statusCode);
-    print(response.body);
+    // print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       //Tontine tontine = tontineFromJson(response.body);
       var jsdecod = jsonDecode(response.body);
-      print('puuuuut : ${jsdecod['id']}');
+      //print('puuuuut : ${jsdecod['id']}');
       return jsdecod['id'];
     } else {
       return null;
@@ -295,9 +299,9 @@ class RemoteServices {
     };
 
     var response = await client.put(url, headers: headers);
-    print(response.statusCode);
-    print('Dans remote body on enable : ${response.body}');
-    print('Dans remote code on enable : ${response.statusCode}');
+    //print(response.statusCode);
+    //print('Dans remote body on enable : ${response.body}');
+    //print('Dans remote code on enable : ${response.statusCode}');
 
     return response.statusCode;
   }
@@ -313,9 +317,9 @@ class RemoteServices {
     };
 
     var response = await client.put(url, headers: headers);
-    print(response.statusCode);
-    print('Dans remote body on desable : ${response.body}');
-    print('Dans remote code on desable : ${response.statusCode}');
+    //print(response.statusCode);
+    //print('Dans remote body on desable : ${response.body}');
+    //print('Dans remote code on desable : ${response.statusCode}');
 
     return response.statusCode;
   }
@@ -325,8 +329,8 @@ class RemoteServices {
   Future<Tontine?> getSingleTontine({required int id}) async {
     var uri = Uri.parse('${baseUri}tontines/$id');
     var response = await client.get(uri);
-    print('Dans remote : ${response.body}');
-    print('Dans remote : ${response.statusCode}');
+    // print('Dans remote : ${response.body}');
+    /// print('Dans remote : ${response.statusCode}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       var json = response.body;
       //print(response.body);
@@ -342,7 +346,7 @@ class RemoteServices {
     var uri = Uri.parse('${baseUri}tontines/$id');
     var response = await client.delete(uri);
     //print('Dans remote delete body : ${response.body}');
-    print('ans remote delete code : ${response.statusCode}');
+    //print('ans remote delete code : ${response.statusCode}');
     //if (response.statusCode == 200 || response.statusCode == 200) {
     //var json = jsonDecode(response.body);
 
@@ -357,8 +361,8 @@ class RemoteServices {
       {required int groupId, required int userId}) async {
     var uri = Uri.parse('${baseUri}groups/$groupId/users/$userId');
     var response = await client.delete(uri);
-    print('Dans remote delete user body : ${response.body}');
-    print('dans remote delete user code : ${response.statusCode}');
+    //print('Dans remote delete user body : ${response.body}');
+    //print('dans remote delete user code : ${response.statusCode}');
     //if (response.statusCode == 200 || response.statusCode == 200) {
     //var json = jsonDecode(response.body);
 
@@ -372,8 +376,8 @@ class RemoteServices {
   Future<List<MoneyTransaction>> getTransactionsList() async {
     var uri = Uri.parse('${baseUri}transactions');
     var response = await client.get(uri);
-    print('list transactions Dans remote : ${response.body}');
-    print('code Dans remote : ${response.statusCode}');
+    //print('list transactions Dans remote : ${response.body}');
+    //print('code Dans remote : ${response.statusCode}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       var json = response.body;
       //print(response.body);
@@ -389,8 +393,8 @@ class RemoteServices {
   Future<List<Tontine?>> getCurrentUserTontineList({required int id}) async {
     var uri = Uri.parse('${baseUri}users/$id/tontines');
     var response = await client.get(uri);
-    print('Dans remote : ${response.body}');
-    print('Dans remote : ${response.statusCode}');
+    //print('Dans remote : ${response.body}');
+    //print('Dans remote : ${response.statusCode}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       var json = response.body;
       //print(response.body);
@@ -406,8 +410,8 @@ class RemoteServices {
       {required int seletedGroupId}) async {
     var uri = Uri.parse('${baseUri}groups/$seletedGroupId/users');
     var response = await client.get(uri);
-    print('Dans remote i1 : ${response.body}');
-    print('Dans remote : ${response.statusCode}');
+    //print('Dans remote i1 : ${response.body}');
+    //print('Dans remote : ${response.statusCode}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       var json = response.body;
       //print(response.body);
@@ -421,9 +425,9 @@ class RemoteServices {
   Future<List<Tontine?>> getAllTontineList() async {
     var uri = Uri.parse('${baseUri}tontines');
     var response = await client.get(uri);
-    print('toutes les tontines dans remote : ${response.body}');
-    print(
-        'status code de toutes les tontines dans remote : ${response.statusCode}');
+    //print('toutes les tontines dans remote : ${response.body}');
+    // print(
+    //'status code de toutes les tontines dans remote : ${response.statusCode}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       var json = response.body;
       //print(response.body);
@@ -460,7 +464,7 @@ class RemoteServices {
     if (response.statusCode == 201 || response.statusCode == 200) {
       //Tontine tontine = tontineFromJson(response.body);
       var jsdecod = jsonDecode(response.body);
-      print('idididiidi : ${jsdecod['id']}');
+      //print('idididiidi : ${jsdecod['id']}');
       return jsdecod['tontine_id'];
     } else {
       return null;
@@ -481,7 +485,7 @@ class RemoteServices {
       "tontine_id": tontineId,
       "name": groupeName,
     };
-    ///////////// encode email to json objet/////////
+    ///////////// encode email to json objet////////////
     var payload = jsonEncode(postDetail);
     // http request headers
     var headers = {
@@ -489,15 +493,15 @@ class RemoteServices {
     };
 
     var response = await client.post(url, body: payload, headers: headers);
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print('gouuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu : ${response.body}');
     if (response.statusCode == 201 || response.statusCode == 200) {
       //Tontine tontine = tontineFromJson(response.body);
       var jsdecod = jsonDecode(response.body);
-      print('idididiidi : ${jsdecod['id']}');
-      return jsdecod['tontine_id'];
+      // print('idididiidi : ${jsdecod['id']}');
+      return jsdecod['id'].toString();
     } else {
-      print('nonononoononnonon');
+      //print('nonononoononnonon');
       return null;
     }
   }

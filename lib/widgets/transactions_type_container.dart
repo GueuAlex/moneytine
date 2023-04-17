@@ -39,7 +39,7 @@ class _TransactionsTypeContainerState extends State<TransactionsTypeContainer> {
   ///
   ///
   Tontine? _tontine;
-  User? _user;
+  MyUser? _user;
 
   getTontineById() async {
     Tontine? tontine = await RemoteServices()
@@ -52,7 +52,7 @@ class _TransactionsTypeContainerState extends State<TransactionsTypeContainer> {
   }
 
   getUserById() async {
-    User? user =
+    MyUser? user =
         await RemoteServices().getSingleUser(id: widget.mTransactions.userId);
     if (user != null) {
       setState(() {

@@ -48,7 +48,7 @@ class _SplashCreenState extends State<SplashCreen> {
         var response = await RemoteServices().getSingleUser(id: id);
         // ignore: use_build_context_synchronously
         if (response != null) {
-          User user = response;
+          MyUser user = response;
           // ignore: use_build_context_synchronously
           Navigator.of(context)
               .pushReplacement(MaterialPageRoute(builder: (context) {

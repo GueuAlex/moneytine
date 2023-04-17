@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/models/tontine.dart';
 import 'package:moneytine/models/transation_by_date.dart';
-import 'package:moneytine/models/user.dart';
 
 import '../style/palette.dart';
 import 'transactions_type_container.dart';

@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moneytine/config/firebase_const.dart';
 import 'package:moneytine/functions/functions.dart';
 import 'package:moneytine/models/user.dart';
 import 'package:moneytine/remote_services/remote_services.dart';
@@ -23,7 +26,7 @@ class OtpScreen extends StatefulWidget {
   });
   int otp;
   final String email;
-  final User? user;
+  final MyUser? user;
   final bool isSiginProcess;
 
   @override
@@ -37,6 +40,10 @@ class _OtpScreenState extends State<OtpScreen> {
   bool canPush = false;
   int userEntryOtp = 0;
   bool isNewOptProcess = false;
+
+  /////////////////////////// fire base auth instance //////////////////////
+  ///
+  final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +75,30 @@ class _OtpScreenState extends State<OtpScreen> {
                 });
                 //print(' ici : ${await postUser()}');
                 if (widget.isSiginProcess) {
-                  if (await Functions.postUser(widget.user) != null) {
+                  if (await Functions.postUser(user: widget.user) != null) {
+                    //////////////// if user is register in our db
+                    ///let add user in firebase
+                    ///
+                    await _auth
+                        .createUserWithEmailAndPassword(
+                          email: widget.email,
+                          password: FirebaseConst.authPwd,
+                        )
+                        .then((value) => {
+                              Functions.postDetailToFiresotre(
+                                email: widget.email,
+                                fullName: widget.user!.fullName,
+                                password: FirebaseConst.authPwd,
+                              )
+                            })
+                        .catchError((e) {
+                      Fluttertoast.showToast(msg: e!.message);
+                    });
+
+                    ///
+                    ///////////////////////////////////////////////////////
+                    ///
+
                     Fluttertoast.showToast(
                       msg: 'Vous êtes bien inscit !',
                       backgroundColor: Palette.appPrimaryColor,
