@@ -1,10 +1,8 @@
-import 'package:moneytine/models/money_transaction.dart';
-
-class TransactionsByDate {
-  TransactionsByDate({
+class DataByDate<T> {
+  DataByDate({
     required this.date,
-    required this.mTransaction,
+    required this.data,
   });
   final DateTime date;
-  final List<MoneyTransaction> mTransaction;
+  final List<T> data;
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:moneytine/models/money_transaction.dart';
+import 'package:moneytine/models/notification_models.dart';
 import 'package:moneytine/models/tontine.dart';
 import 'package:moneytine/models/user.dart';
 
@@ -35,7 +36,7 @@ class RemoteServices {
 
     var response = await client.post(url, body: payload, headers: headers);
     //print(response.statusCode);
-    //print(response.body);
+    print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       return jsonDecode(response.body);
     } else if (response.statusCode == 422) {
@@ -74,6 +75,33 @@ class RemoteServices {
       }
       return null;
     }
+  }
+
+///////////////// post user detail when otp code is verify//////////////////
+  ///
+  Future<dynamic> postNotifDetails(
+      {required String api,
+      required NotificationModel notificationModel}) async {
+    ////////// parse our url /////////////////////
+    var url = Uri.parse(baseUri + api);
+
+    /////////////// encode user to jsn //////////////////////
+    var payload = singleNotificationModelToJson(notificationModel);
+
+    // http request headers
+    var headers = {
+      'Content-Type': 'application/json',
+    };
+
+    //////////////// post user ////////////
+    var response = await client.post(url, body: payload, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return response.body;
+    }
+    return null;
   }
 
   ////////////////////////////////// post reset password details///////////////
@@ -144,6 +172,25 @@ class RemoteServices {
     return [];
   }
 
+  //////////////////////////////// get current user notif list by id //////////////////////
+  ///
+  Future<List<NotificationModel>> getCurrentUserNotifsList(
+      {required int id}) async {
+    var uri = Uri.parse('${baseUri}users/$id/notifications');
+    var response = await client.get(uri);
+    //print('Dans remote user liste : ${response.body}');
+    //print('Dans remote : ${response.statusCode}');
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var json = response.body;
+      //print(response.body);
+      List<NotificationModel> notifList = notificationModelFromJson(json);
+      //print(userList);
+
+      return notifList;
+    }
+    return [];
+  }
+
   //////////////////////////////// get group part by id //////////////////////
   ///
   Future<double?> getGroupPart({required int groupeId}) async {
@@ -205,8 +252,8 @@ class RemoteServices {
     };
 
     var response = await client.post(url, body: payload, headers: headers);
-    //print(response.statusCode);
-    //print(response.body);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       //Tontine tontine = tontineFromJson(response.body);
       var jsdecod = jsonDecode(response.body);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moneytine/models/money_transaction.dart';
 import 'package:moneytine/models/transation_by_date.dart';
 import 'package:moneytine/style/palette.dart';
 import 'package:moneytine/widgets/transactions_widget.dart';
@@ -9,7 +10,7 @@ class AllTransactionsHistory extends StatelessWidget {
     required this.trasansactionsByDate,
   });
 
-  final List<TransactionsByDate> trasansactionsByDate;
+  final List<DataByDate<MoneyTransaction>> trasansactionsByDate;
 
   @override
   Widget build(BuildContext context) {

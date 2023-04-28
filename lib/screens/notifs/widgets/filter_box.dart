@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moneytine/models/notification_models.dart';
+import 'package:moneytine/models/transation_by_date.dart';
 
 import '../../../style/palette.dart';
 import 'date_filter.dart';
@@ -7,46 +9,34 @@ import 'incoming_outcoming_row.dart';
 class FilterBox extends StatefulWidget {
   const FilterBox({
     super.key,
+    required this.interval,
+    required this.data,
   });
+
+  final DateTimeRange interval;
+  final List<DataByDate<NotificationModel>> data;
 
   @override
   State<FilterBox> createState() => _FilterBoxState();
 }
 
 class _FilterBoxState extends State<FilterBox> {
-  //////////////////////////// date range ////////////////////////////////////
+  ////////////
   ///
-  DateTimeRange _selectedDates = DateTimeRange(
-    start: DateTime.now().subtract(const Duration(days: 30)),
-    end: DateTime.now(),
-  );
-//////////////////////// dateTimeRange selector /////////////////////////
-  ///
-  ///
-  Future<DateTimeRange?> dateTimeRange() async {
-    return await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(2023),
-      lastDate: DateTime.now(),
-      locale: const Locale('fr', 'FR'),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            primaryColor: Palette.primarySwatch,
-            buttonTheme:
-                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-            colorScheme: const ColorScheme.light(
-              primary: Palette.primarySwatch,
-            ).copyWith(secondary: Palette.primarySwatch),
-          ),
-          child: SizedBox(
-            width: double.infinity,
-            height: 300,
-            child: child,
-          ),
-        );
-      },
-    );
+  double totalTransactions({
+    required List<DataByDate<NotificationModel>> data,
+    required String type,
+  }) {
+    double total = 0;
+    for (DataByDate<NotificationModel> element in data) {
+      for (NotificationModel notif in element.data) {
+        if (notif.type.toLowerCase() == type.toLowerCase()) {
+          total += notif.amount;
+          print(total);
+        }
+      }
+    }
+    return total;
   }
 
   @override
@@ -76,23 +66,17 @@ class _FilterBoxState extends State<FilterBox> {
         children: <Widget>[
           Expanded(
             child: InkWell(
-              onTap: () async {
-                DateTimeRange? dtr = await dateTimeRange();
-
-                if (dtr != null) {
-                  setState(() {
-                    _selectedDates = dtr;
-                  });
-                }
-                print(_selectedDates);
-              },
               child: DateFilter(
-                selectedDates: _selectedDates,
+                selectedDates: widget.interval,
               ),
             ),
           ),
-          const Expanded(
-            child: IncomingOutcomingRow(),
+          Expanded(
+            child: IncomingOutcomingRow(
+              versement:
+                  totalTransactions(data: widget.data, type: "versement"),
+              retrait: totalTransactions(data: widget.data, type: "retrait"),
+            ),
           )
         ],
       ),

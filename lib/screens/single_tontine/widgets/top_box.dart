@@ -178,13 +178,7 @@ class TopBox extends StatelessWidget {
                     ),
                     //),
                   ),
-                  /* Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: 1,
-                    color: Colors.grey,
-                  ), */
                   Expanded(
-                    //child: FittedBox(
                     child: Container(
                       margin: const EdgeInsets.only(
                         right: 8.0,
@@ -207,7 +201,6 @@ class TopBox extends StatelessWidget {
                       ),
                     ),
                   ),
-                  //)
                 ],
               ),
             ),

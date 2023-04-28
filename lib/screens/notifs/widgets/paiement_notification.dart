@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:moneytine/models/notification_models.dart';
 
 import '../../../style/palette.dart';
 
 class PaiementNotication extends StatelessWidget {
   const PaiementNotication({
     super.key,
+    required this.notificationModel,
   });
+
+  final NotificationModel notificationModel;
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +65,8 @@ class PaiementNotication extends StatelessWidget {
                         color: Colors.black,
                       ),
                       children: <TextSpan>[
-                        const TextSpan(
-                          text: '70000 FCFA ',
+                        TextSpan(
+                          text: '${notificationModel.amount} FCFA ',
                           style: TextStyle(
                             color: Palette.appPrimaryColor,
                             fontSize: 13,
@@ -73,8 +77,8 @@ class PaiementNotication extends StatelessWidget {
                           text: 'pour',
                           style: TextStyle(),
                         ),
-                        const TextSpan(
-                          text: ' tontineName ',
+                        TextSpan(
+                          text: ' ${notificationModel.tontineName} ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -90,7 +94,7 @@ class PaiementNotication extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Text(
-                      DateFormat('à HH:mm').format(DateTime.now()),
+                      notificationModel.hour.substring(0, 5),
                       style: const TextStyle(
                         color: Palette.greyColor,
                         fontSize: 12,

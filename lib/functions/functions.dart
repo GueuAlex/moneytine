@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneytine/models/user.dart';
 
+import '../models/money_transaction.dart';
 import '../remote_services/remote_services.dart';
 
 class Functions {
@@ -215,5 +216,36 @@ class Functions {
         .collection("users")
         .doc(user.uid)
         .set(userModel.toJson());
+  }
+
+  static Future<List<MoneyTransaction>> getThisUSerTransactionsListByGroupId(
+      {required int groupId, required int userId}) async {
+    final List<MoneyTransaction> thisUserTransactionList = [];
+    List<MoneyTransaction> allTransactions =
+        await RemoteServices().getTransactionsList();
+
+    if (allTransactions.isNotEmpty) {
+      // _allTransactions.clear();
+      for (MoneyTransaction element in allTransactions) {
+        if (element.userId == userId && element.groupeId == groupId) {
+          thisUserTransactionList.add(element);
+        }
+      }
+      return thisUserTransactionList;
+
+      // Créer une liste de TransactionsByDate à partir de la liste triée
+    }
+    return [];
+  }
+
+  static Future<bool> postTransatcionDetails(
+      {required MoneyTransaction moneyTransaction}) async {
+    var response = await RemoteServices().postNewTransaction(
+        api: 'transactions', mtransaction: moneyTransaction);
+
+    if (response != null) {
+      return true;
+    }
+    return false;
   }
 }

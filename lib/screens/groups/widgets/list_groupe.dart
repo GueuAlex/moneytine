@@ -73,9 +73,9 @@ class _ListGroupState extends State<ListGroup> {
       }
       return updatedselectedGroupData;
     }).listen((updateList) {
-      //setState(() {
-      selectedGroupData = updateList;
-      //});
+      setState(() {
+        selectedGroupData = updateList;
+      });
     });
   }
 

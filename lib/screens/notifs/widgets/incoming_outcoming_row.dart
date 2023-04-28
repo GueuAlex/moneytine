@@ -6,8 +6,11 @@ import '../../../style/palette.dart';
 class IncomingOutcomingRow extends StatelessWidget {
   const IncomingOutcomingRow({
     super.key,
+    required this.retrait,
+    required this.versement,
   });
-
+  final double versement;
+  final double retrait;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -43,21 +46,21 @@ class IncomingOutcomingRow extends StatelessWidget {
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Paiement',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4.0,
                     ),
                     FittedBox(
                       child: Text(
-                        '150000 FCFA',
-                        style: TextStyle(
+                        '${versement} FCFA',
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
@@ -105,20 +108,20 @@ class IncomingOutcomingRow extends StatelessWidget {
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Reception',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 3,
                     ),
                     FittedBox(
                       child: Text(
-                        '150000 FCFA',
+                        '${retrait} FCFA',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

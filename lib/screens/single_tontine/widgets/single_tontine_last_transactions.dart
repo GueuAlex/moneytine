@@ -32,7 +32,7 @@ class _SingleTontineLastTransactionsState
   ////////////////////////////// all transaction and filter by user id ::///////
   ///
   final List<MoneyTransaction> _allTransactions = [];
-  List<TransactionsByDate> _trasansactionsByDate = [];
+  List<DataByDate<MoneyTransaction>> _trasansactionsByDate = [];
   /////////////////////////////////////////////////////////////
   ///
   List<MyUser> members = [];
@@ -71,17 +71,17 @@ class _SingleTontineLastTransactionsState
         (a, b) => a.date.compareTo(b.date),
       );
       // Créer une liste de TransactionsByDate à partir de la liste triée
-      List<TransactionsByDate> transactionsByDate = [];
+      List<DataByDate<MoneyTransaction>> transactionsByDate = [];
       for (var t in _allTransactions) {
-        TransactionsByDate? last =
+        DataByDate? last =
             transactionsByDate.isNotEmpty ? transactionsByDate.last : null;
         if (last == null || last.date != t.date) {
-          transactionsByDate.add(TransactionsByDate(
+          transactionsByDate.add(DataByDate<MoneyTransaction>(
             date: t.date,
-            mTransaction: [t],
+            data: [t],
           ));
         } else {
-          last.mTransaction.add(t);
+          last.data.add(t);
         }
       }
       setState(() {

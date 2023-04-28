@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:moneytine/functions/firebase_fcm.dart';
 import 'package:moneytine/models/tontine.dart';
 import 'package:moneytine/models/user.dart';
 import 'package:moneytine/remote_services/remote_services.dart';
@@ -53,7 +54,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
   //////////////////////////
   ///
   final List<MoneyTransaction> _allTransactions = [];
-  List<TransactionsByDate> _trasansactionsByDate = [];
+  List<DataByDate<MoneyTransaction>> _trasansactionsByDate = [];
 
   getAllTransactions() async {
     List<MoneyTransaction> allTransactions =
@@ -72,17 +73,17 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
         (a, b) => a.date.compareTo(b.date),
       );
       // Créer une liste de TransactionsByDate à partir de la liste triée
-      List<TransactionsByDate> transactionsByDate = [];
+      List<DataByDate<MoneyTransaction>> transactionsByDate = [];
       for (var t in _allTransactions) {
-        TransactionsByDate? last =
+        DataByDate? last =
             transactionsByDate.isNotEmpty ? transactionsByDate.last : null;
         if (last == null || last.date != t.date) {
-          transactionsByDate.add(TransactionsByDate(
+          transactionsByDate.add(DataByDate<MoneyTransaction>(
             date: t.date,
-            mTransaction: [t],
+            data: [t],
           ));
         } else {
-          last.mTransaction.add(t);
+          last.data.add(t);
         }
       }
       setState(() {
@@ -96,6 +97,8 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
   ///////////////////////////////
   @override
   void initState() {
+    FirebaseFCM.storeNotificationToken();
+    FirebaseFCM.getTokenNotificationByEmail(userEmail: widget.user.email);
     _scrolleController.addListener(() {
       if (_scrolleController.position.userScrollDirection ==
           ScrollDirection.forward) {

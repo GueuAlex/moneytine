@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:moneytine/models/notification_models.dart';
 
 import '../../../style/palette.dart';
 
 class RapelNotification extends StatelessWidget {
   const RapelNotification({
     super.key,
+    required this.notificationModel,
   });
+
+  final NotificationModel notificationModel;
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +80,9 @@ class RapelNotification extends StatelessWidget {
                               //color: Colors.red,
                               ),
                         ),
-                        const TextSpan(
-                          text: ' tontineName ',
-                          style: TextStyle(
+                        TextSpan(
+                          text: ' ${notificationModel.tontineName} ',
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             //color: Colors.red,
                           ),
@@ -91,16 +95,15 @@ class RapelNotification extends StatelessWidget {
                               ),
                         ),
                         TextSpan(
-                          text: DateFormat(' MMM,dd,yyyy ')
-                              .format(DateTime.now()),
+                          text: notificationModel.hour.substring(0, 5),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             //color: Colors.red,
                           ),
                         ),
-                        const TextSpan(
-                          text: '\n50000 FCFA',
-                          style: TextStyle(
+                        TextSpan(
+                          text: '\n${notificationModel.amount} FCFA',
+                          style: const TextStyle(
                             //fontWeight: FontWeight.bold,
                             color: Palette.appPrimaryColor,
                             fontSize: 13,

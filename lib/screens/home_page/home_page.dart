@@ -25,11 +25,14 @@ class _HomePageScreenState extends State<HomePageScreen> {
   String tontineName = '';
 
   List<Widget> _buildScreens(BuildContext context) {
-    return [
-      MesTontinesScreen(user: widget.user!),
-      const NotifsScreen(),
-      SettingsScreen(user: widget.user!)
-    ];
+    if (widget.user != null) {
+      return [
+        MesTontinesScreen(user: widget.user!),
+        NotifsScreen(user: widget.user!),
+        SettingsScreen(user: widget.user!)
+      ];
+    }
+    return [];
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {

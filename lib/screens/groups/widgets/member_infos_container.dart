@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:moneytine/functions/functions.dart';
 import 'package:moneytine/remote_services/remote_services.dart';
 import 'package:moneytine/screens/single_tontine/widgets/export_widgets.dart';
 
+import '../../../functions/firebase_fcm.dart';
+import '../../../models/money_transaction.dart';
+import '../../../models/notification_models.dart';
 import '../../../models/single_group_data.dart';
 import '../../../models/tontine.dart';
 import '../../../models/user.dart';
@@ -32,6 +38,24 @@ class MemberInfosContainer extends StatefulWidget {
 }
 
 class _MemberInfosContainerState extends State<MemberInfosContainer> {
+  bool retraitExiste = false;
+  @override
+  void initState() {
+    verify();
+    super.initState();
+  }
+
+  verify() async {
+    List<MoneyTransaction> tab =
+        await Functions.getThisUSerTransactionsListByGroupId(
+            groupId: widget.groupe.id, userId: widget.user.id!);
+    if (retraitExist(tab: tab)) {
+      setState(() {
+        retraitExiste = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -99,7 +123,7 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
           ),
           rowInfos(
             text1: 'Statut de retrait :',
-            text2: 'Effectuée',
+            text2: retraitExiste ? 'Effectué' : 'Non effectué',
             // onTap: () {},
           ),
           /* rowInfos(
@@ -384,17 +408,109 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
     }
   }
 
-  void retrait() {
+  void retrait() async {
     if (widget.currentUser.id == widget.tontine.creatorId) {
       // todo something///////////////////////////
       if (widget.tontine.isActive == 1) {
         //////////////// on peut faire retrait///////////////////
         ///
-        print('retrait stard !');
+
+        Functions.showLoadingSheet(ctxt: context);
+        List<MoneyTransaction> tab =
+            await Functions.getThisUSerTransactionsListByGroupId(
+          groupId: widget.groupe.id,
+          userId: widget.user.id!,
+        );
+        print(tab);
+        if (tab.isNotEmpty) {
+          if (retraitExist(tab: tab)) {
+            ////////////
+            Navigator.pop(context);
+            Fluttertoast.showToast(
+              msg: 'Un retrait existe déjà pour ce membre !',
+              backgroundColor: Palette.appPrimaryColor,
+            );
+          } else {
+            double gain = widget.tontine.contribution *
+                double.parse(widget.tontine.numberOfType.toString()) *
+                widget.data.part;
+            String hours = DateFormat('HH:mm').format(DateTime.now());
+            print('retrait stard ok !');
+            MoneyTransaction newTrasanction = MoneyTransaction(
+              type: 'Retrait',
+              amunt: gain,
+              hours: hours,
+              date: DateTime.now(),
+              userId: widget.user.id!,
+              groupeId: widget.groupe.id,
+              tontineId: widget.tontine.id,
+            );
+            int tId = await RemoteServices().postNewTransaction(
+              api: 'transactions',
+              mtransaction: newTrasanction,
+            );
+            if (tId.isNaN) {
+              Navigator.pop(context);
+              Fluttertoast.showToast(
+                msg: 'Une erreur est subvenue !',
+                backgroundColor: Palette.appPrimaryColor,
+              );
+            } else {
+              Future.delayed(const Duration(seconds: 5)).then((value) async {
+                /////////////////////////// create notif
+                ///and send it
+                NotificationModel newNotif = NotificationModel(
+                  amount: gain,
+                  recipientId: widget.user.id!,
+                  type: 'Retrait',
+                  tontineId: widget.tontine.id,
+                  date: DateTime.now(),
+                  hour: DateFormat('HH:mm').format(DateTime.now()),
+                );
+                var response = await RemoteServices().postNotifDetails(
+                  api: 'notifications',
+                  notificationModel: newNotif,
+                );
+                if (response != null) {
+                  ///////////////////////////////////////////
+                  /// envoi de notification
+                  FirebaseFCM.getTokenNotificationByEmail(
+                    userEmail: widget.user.email,
+                  ).then(
+                    (token) {
+                      if (token != null) {
+                        FirebaseFCM.sendNotification(
+                          title: 'Transaction',
+                          token: token,
+                          message: 'Votre retrait a été enregistrer  👍🏻',
+                        );
+                      }
+                    },
+                  );
+                } else {
+                  print('une erreur quelque part');
+                }
+              });
+
+              Navigator.pop(context);
+              Fluttertoast.showToast(
+                msg: 'Retrait bien enregistré !',
+                backgroundColor: Palette.appPrimaryColor,
+              );
+            }
+          }
+        } else {
+          Navigator.pop(context);
+          Fluttertoast.showToast(
+            msg: 'Ce membre n\'a aucun paiement enregistré !',
+            backgroundColor: Palette.appPrimaryColor,
+          );
+        }
 
         ///
         /////////////////////////////////////////////////////////
       } else {
+        Navigator.pop(context);
         Fluttertoast.showToast(
           msg: 'Veuillez réactivée la tontine !',
           backgroundColor: Palette.appPrimaryColor,
@@ -407,5 +523,16 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
         backgroundColor: Palette.appPrimaryColor,
       );
     }
+  }
+
+  bool retraitExist({required List<MoneyTransaction> tab}) {
+    bool retraitExist = false;
+    for (MoneyTransaction element in tab) {
+      if (element.type == 'Retrait') {
+        retraitExist = true;
+        break;
+      }
+    }
+    return retraitExist;
   }
 }

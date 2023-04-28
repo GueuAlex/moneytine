@@ -2,12 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../models/notification_models.dart';
 import '../../../style/palette.dart';
 
 class ReceptionNotication extends StatelessWidget {
   const ReceptionNotication({
     super.key,
+    required this.notificationModel,
   });
+
+  final NotificationModel notificationModel;
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +59,9 @@ class ReceptionNotication extends StatelessWidget {
                         color: Colors.black,
                       ),
                       children: <TextSpan>[
-                        const TextSpan(
-                          text: '200000 FCFA ',
-                          style: TextStyle(
+                        TextSpan(
+                          text: '${notificationModel.amount} FCFA ',
+                          style: const TextStyle(
                             color: Palette.appPrimaryColor,
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -67,16 +71,15 @@ class ReceptionNotication extends StatelessWidget {
                           text: 'de',
                           style: TextStyle(),
                         ),
-                        const TextSpan(
-                          text: ' tontineName ',
-                          style: TextStyle(
+                        TextSpan(
+                          text: ' ${notificationModel.tontineName} ',
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        TextSpan(
-                          text:
-                              DateFormat(' bien reçu ').format(DateTime.now()),
-                          style: const TextStyle(),
+                        const TextSpan(
+                          text: ' bien reçu ',
+                          style: TextStyle(),
                         ),
                       ],
                     ),
@@ -84,7 +87,7 @@ class ReceptionNotication extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Text(
-                      DateFormat('à HH:mm').format(DateTime.now()),
+                      notificationModel.hour.substring(0, 5),
                       style: const TextStyle(
                         color: Palette.greyColor,
                         fontSize: 12,

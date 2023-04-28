@@ -1,14 +1,18 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:moneytine/functions/firebase_fcm.dart';
 import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/functions/local_notification_services.dart';
 import 'package:moneytine/models/money_transaction.dart';
 import 'package:moneytine/models/tontine.dart';
 import 'package:moneytine/models/user.dart';
 import 'package:moneytine/remote_services/remote_services.dart';
 import 'package:moneytine/widgets/custom_button.dart';
 
+import '../../../models/notification_models.dart';
 import '../../../style/palette.dart';
 import '../../../widgets/custom_text.dart';
 
@@ -51,6 +55,15 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
     super.dispose();
     // _paimentNoteCotroller.dispose();
     _paiementAmountController.dispose();
+  }
+
+  @override
+  void initState() {
+    FirebaseMessaging.instance.getInitialMessage();
+    FirebaseMessaging.onMessage.listen((event) {
+      LocalNotificationService().display(event);
+    });
+    super.initState();
   }
 
   @override
@@ -332,10 +345,11 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                       print('user id : ${widget.user.id}');
                       print(
                           '${_selectedPaimentTime.hour}:${_selectedPaimentTime.minute}');
-
+                      double amount =
+                          double.parse(_paiementAmountController.text);
                       MoneyTransaction moneyTransaction = MoneyTransaction(
                         type: 'Versement',
-                        amunt: double.parse(_paiementAmountController.text),
+                        amunt: amount,
                         hours:
                             '${_selectedPaimentTime.hour}:${_selectedPaimentTime.minute}',
                         date: _selectedPaimentDate,
@@ -345,8 +359,44 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                       );
                       Future.delayed(const Duration(seconds: 3)).then(
                         (value) async {
-                          if (await postTransatcionDetails(
+                          if (await Functions.postTransatcionDetails(
                               moneyTransaction: moneyTransaction)) {
+                            ///////////////////////////////
+                            ///on creer une donnée de notif pour notre db
+                            NotificationModel newNotif = NotificationModel(
+                              amount: amount,
+                              recipientId: widget.user.id!,
+                              type: 'Versement',
+                              tontineId: widget.tontine.id,
+                              date: DateTime.now(),
+                              hour: DateFormat('HH:mm').format(DateTime.now()),
+                            );
+                            var response =
+                                await RemoteServices().postNotifDetails(
+                              api: 'notifications',
+                              notificationModel: newNotif,
+                            );
+                            if (response != null) {
+                              ///////////////////////////////////////////
+                              /// envoi de notification
+                              FirebaseFCM.getTokenNotificationByEmail(
+                                userEmail: widget.user.email,
+                              ).then(
+                                (token) {
+                                  if (token != null) {
+                                    FirebaseFCM.sendNotification(
+                                      title: 'Transaction',
+                                      token: token,
+                                      message:
+                                          'Votre versement a été enregistrer  👍🏻',
+                                    );
+                                  }
+                                },
+                              );
+                            } else {
+                              print('une erreur quelque part');
+                            }
+
                             // ignore: use_build_context_synchronously
                             Navigator.pop(context);
                             Navigator.pop(context);
@@ -466,16 +516,5 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
         _selectedPaimentTime = newTime;
       });
     }
-  }
-
-  Future<bool> postTransatcionDetails(
-      {required MoneyTransaction moneyTransaction}) async {
-    var response = await RemoteServices().postNewTransaction(
-        api: 'transactions', mtransaction: moneyTransaction);
-
-    if (response != null) {
-      return true;
-    }
-    return false;
   }
 }
