@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moneytine/style/palette.dart';
 
 class ContributionInfos extends StatelessWidget {
   ContributionInfos({super.key, required this.label, required this.color});

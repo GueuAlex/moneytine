@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/models/notification_models.dart';
-import 'package:moneytine/models/transation_by_date.dart';
 
+import '../../../models/notification_models.dart';
+import '../../../models/transation_by_date.dart';
 import '../../../style/palette.dart';
 import 'paiement_notification.dart';
 import 'rapel_notification.dart';

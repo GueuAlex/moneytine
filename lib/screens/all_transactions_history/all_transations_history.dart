@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/money_transaction.dart';
-import 'package:moneytine/models/transation_by_date.dart';
-import 'package:moneytine/style/palette.dart';
-import 'package:moneytine/widgets/transactions_widget.dart';
+
+import '../../models/money_transaction.dart';
+import '../../models/transation_by_date.dart';
+import '../../models/user.dart';
+import '../../style/palette.dart';
+import '../../widgets/transactions_widget.dart';
 
 class AllTransactionsHistory extends StatelessWidget {
   const AllTransactionsHistory({
     super.key,
     required this.trasansactionsByDate,
+    required this.user,
   });
+  final MyUser user;
 
   final List<DataByDate<MoneyTransaction>> trasansactionsByDate;
 
@@ -27,6 +31,7 @@ class AllTransactionsHistory extends StatelessWidget {
               children: List.generate(
                 2,
                 (index) => TransactionsWidget(
+                  user: user,
                   trasansactionsByDate: trasansactionsByDate[index],
                 ),
               ),

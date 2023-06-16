@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/screens/single_tontine/single_tontine.dart';
 
+import '../../../functions/functions.dart';
+import '../../../models/tontine.dart';
+import '../../../models/user.dart';
+import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
 import '../../../widgets/custom_button.dart';
+import '../../single_tontine/single_tontine.dart';
 
 class CreatetontineSheetContent extends StatefulWidget {
   const CreatetontineSheetContent({super.key, required this.user});

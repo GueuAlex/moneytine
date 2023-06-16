@@ -4,13 +4,13 @@ import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/widgets/custom_button.dart';
 import 'package:intl/intl.dart';
 
+import '../../functions/functions.dart';
+import '../../models/tontine.dart';
+import '../../models/user.dart';
 import '../../style/palette.dart';
+import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text.dart';
 import 'widgets/modify_tontine_sheet.dart';
 
@@ -114,7 +114,7 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
                     onDateTimeChanged: (DateTime newDate) {
                       setState(() {
                         _selectedDate1 = newDate;
-                        print(newDate.toString());
+                        //print(newDate.toString());
                       });
                     },
                     minimumYear: 1900,
@@ -677,7 +677,7 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
                 onPress: () {
                   if (_formKey.currentState!.validate()) {
                     Functions.showLoadingSheet(ctxt: context);
-                    print('type : ${_selectedType}');
+                    /* print('type : ${_selectedType}');
                     print('nombre type : ${_numberOfController.text}');
                     print(
                         'Date debut : ${DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDate1)}');
@@ -685,12 +685,12 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
                         'Premier paie : ${DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDate2)}');
 
                     print('montant : ${_contributeAmountController.text}');
-                    print(DateTime.now());
+                    print(DateTime.now()); */
 
                     double amount =
                         double.parse(_contributeAmountController.text);
                     var part = (amount * (1 / 2));
-                    print(part.toString());
+                    //print(part.toString());
 
                     Future.delayed(const Duration(seconds: 2)).then((value) {
                       Navigator.pop(context);
@@ -735,17 +735,17 @@ class _ModifyTontineScreenState extends State<ModifyTontineScreen> {
               });
             }
           }
-          showSnackBar(list.toString());
+          //showSnackBar(list.toString());
         },
         enableMultipleSelection: false,
       ),
     ).showModal(context);
   }
 
-  void showSnackBar(String message) {
+  /* void showSnackBar(String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
-  }
+  } */
 
   void _showBottomSheet(
       {required BuildContext context, required Tontine tontine}) {

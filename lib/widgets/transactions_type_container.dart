@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/money_transaction.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../functions/functions.dart';
+import '../models/money_transaction.dart';
+import '../models/tontine.dart';
+import '../models/user.dart';
+import '../remote_services/remote_services.dart';
 import '../style/palette.dart';
 
 class TransactionsTypeContainer extends StatefulWidget {
@@ -19,13 +20,14 @@ class TransactionsTypeContainer extends StatefulWidget {
     //required this.user,
     required this.lastIndex,
     required this.index,
+    required this.user,
   });
   //final String transactionType;
   final Color color;
   final MoneyTransaction mTransactions;
   //final Tontine tontine;
   // final Groupe groupe;
-  //final User user;
+  final MyUser user;
   final int lastIndex;
   final int index;
 
@@ -89,9 +91,18 @@ class _TransactionsTypeContainerState extends State<TransactionsTypeContainer> {
                       child: Center(
                         child: FittedBox(
                           child: Text(
-                            widget.mTransactions.type.toLowerCase(),
+                            widget.user.id ==
+                                        widget.mTransactions.tontineCreatorId &&
+                                    widget.mTransactions.type != 'Retrait'
+                                ? 'Réception'
+                                : widget.mTransactions.type.toLowerCase(),
                             style: TextStyle(
-                              color: widget.color,
+                              color: widget.user.id ==
+                                          widget
+                                              .mTransactions.tontineCreatorId &&
+                                      widget.mTransactions.type != 'Retrait'
+                                  ? Palette.appSecondaryColor
+                                  : widget.color,
                               fontWeight: FontWeight.normal,
                             ),
                           ),
@@ -158,7 +169,7 @@ class _TransactionsTypeContainerState extends State<TransactionsTypeContainer> {
                       child: Center(
                         child: FittedBox(
                           child: Text(
-                            '${widget.mTransactions.amunt} CFA',
+                            '${Functions.addSpaceAfterThreeDigits((widget.mTransactions.amunt).toString())} CFA',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -202,4 +213,15 @@ class TransactionsShimmer extends StatelessWidget {
       color: Colors.grey,
     );
   }
+
+  /* String typeVerif(
+      {required MyUser user, required MoneyTransaction mTransaction}) {
+    if (user.id == mTransaction.tontineCreatorId) {
+      return 'Réception';
+    }
+    if (user.id == mTransaction.tontineCreatorId &&
+        user.id == mTransaction.userId) {
+      return 'Versement';
+    }
+  } */
 }

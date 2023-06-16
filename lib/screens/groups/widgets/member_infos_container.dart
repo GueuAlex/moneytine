@@ -1,20 +1,19 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/screens/single_tontine/widgets/export_widgets.dart';
 
 import '../../../functions/firebase_fcm.dart';
+import '../../../functions/functions.dart';
 import '../../../models/money_transaction.dart';
 import '../../../models/notification_models.dart';
 import '../../../models/single_group_data.dart';
 import '../../../models/tontine.dart';
 import '../../../models/user.dart';
+import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/generate_groupe_button.dart';
 import 'group_user_contribution.dart';
 import 'register_user_versement.dart';
 
@@ -39,6 +38,7 @@ class MemberInfosContainer extends StatefulWidget {
 
 class _MemberInfosContainerState extends State<MemberInfosContainer> {
   bool retraitExiste = false;
+  double montantSolder = 0;
   @override
   void initState() {
     verify();
@@ -54,6 +54,19 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
         retraitExiste = true;
       });
     }
+
+    ///////////////////// calcul de montant soldé//////////////////////////
+    ///
+    ///
+    double sold = 0;
+    for (var element in tab) {
+      if (element.type == 'Versement') {
+        sold += element.amunt;
+      }
+    }
+    setState(() {
+      montantSolder = sold;
+    });
   }
 
   @override
@@ -111,54 +124,53 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
           ),
           rowInfos(
             text1: 'Part de contribution :',
-            text2:
-                '${widget.data.part} => ${widget.data.part * widget.tontine.contribution}',
+            text2: '${widget.data.part} => ${Functions.addSpaceAfterThreeDigits(
+              (widget.data.part * widget.tontine.contribution).toString(),
+            )} FCFA',
             // onTap: () {},
           ),
           rowInfos(
             text1: 'Gain après retrait:',
-            text2:
-                '${(widget.tontine.contribution * double.parse(widget.tontine.numberOfType.toString()) * widget.data.part)} FCFA',
+            text2: '${Functions.addSpaceAfterThreeDigits(
+              (widget.tontine.contribution *
+                      double.parse(widget.tontine.numberOfType.toString()) *
+                      widget.data.part)
+                  .toString(),
+            )} FCFA',
             //onTap: () {},
+          ),
+          rowInfos(
+            text1: 'Montant soldé :',
+            text2:
+                '${Functions.addSpaceAfterThreeDigits(montantSolder.toString())} FCFA',
+            // onTap: () {},
           ),
           rowInfos(
             text1: 'Statut de retrait :',
             text2: retraitExiste ? 'Effectué' : 'Non effectué',
             // onTap: () {},
           ),
-          /* rowInfos(
-            text1: 'Historique des contributions :',
-            text2: 'Voir',
-            isHistory: true,
-            onTap: () {
-              // print('contribution historique ');
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return GroupUserContribution(
-                  groupe: widget.groupe,
-                  tontine: widget.tontine,
-                  user: widget.user,
-                );
-              }));
-            },
-          ), */
+          const SizedBox(height: 25),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GenerateGroupeButton(
-                  isGenerate: true,
-                  text: 'Faire un Retrait',
+                  isGenerate: false,
+                  text: 'Retrait',
                   color: Palette.appPrimaryColor,
                   icon: CupertinoIcons.arrow_up,
-                  onTap: retrait,
+                  onTap: () {
+                    _showBottomSheet(context: context);
+                  },
                 ),
                 const SizedBox(
                   width: 4,
                 ),
                 GenerateGroupeButton(
-                  isGenerate: true,
-                  text: 'Faire un versement',
+                  isGenerate: false,
+                  text: 'Versement',
                   color: Palette.appSecondaryColor,
                   icon: CupertinoIcons.arrow_down,
                   onTap: versement,
@@ -167,15 +179,15 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
                   width: 4,
                 ),
                 GenerateGroupeButton(
-                  isGenerate: true,
-                  text: 'Retirer ce membre',
+                  isGenerate: false,
+                  text: 'Retirer',
                   color: Palette.greyColor,
                   icon: CupertinoIcons.minus,
                   onTap: () {
                     if (widget.currentUser.id == widget.tontine.creatorId) {
                       // do something /////////////////////////
                       if (widget.tontine.isActive == 1) {
-                        removeUser();
+                        _showBottomSheet(context: context, isRetrait: false);
                       } else {
                         Fluttertoast.showToast(
                           msg: 'Veuillez reactivée la tontine !',
@@ -199,110 +211,6 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
             tontine: widget.tontine,
             user: widget.user,
           ),
-          /* Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: CustomButton(
-                color: Palette.appPrimaryColor,
-                width: double.infinity,
-                height: 45,
-                radius: 50,
-                isSetting: true,
-                fontsize: 14,
-                text: 'Faire un retrait',
-                onPress: () {
-                  if (widget.currentUser.id == widget.tontine.creatorId) {
-                    // todo something///////////////////////////
-                    if (widget.tontine.isActive == 1) {
-                      //////////////// on peut faire retrait///////////////////
-                      ///
-
-                      ///
-                      /////////////////////////////////////////////////////////
-                    } else {
-                      Fluttertoast.showToast(
-                        msg: 'Veuillez réactivée la tontine !',
-                        backgroundColor: Palette.appPrimaryColor,
-                      );
-                    }
-                    //////////////////
-                  } else {
-                    Fluttertoast.showToast(
-                      msg: 'Action non autorisée !',
-                      backgroundColor: Palette.appPrimaryColor,
-                    );
-                  }
-                }),
-          ), */
-          /* Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: CustomButton(
-              color: Palette.appSecondaryColor,
-              width: double.infinity,
-              height: 45,
-              isSetting: true,
-              fontsize: 14,
-              radius: 50,
-              text: 'Enregistrer un versement',
-              onPress: () {
-                if (widget.currentUser.id == widget.tontine.creatorId) {
-                  if (widget.tontine.isActive == 1) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return RegisterUserVersement(
-                            groupe: widget.groupe,
-                            tontine: widget.tontine,
-                            user: widget.user,
-                          );
-                        },
-                      ),
-                    );
-                  } else {
-                    Fluttertoast.showToast(
-                      msg: 'Veuillez réactivée la tontine !',
-                      backgroundColor: Palette.appPrimaryColor,
-                    );
-                  }
-                } else {
-                  Fluttertoast.showToast(
-                    msg: 'Action non autorisée !',
-                    backgroundColor: Palette.appPrimaryColor,
-                  );
-                }
-              },
-            ),
-          ), */
-          /*  Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: CustomButton(
-              color: Palette.greyColor,
-              width: double.infinity,
-              height: 45,
-              radius: 50,
-              isSetting: true,
-              fontsize: 14,
-              text: 'Retirer ce membre',
-              onPress: () {
-                if (widget.currentUser.id == widget.tontine.creatorId) {
-                  // do something /////////////////////////
-                  if (widget.tontine.isActive == 1) {
-                    removeUser();
-                  } else {
-                    Fluttertoast.showToast(
-                      msg: 'Veuillez reactivée la tontine !',
-                      backgroundColor: Palette.appPrimaryColor,
-                    );
-                  }
-                  /////////////////////////////////////////
-                } else {
-                  Fluttertoast.showToast(
-                    msg: 'Action non autorisée !',
-                    backgroundColor: Palette.appPrimaryColor,
-                  );
-                }
-              },
-            ),
-          ), */
         ],
       ),
     );
@@ -395,6 +303,7 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
           backgroundColor: Palette.appPrimaryColor,
         );
         Navigator.pop(context);
+        Navigator.pop(context);
       });
     } else {
       Future.delayed(const Duration(seconds: 3)).then((value) {
@@ -421,7 +330,7 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
           groupId: widget.groupe.id,
           userId: widget.user.id!,
         );
-        print(tab);
+        //print(tab);
         if (tab.isNotEmpty) {
           if (retraitExist(tab: tab)) {
             ////////////
@@ -435,7 +344,7 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
                 double.parse(widget.tontine.numberOfType.toString()) *
                 widget.data.part;
             String hours = DateFormat('HH:mm').format(DateTime.now());
-            print('retrait stard ok !');
+            // print('retrait stard ok !');
             MoneyTransaction newTrasanction = MoneyTransaction(
               type: 'Retrait',
               amunt: gain,
@@ -444,6 +353,7 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
               userId: widget.user.id!,
               groupeId: widget.groupe.id,
               tontineId: widget.tontine.id,
+              tontineCreatorId: widget.tontine.creatorId,
             );
             int tId = await RemoteServices().postNewTransaction(
               api: 'transactions',
@@ -484,11 +394,15 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
                           token: token,
                           message: 'Votre retrait a été enregistrer  👍🏻',
                         );
+                        /////////////////:
+                        ///
+                        FirebaseFCM.updateUserIsNotifField(
+                            email: widget.user.email, isNotif: true);
                       }
                     },
                   );
                 } else {
-                  print('une erreur quelque part');
+                  // print('une erreur quelque part');
                 }
               });
 
@@ -534,5 +448,103 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
       }
     }
     return retraitExist;
+  }
+
+  void _showBottomSheet(
+      {required BuildContext context, bool isRetrait = true}) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 200,
+          decoration: const BoxDecoration(
+            color: Palette.whiteColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25.0),
+              topRight: Radius.circular(25.0),
+            ),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Center(
+                    child: Container(
+                      width: 60,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Palette.greyColor.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 15.5),
+                  child: Text(
+                    ' ',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                //const SizedBox(height: 20),
+                //Options(options: _options)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: isRetrait
+                            ? Text(
+                                'Enregistrement d\'un retrait pour ${widget.user.fullName}',
+                                textAlign: TextAlign.center,
+                              )
+                            : Text(
+                                'Souhaitez vous supprimer ${widget.user.fullName} ?',
+                                textAlign: TextAlign.center,
+                              ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: CustomButton(
+                        isSetting: true,
+                        fontsize: 16,
+                        color: Palette.appPrimaryColor,
+                        width: double.infinity,
+                        height: 40,
+                        radius: 50,
+                        text: 'Confirmer',
+                        onPress: isRetrait ? retrait : removeUser,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8, left: 8),
+                      child: CustomButton(
+                        isSetting: true,
+                        fontsize: 16,
+                        color: Palette.primaryColor,
+                        width: double.infinity,
+                        height: 40,
+                        radius: 50,
+                        text: 'Annuler',
+                        onPress: () => Navigator.pop(context),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -1,17 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moneytine/config/firebase_const.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/screens/auth/success.dart';
 
+import '../../config/firebase_const.dart';
+import '../../functions/functions.dart';
+import '../../models/user.dart';
+import '../../remote_services/remote_services.dart';
 import '../../style/palette.dart';
 import '../../widgets/leading.dart';
 import 'login.dart';
+import 'pin_code/pin_code.dart';
 import 'reset_password_screen.dart';
 import 'widgets/otp_text_field.dart';
 
@@ -67,7 +66,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 userEntryOtp = int.parse(textEditingController.text);
               });
             }
-            print(' dans screen : $userEntryOtp');
+            //print(' dans screen : $userEntryOtp');
             Future.delayed(const Duration(seconds: 4)).then((value) async {
               if (widget.otp == userEntryOtp) {
                 setState(() {
@@ -99,15 +98,23 @@ class _OtpScreenState extends State<OtpScreen> {
                     ///////////////////////////////////////////////////////
                     ///
 
-                    Fluttertoast.showToast(
-                      msg: 'Vous êtes bien inscit !',
-                      backgroundColor: Palette.appPrimaryColor,
-                    );
+                    /*  */
                     // ignore: use_build_context_synchronously
-                    Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const SucessScreen();
-                    }), (route) => false);
+                    /*    */
+                    var response = await Functions.postLoginDetails(
+                      email: widget.user!.email,
+                      password: widget.user!.password!,
+                    );
+                    if (response != null) {
+                      MyUser user = response;
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (context) {
+                        return PinCodeScreen(
+                          isRegistration: true,
+                          user: user,
+                        );
+                      }), (route) => false);
+                    }
                   } else {
                     setState(() {
                       isLoading = false;
@@ -258,7 +265,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                 isNewOptProcess = true;
                               });
                               int newOtp = await Functions.postEmail(
-                                api: 'users/verification/email',
+                                api: 'users/email/password/reset',
                                 email: widget.email,
                               );
                               Future.delayed(const Duration(seconds: 4))

@@ -4,10 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:moneytine/models/user.dart';
-
-import 'tontine.dart';
-
 //////////////////////////////// single //////////////////////////////////////
 ///
 ///
@@ -37,6 +33,7 @@ class MoneyTransaction {
     required this.userId,
     required this.groupeId,
     required this.tontineId,
+    required this.tontineCreatorId,
   });
 
   int? id;
@@ -47,6 +44,7 @@ class MoneyTransaction {
   int userId;
   int groupeId;
   int tontineId;
+  int tontineCreatorId;
 
   factory MoneyTransaction.fromJson(Map<String, dynamic> json) =>
       MoneyTransaction(
@@ -58,6 +56,7 @@ class MoneyTransaction {
         userId: json["user_id"],
         groupeId: json["group_id"],
         tontineId: json["tontine_id"],
+        tontineCreatorId: json["tontine_creator_id"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -69,5 +68,6 @@ class MoneyTransaction {
         "user_id": userId,
         "group_id": groupeId,
         "tontine_id": tontineId,
+        "tontine_creator_id": tontineCreatorId,
       };
 }

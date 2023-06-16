@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/style/palette.dart';
 
+import '../../models/tontine.dart';
+import '../../models/user.dart';
+import '../../style/palette.dart';
 import 'widgets/group_header.dart';
 import 'widgets/group_top_box.dart';
 import 'widgets/single_tontine_groupe_container.dart';
@@ -44,9 +44,15 @@ class GroupsScreen extends StatelessWidget {
                 )
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.only(right: 55.0, left: 55.0, top: 45),
-              child: GroupTopBox(),
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 55.0,
+                left: 55.0,
+                top: 65,
+              ),
+              child: GroupTopBox(
+                tontine: tontine,
+              ),
             ),
           ],
         ),

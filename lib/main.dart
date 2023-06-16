@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:moneytine/functions/local_notification_services.dart';
 import 'firebase_options.dart';
 
+import 'functions/local_notification_services.dart';
 import 'splash.dart';
 import 'style/palette.dart';
 
@@ -15,7 +15,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
 
-  print("Handling a background message: ${message.messageId}");
+  //print("Handling a background message: ${message.messageId}");
 }
 
 Future<void> main() async {
@@ -37,14 +37,14 @@ Future<void> main() async {
     sound: true,
   );
 
-  print('User granted permission: ${settings.authorizationStatus}');
+  //print('User granted permission: ${settings.authorizationStatus}');
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
+    //print('Got a message whilst in the foreground!');
+    //print('Message data: ${message.data}');
 
     if (message.notification != null) {
       LocalNotificationService().display(message);
-      print('Message also contained a notification: ${message.notification}');
+      //print('Message also contained a notification: ${message.notification}');
     }
   });
 
@@ -101,6 +101,8 @@ class MyApp extends StatelessWidget {
       ),
       //home: const MyHomePage(title: 'MoneyTine'),
       home: const SplashCreen(),
+      //home: CountdownWidget(endDate: DateTime.now().add(Duration(days: 30))),
+      //home: const PinCodeScreen(),
       //home: SuperposedCarousel(),
       //home: const HomePageScreen(),
       //home: const DropDownListExample(),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/money_transaction.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/transation_by_date.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/widgets/loading_container.dart';
 
+import '../../../models/money_transaction.dart';
+import '../../../models/tontine.dart';
+import '../../../models/transation_by_date.dart';
+import '../../../models/user.dart';
+import '../../../remote_services/remote_services.dart';
+import '../../../widgets/loading_container.dart';
 import '../../../widgets/transactions_widget.dart';
 
 class GroupUserContribution extends StatefulWidget {
@@ -111,11 +111,12 @@ class _GroupUserContributionState extends State<GroupUserContribution> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Transactions  '),
+                          Text('  '),
                           Column(
                             children: List.generate(
                               _trasansactionsByDate.length,
                               (index) => TransactionsWidget(
+                                user: widget.user,
                                 trasansactionsByDate:
                                     _trasansactionsByDate[index],
                                 //user: widget.user,

@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/screens/my_tontines/mes_tontines.dart';
-import 'package:moneytine/screens/notifs/notifs_screen.dart';
-import 'package:moneytine/screens/settings/settings_screen.dart';
-import 'package:moneytine/style/palette.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+
+import '../../functions/firebase_fcm.dart';
+import '../../models/user.dart';
+import '../../style/palette.dart';
+import '../my_tontines/mes_tontines.dart';
+import '../notifs/notifs_screen.dart';
+import '../settings/settings_screen.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key, this.user});
@@ -23,6 +25,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   //inal double iconSize = 22;
   String code = '';
   String tontineName = '';
+  bool isNotif1 = false;
 
   List<Widget> _buildScreens(BuildContext context) {
     if (widget.user != null) {
@@ -59,16 +62,17 @@ class _HomePageScreenState extends State<HomePageScreen> {
               size: 22,
             ),
             Positioned(
-                right: 3,
-                top: 5,
-                child: Container(
-                  width: 7,
-                  height: 7,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.red,
-                  ),
-                ))
+              right: 3,
+              top: 5,
+              child: Container(
+                width: 7,
+                height: 7,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isNotif1 ? Colors.red : Colors.transparent,
+                ),
+              ),
+            )
           ],
         ),
         title: "Notifications",
@@ -96,10 +100,33 @@ class _HomePageScreenState extends State<HomePageScreen> {
     ];
   }
 
+  void getBool() async {
+    final isNotif = await FirebaseFCM.getIsNotif();
+    if (isNotif != null) {
+      ////////////
+      setState(() {
+        isNotif1 = isNotif;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    getBool();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PersistentTabView(
+        onItemSelected: (index) {
+          if (index == 1) {
+            setState(() {
+              isNotif1 = false;
+            });
+          }
+        },
         context,
         controller: _controller,
         screens: _buildScreens(context),

@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/screens/auth/success.dart';
 
+import '../../functions/functions.dart';
 import '../../style/palette.dart';
 import '../../widgets/leading.dart';
 import 'login.dart';
+import 'success.dart';
 import 'widgets/reset_password_text_field.dart';
 
 class ResetPasswordScreen extends StatefulWidget {

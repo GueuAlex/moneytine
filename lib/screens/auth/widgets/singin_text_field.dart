@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
-import '../../../config/pwd.dart';
 import '../../../style/palette.dart';
 import '../login.dart';
 
@@ -71,46 +69,6 @@ class _SinginTextFieldState extends State<SinginTextField> {
         //fillColor: Style.appWhite,
       ),
     );
-
-    //////////////////////first name field ///////////
-    /* final lastNameFiel = TextFormField(
-      autofocus: false,
-
-      //first name validator
-      validator: (value) {
-        if (value!.isEmpty) {
-          return ('Le prénom est obligatoire !');
-        }
-
-        if (value.length < 2) {
-          return ('prénom trop court !');
-        }
-
-        return null;
-      },
-      controller: lastNameController,
-      keyboardType: TextInputType.name,
-      //validation: ()=>{}
-      onSaved: (value) {
-        lastNameController.text = value!;
-      },
-      textInputAction: TextInputAction.next,
-      decoration: InputDecoration(
-        prefixIcon: const Icon(
-          CupertinoIcons.person,
-          color: Palette.secondaryColor,
-        ),
-        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        labelText: 'Prénoms',
-        labelStyle: const TextStyle(color: Palette.secondaryColor),
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-
-        //fillColor: Style.appWhite,
-      ),
-    ); */
 
     ///////////// email field ///////////////////
     final emailField = TextFormField(
@@ -275,7 +233,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
       ),
     );
 
-    final pwdValidator = FlutterPwValidator(
+    /* final pwdValidator = FlutterPwValidator(
       controller: widget.passwordController,
       minLength: 8,
       uppercaseCharCount: 1,
@@ -294,7 +252,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
         });
       },
       strings: FrenchStrings(),
-    );
+    ); */
 
     return Column(
       children: [
@@ -335,7 +293,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
         const SizedBox(
           height: 10.0,
         ),
-        Padding(
+        /* Padding(
           padding: const EdgeInsets.only(
             right: 15.0,
             left: 15.0,
@@ -350,7 +308,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
             ),
             child: passwordField,
           ),
-        ),
+        ), */
         isVisible
             ? Container(
                 width: double.infinity,
@@ -361,13 +319,14 @@ class _SinginTextFieldState extends State<SinginTextField> {
                   left: 25,
                 ),
                 // color: Colors.amber,
-                child: pwdValidator,
+                //child: pwdValidator,
+                child: Container(),
               )
             : Container(),
         const SizedBox(
           height: 10.0,
         ),
-        Padding(
+        /* Padding(
           padding: const EdgeInsets.only(
             right: 15.0,
             left: 15.0,
@@ -382,7 +341,7 @@ class _SinginTextFieldState extends State<SinginTextField> {
             ),
             child: confirmPasswordField,
           ),
-        ),
+        ), */
         Padding(
           padding: const EdgeInsets.only(top: 30.0),
           child: GestureDetector(

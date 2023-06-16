@@ -28,10 +28,11 @@ class GroupeCard extends StatelessWidget {
         top: 5.0,
         left: 5.0,
         right: 5.0,
+        //bottom: 10,
       ),
       margin: const EdgeInsets.only(right: 5.0),
-      width: 150,
-      height: 60,
+      width: 130,
+      height: 45,
       decoration: BoxDecoration(
         color: index != selectedIndex
             ? Palette.secondaryColor.withOpacity(0.2)
@@ -59,27 +60,32 @@ class GroupeCard extends StatelessWidget {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                groupe.nom,
-                style: TextStyle(
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  groupe.nom,
+                  style: TextStyle(
+                    color: selectedIndex != index
+                        ? Palette.secondaryColor
+                        : Palette.whiteColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Icon(
+                  CupertinoIcons.person_3_fill,
                   color: selectedIndex != index
                       ? Palette.secondaryColor
                       : Palette.whiteColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              Icon(
-                CupertinoIcons.person_3_fill,
-                color: selectedIndex != index
-                    ? Palette.secondaryColor
-                    : Palette.whiteColor,
-                size: 30,
-              )
-            ],
+                  size: 23,
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 5,
           )
         ],
       ),

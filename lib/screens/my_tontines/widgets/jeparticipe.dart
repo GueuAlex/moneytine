@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/screens/single_tontine/single_tontine.dart';
-import 'package:moneytine/style/palette.dart';
+import 'package:flutter_svg/svg.dart';
 
+import '../../../models/tontine.dart';
+import '../../../models/user.dart';
+import '../../../style/palette.dart';
+import '../../single_tontine/single_tontine.dart';
 import 'jeparticipe_tontine_card.dart';
 
-class JeParticipe extends StatelessWidget {
+class JeParticipe extends StatefulWidget {
   const JeParticipe({
     super.key,
     required this.tontineList,
@@ -16,6 +17,70 @@ class JeParticipe extends StatelessWidget {
   final List<Tontine> tontineList;
   final MyUser user;
 
+  @override
+  State<JeParticipe> createState() => _JeParticipeState();
+}
+
+class _JeParticipeState extends State<JeParticipe> {
+  ///////////////////////////////////////////////////////
+  ///
+  ///
+  List<Tontine> _tontineList = [];
+  //////////////////////////////////////////////
+  ///
+  String filterName = 'Toutes les tontines';
+  //////////////////////////////////////////////
+  List<String> _options = [
+    'Toutes les tontines',
+    'Tontines en cours',
+    'Tontines terminées',
+  ];
+  List<String> _assets = [
+    'assets/icons/search-eye-line.svg',
+    'assets/icons/refresh-line.svg',
+    'assets/icons/check-line.svg',
+  ];
+  ///////////////////////////////////////////////
+  ///
+/*   runFilter() {
+    print('object');
+    if (filterName == 'Toutes les tontines') {
+      //_tontineList.clear();
+      setState(() {
+        _tontineList = widget.tontineList;
+      });
+    }
+    if (filterName == 'Tontines en cours') {
+      _tontineList.clear();
+      for (Tontine tontine in widget.tontineList) {
+        if (tontine.isActive == 1) {
+          setState(() {
+            _tontineList.add(tontine);
+          });
+        }
+      }
+    }
+    if (filterName == 'Tontines terminées') {
+      _tontineList.clear();
+      for (Tontine tontine in widget.tontineList) {
+        if (tontine.isActive == 0) {
+          setState(() {
+            _tontineList.add(tontine);
+          });
+        }
+      }
+    }
+  } */
+
+  ////////////////////////////////////////////////
+  ///
+  @override
+  void initState() {
+    _tontineList = widget.tontineList;
+    super.initState();
+  }
+
+  ///////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +116,7 @@ class JeParticipe extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                tontineList.length.toString(),
+                                widget.tontineList.length.toString(),
                                 style: const TextStyle(
                                   color: Palette.whiteColor,
                                   fontWeight: FontWeight.bold,
@@ -59,7 +124,7 @@ class JeParticipe extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                tontineList.length <= 1
+                                widget.tontineList.length <= 1
                                     ? '  Tontine'
                                     : '  Tontines',
                                 style: const TextStyle(
@@ -102,7 +167,7 @@ class JeParticipe extends StatelessWidget {
                         color: Colors.transparent,
                         child: Center(
                           child: Container(
-                            padding: const EdgeInsets.only(top: 10, left: 10),
+                            padding: const EdgeInsets.all(5.0),
                             width: 300,
                             height: MediaQuery.of(context).size.height,
                             decoration: BoxDecoration(
@@ -125,9 +190,50 @@ class JeParticipe extends StatelessWidget {
                               color: Palette.whiteColor,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Column(
+                            child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [],
+                              children: [
+                                ////////////////////////////////////////
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Palette.greyColor.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        filterName,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                          color: Palette.greyColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 4.0),
+                                InkWell(
+                                  onTap: () => _showBottomSheet(context),
+                                  child: Container(
+                                    width: 60,
+                                    height: MediaQuery.of(context).size.height,
+                                    decoration: BoxDecoration(
+                                      color: Palette.appPrimaryColor
+                                          .withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Center(
+                                      child: SvgPicture.asset(
+                                        'assets/icons/filter.svg',
+                                        width: 30,
+                                        color: Palette.secondaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                /////////////////////////////////////////
+                              ],
                             ),
                           ),
                         ),
@@ -141,15 +247,15 @@ class JeParticipe extends StatelessWidget {
               ),
               Column(
                 children: List.generate(
-                  tontineList.length,
+                  widget.tontineList.length,
                   (index) => JeParticipeTontineCard(
-                    tontine: tontineList[index],
+                    tontine: widget.tontineList[index],
                     onTap: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return SingleTontine(
-                          tontine: tontineList[index],
-                          user: user,
+                          tontine: widget.tontineList[index],
+                          user: widget.user,
                         );
                       }));
                     },
@@ -162,4 +268,89 @@ class JeParticipe extends StatelessWidget {
       ),
     );
   }
+
+  /////////////////////////
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 300,
+          decoration: const BoxDecoration(
+            color: Palette.whiteColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25.0),
+              topRight: Radius.circular(25.0),
+            ),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Center(
+                    child: Container(
+                      width: 60,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Palette.greyColor.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 15.5),
+                  child: Text(
+                    ' ',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                //Options(options: _options)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(
+                    _options.length,
+                    (index) => ListTile(
+                      onTap: () {
+                        setState(() {
+                          filterName = _options[index];
+                        });
+                        Navigator.pop(context);
+
+                        // runFilter();
+                      },
+                      leading: Container(
+                        padding: EdgeInsets.all(8),
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Palette.secondaryColor.withOpacity(0.3),
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset(
+                            _assets[index],
+                            color: Palette.secondaryColor,
+                          ),
+                        ),
+                      ),
+                      title: Text(_options[index]),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  ///
+  ////////////////////////
 }

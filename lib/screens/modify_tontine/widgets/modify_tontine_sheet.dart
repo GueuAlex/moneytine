@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/screens/single_tontine/single_tontine.dart';
-import 'package:moneytine/widgets/custom_button.dart';
-import 'package:moneytine/widgets/custom_text.dart';
 
+import '../../../functions/functions.dart';
+import '../../../models/tontine.dart';
+import '../../../models/user.dart';
+import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/custom_text.dart';
+import '../../single_tontine/single_tontine.dart';
 
 class ModifyTontineSheetContent extends StatefulWidget {
   const ModifyTontineSheetContent({
@@ -90,7 +90,7 @@ class _ModifyTontineSheetContentState extends State<ModifyTontineSheetContent> {
                             text: widget.type,
                           ),
                           RecapInfosRow(
-                            label: 'Nomde de mois :',
+                            label: 'Nombre de mois :',
                             text: widget.monbreType.toString(),
                           ),
                           RecapInfosRow(
@@ -99,12 +99,12 @@ class _ModifyTontineSheetContentState extends State<ModifyTontineSheetContent> {
                                 .format(widget.dateDebut),
                           ),
                           RecapInfosRow(
-                            label: 'Date du prémier paiement :',
+                            label: 'Date du premier paiement :',
                             text: DateFormat('dd / MM / yyyy')
                                 .format(widget.datePremierePaie),
                           ),
                           RecapInfosRow(
-                            label: 'Date du dernier prémier paiement :',
+                            label: 'Date du dernier paiement :',
                             text: DateFormat('dd / MM / yyyy')
                                 .format(widget.dateDernierPaie),
                           ),

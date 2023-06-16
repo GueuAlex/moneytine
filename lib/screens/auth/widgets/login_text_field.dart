@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytine/screens/auth/reset_email.dart';
 
 import '../../../style/palette.dart';
 
@@ -153,7 +152,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
         const SizedBox(
           height: 10.0,
         ),
-        Padding(
+        /* Padding(
           padding: const EdgeInsets.only(
             right: 15.0,
             left: 15.0,
@@ -168,7 +167,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
             ),
             child: passwordField,
           ),
-        ),
+        ), */
         Container(
           padding: const EdgeInsets.only(
             right: 25.0,
@@ -189,7 +188,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
                   )
                 ],
               ),
-              InkWell(
+              /* InkWell(
                 onTap: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
@@ -197,7 +196,8 @@ class _LoginTextFieldState extends State<LoginTextField> {
                   }));
                 },
                 child: const Text(' Mot de passe oublié ?'),
-              )
+              ) */
+              Container(),
             ],
           ),
         ),

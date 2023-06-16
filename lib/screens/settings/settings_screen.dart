@@ -1,17 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/config/prefs.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/screens/auth/login.dart';
-import 'package:moneytine/style/palette.dart';
-import 'package:moneytine/widgets/custom_button.dart';
-import 'package:moneytine/widgets/custom_text.dart';
 
+import '../../config/prefs.dart';
+import '../../functions/functions.dart';
+import '../../models/tontine.dart';
+import '../../models/user.dart';
+import '../../style/palette.dart';
+import '../../widgets/custom_button.dart';
+import '../../widgets/custom_text.dart';
+import '../auth/login.dart';
 import 'widgets/name_container.dart';
 import 'widgets/top_row.dart';
 
@@ -224,10 +223,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               CustomButton(
                 isSetting: true,
-                fontsize: 14,
+                fontsize: 13,
                 color: Palette.appPrimaryColor,
                 width: double.infinity,
-                height: 40,
+                height: 35,
                 radius: 50,
                 text: 'Enregistrer les modifications',
                 onPress: () async {
@@ -248,10 +247,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               CustomButton(
                 isSetting: true,
-                fontsize: 14,
+                fontsize: 13,
                 color: Palette.primaryColor,
                 width: double.infinity,
-                height: 40,
+                height: 35,
                 radius: 50,
                 text: 'Se déconnecter',
                 onPress: () async {
@@ -381,7 +380,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         birthDate = newDate;
                         birthDateFromPrefs =
                             DateFormat('dd / MM/ yyyy').format(newDate);
-                        print(newDate.toString());
+                        //print(newDate.toString());
                       });
                     },
                     minimumYear: 1900,

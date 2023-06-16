@@ -2,25 +2,24 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/screens/single_tontine/widgets/transactions_of_this_tontine.dart';
-import 'package:moneytine/widgets/empty_transaction.dart';
-import 'package:moneytine/widgets/loading_container.dart';
 
 import '../../../models/money_transaction.dart';
+import '../../../models/tontine.dart';
 import '../../../models/transation_by_date.dart';
+import '../../../models/user.dart';
 import '../../../remote_services/remote_services.dart';
+import '../../../widgets/empty_transaction.dart';
 import '../../../widgets/list_groupe_card_header.dart';
+import '../../../widgets/loading_container.dart';
 import '../../../widgets/transactions_widget.dart';
+import 'transactions_of_this_tontine.dart';
 
 class SingleTontineLastTransactions extends StatefulWidget {
-  const SingleTontineLastTransactions({
-    required this.tontine,
-    super.key,
-  });
+  const SingleTontineLastTransactions(
+      {required this.tontine, super.key, required this.user});
 
   final Tontine tontine;
+  final MyUser user;
 
   @override
   State<SingleTontineLastTransactions> createState() =>
@@ -157,8 +156,10 @@ class _SingleTontineLastTransactionsState
                           MaterialPageRoute(
                             builder: (context) {
                               return TransactionsOfThisTontine(
-                                  transactionsByDate: _trasansactionsByDate,
-                                  menbers: members);
+                                user: widget.user,
+                                transactionsByDate: _trasansactionsByDate,
+                                menbers: members,
+                              );
                             },
                           ),
                         );
@@ -174,6 +175,7 @@ class _SingleTontineLastTransactionsState
                               children: List.generate(
                             _trasansactionsByDate.length,
                             (index) => TransactionsWidget(
+                              user: widget.user,
                               trasansactionsByDate:
                                   _trasansactionsByDate[index],
                               //user: members[index],

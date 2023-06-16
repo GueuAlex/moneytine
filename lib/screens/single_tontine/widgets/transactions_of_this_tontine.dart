@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/money_transaction.dart';
-import 'package:moneytine/models/transation_by_date.dart';
-import 'package:moneytine/style/palette.dart';
-import 'package:moneytine/widgets/transactions_widget.dart';
 
+import '../../../models/money_transaction.dart';
+import '../../../models/transation_by_date.dart';
 import '../../../models/user.dart';
+import '../../../style/palette.dart';
+import '../../../widgets/transactions_widget.dart';
 
 class TransactionsOfThisTontine extends StatelessWidget {
   const TransactionsOfThisTontine({
     super.key,
     required this.transactionsByDate,
     required this.menbers,
+    required this.user,
   });
   final List<DataByDate<MoneyTransaction>> transactionsByDate;
   final List<MyUser> menbers;
+  final MyUser user;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class TransactionsOfThisTontine extends StatelessWidget {
               children: List.generate(
                 transactionsByDate.length,
                 (index) => TransactionsWidget(
+                  user: user,
                   trasansactionsByDate: transactionsByDate[index],
                   // user: menbers[index],
                 ),

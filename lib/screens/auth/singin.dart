@@ -3,14 +3,15 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/screens/auth/login.dart';
-import 'package:moneytine/screens/auth/otp_screen.dart';
-import 'package:moneytine/screens/auth/widgets/singin_text_field.dart';
-import 'package:moneytine/style/palette.dart';
 
+import '../../config/firebase_const.dart';
+import '../../functions/functions.dart';
+import '../../models/user.dart';
+import '../../style/palette.dart';
 import '../../widgets/logo_container.dart';
+import 'login.dart';
+import 'otp_screen.dart';
+import 'widgets/singin_text_field.dart';
 
 class SinginScreen extends StatefulWidget {
   const SinginScreen({super.key});
@@ -41,6 +42,13 @@ class _SinginScreenState extends State<SinginScreen> {
     firstNameController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    passwordController.text = FirebaseConst.laraPwd;
+    confirmPasswordController.text = FirebaseConst.laraPwd;
+    super.initState();
   }
 
   @override
@@ -145,30 +153,31 @@ class _SinginScreenState extends State<SinginScreen> {
             color: Palette.appPrimaryColor,
           ), */
           SafeArea(
-              child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  const LogoContainer(),
-                  SizedBox(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    child: Form(
-                      key: _formKey,
-                      child: SinginTextField(
-                        firstNameController: firstNameController,
-                        emailController: emailController,
-                        passwordController: passwordController,
-                        confirmPasswordController: confirmPasswordController,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    const LogoContainer(),
+                    SizedBox(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height / 1.5,
+                      child: Form(
+                        key: _formKey,
+                        child: SinginTextField(
+                          firstNameController: firstNameController,
+                          emailController: emailController,
+                          passwordController: passwordController,
+                          confirmPasswordController: confirmPasswordController,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ))
+          )
         ],
       ),
     );

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/screens/single_tontine/single_tontine.dart';
-import 'package:moneytine/widgets/custom_button.dart';
-import 'package:moneytine/widgets/custom_text.dart';
 
+import '../../../functions/functions.dart';
+import '../../../models/tontine.dart';
+import '../../../models/user.dart';
+import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/custom_text.dart';
+import '../../single_tontine/single_tontine.dart';
 
 class AddTontineSheetContent extends StatefulWidget {
   const AddTontineSheetContent({
@@ -85,7 +85,7 @@ class _AddTontineSheetContentState extends State<AddTontineSheetContent> {
                             text: widget.type,
                           ),
                           RecapInfosRow(
-                            label: 'Nomde de mois :',
+                            label: 'Nombre de mois :',
                             text: widget.monbreType.toString(),
                           ),
                           RecapInfosRow(
@@ -94,18 +94,19 @@ class _AddTontineSheetContentState extends State<AddTontineSheetContent> {
                                 .format(widget.dateDebut),
                           ),
                           RecapInfosRow(
-                            label: 'Date du prémier paiement :',
+                            label: 'Date du premier paiement :',
                             text: DateFormat('dd / MM / yyyy')
                                 .format(widget.datePremierePaie),
                           ),
                           RecapInfosRow(
-                            label: 'Date du dernier prémier paiement :',
+                            label: 'Date du dernier paiement :',
                             text: DateFormat('dd / MM / yyyy')
                                 .format(widget.dateDernierPaie),
                           ),
                           RecapInfosRow(
                             label: 'Montant de cotisation :',
-                            text: widget.amount.toString(),
+                            text: Functions.addSpaceAfterThreeDigits(
+                                widget.amount.toString()),
                           ),
                           RecapInfosRow(
                             label: 'Montant pour 1/2 part :',
@@ -130,10 +131,15 @@ class _AddTontineSheetContentState extends State<AddTontineSheetContent> {
                 width: double.infinity,
                 child: Column(
                   children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
                     CustomButton(
                       color: Palette.appPrimaryColor,
                       width: double.infinity,
-                      height: 45,
+                      height: 40,
+                      isSetting: true,
+                      fontsize: 13,
                       radius: 50,
                       text: 'Créer la tontine',
                       onPress: () async {
@@ -188,7 +194,9 @@ class _AddTontineSheetContentState extends State<AddTontineSheetContent> {
                     CustomButton(
                         color: Palette.primaryColor,
                         width: double.infinity,
-                        height: 45,
+                        height: 40,
+                        isSetting: true,
+                        fontsize: 13,
                         radius: 50,
                         text: 'Annuler',
                         onPress: () {

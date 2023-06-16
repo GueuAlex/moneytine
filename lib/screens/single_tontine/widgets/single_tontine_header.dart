@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:moneytine/functions/functions.dart';
 
 import '../../../models/tontine.dart';
@@ -14,9 +15,13 @@ class SingleTontineHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime dateFin = Functions.calculerDateFin(
+      dateDebut: tontine.firstPaiemntDate,
+      nombreMois: tontine.numberOfType,
+    );
     return Container(
       width: double.infinity,
-      height: 150,
+      height: 190,
       padding: const EdgeInsets.only(
           right: 12.0, top: 12.0, bottom: 12.0, left: 50.0),
       margin: const EdgeInsets.only(
@@ -43,15 +48,39 @@ class SingleTontineHeader extends StatelessWidget {
                 .copyWith(color: Palette.whiteColor, fontSize: 16),
           ),
           const SizedBox(
-            height: 10.0,
+            height: 5.0,
           ),
           Text(
             //Functions.numberFormat(tontine.contribution.toString()),
-            '${tontine.contribution.toString()} FCFA',
+            '${Functions.addSpaceAfterThreeDigits((tontine.contribution).toString())} FCFA',
             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                color: Palette.whiteColor,
-                fontWeight: FontWeight.w700,
-                letterSpacing: -1),
+                  color: Palette.whiteColor,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -1,
+                  fontSize: 23,
+                ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            'Date de fin',
+            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                  color: Palette.whiteColor,
+                  fontSize: 16,
+                ),
+          ),
+          const SizedBox(
+            height: 5.0,
+          ),
+          Text(
+            DateFormat('dd MMM yyyy').format(dateFin),
+            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                  color: Palette.whiteColor,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -1,
+                  fontSize: 23,
+                ),
           ),
           const SizedBox(
             height: 8.0,

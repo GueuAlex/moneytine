@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/style/palette.dart';
 
+import '../../../models/tontine.dart';
+import '../../../style/palette.dart';
 import 'contribution_infos.dart';
 
 class JorganiseTontineCard extends StatelessWidget {
@@ -78,7 +78,7 @@ class JorganiseTontineCard extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(bottom: 0),
                         child: Text('Creator name'),
-                      )
+                      ) 
                     ],
                   ) */
                 ],

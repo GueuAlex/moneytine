@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/notification_models.dart';
-import 'package:moneytine/models/transation_by_date.dart';
 
+import '../../../models/notification_models.dart';
+import '../../../models/transation_by_date.dart';
 import '../../../style/palette.dart';
 import 'date_filter.dart';
 import 'incoming_outcoming_row.dart';
@@ -32,7 +32,7 @@ class _FilterBoxState extends State<FilterBox> {
       for (NotificationModel notif in element.data) {
         if (notif.type.toLowerCase() == type.toLowerCase()) {
           total += notif.amount;
-          print(total);
+          //print(total);
         }
       }
     }

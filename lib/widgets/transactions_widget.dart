@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/models/money_transaction.dart';
-import 'package:moneytine/models/transation_by_date.dart';
 
+import '../models/money_transaction.dart';
+import '../models/transation_by_date.dart';
+import '../models/user.dart';
 import '../style/palette.dart';
 import 'transactions_type_container.dart';
 
@@ -10,13 +11,13 @@ class TransactionsWidget extends StatelessWidget {
   const TransactionsWidget({
     super.key,
     required this.trasansactionsByDate,
-    //required this.user,
+    required this.user,
     //required this.groupe,
     //required this.tontine,
   });
 
   final DataByDate<MoneyTransaction> trasansactionsByDate;
-  //final User user;
+  final MyUser user;
   //final Groupe groupe;
   //final Tontine tontine;
 
@@ -96,6 +97,7 @@ class TransactionsWidget extends StatelessWidget {
               children: List.generate(
                 trasansactionsByDate.data.length,
                 (index) => TransactionsTypeContainer(
+                  user: user,
                   color: trasansactionsByDate.data[index].type == 'Versement'
                       ? Palette.appPrimaryColor
                       : trasansactionsByDate.data[index].type == 'Retrait'

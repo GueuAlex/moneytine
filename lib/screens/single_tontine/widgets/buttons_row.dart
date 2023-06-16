@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/screens/my_tontines/mes_tontines.dart';
-import 'package:moneytine/screens/my_tontines/widgets/jorganise.dart';
 
+import '../../../functions/functions.dart';
+import '../../../models/tontine.dart';
+import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
+import '../../../widgets/custom_button.dart';
 import '../../../widgets/generate_groupe_button.dart';
 import '../../groups/groups_screen.dart';
 import '../../modify_tontine/mdify_tontine.dart';
+import '../../my_tontines/mes_tontines.dart';
 import '../single_tontine.dart';
 
 class ButtonsRow extends StatefulWidget {
@@ -63,7 +63,8 @@ class _ButtonsRowState extends State<ButtonsRow> {
                 }
               } else {
                 Fluttertoast.showToast(
-                  msg: 'Cette est uniquement reservée qu\'a l\'administration',
+                  msg:
+                      'Cette action est uniquement reservée qu\'a l\'administration',
                   backgroundColor: Palette.appPrimaryColor,
                 );
               }
@@ -77,12 +78,27 @@ class _ButtonsRowState extends State<ButtonsRow> {
             text: 'Groupes',
             color: Palette.primaryColor,
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return GroupsScreen(
-                  tontine: widget.widget.tontine,
-                  user: widget.widget.user,
+              if (widget.widget.tontine.creatorId == widget.widget.user.id) {
+                if (widget.widget.tontine.isActive == 1) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return GroupsScreen(
+                      tontine: widget.widget.tontine,
+                      user: widget.widget.user,
+                    );
+                  }));
+                } else {
+                  Fluttertoast.showToast(
+                    msg: 'Veuillez réactivé la tontine avant',
+                    backgroundColor: Palette.appPrimaryColor,
+                  );
+                }
+              } else {
+                Fluttertoast.showToast(
+                  msg:
+                      'Cette action est uniquement reservée qu\'a l\'administration',
+                  backgroundColor: Palette.appPrimaryColor,
                 );
-              }));
+              }
             },
           ),
           const SizedBox(
@@ -94,10 +110,17 @@ class _ButtonsRowState extends State<ButtonsRow> {
             color: Palette.appPrimaryColor,
             onTap: () {
               if (widget.widget.user.id == widget.widget.tontine.creatorId) {
-                Functions.showLoadingSheet(ctxt: context);
-                deleteTontine(
+                //Functions.showLoadingSheet(ctxt: context);
+                /* deleteTontine(
                   tontineId: widget.widget.tontine.id,
                   context: context,
+                ); */
+                showModal(
+                  isDeleteProcess: true,
+                  onTap: () => deleteTontine(
+                    tontineId: widget.widget.tontine.id,
+                    context: context,
+                  ),
                 );
               } else {
                 Fluttertoast.showToast(
@@ -171,6 +194,7 @@ class _ButtonsRowState extends State<ButtonsRow> {
 
   Future<void> deleteTontine(
       {required int tontineId, required BuildContext context}) async {
+    Functions.showLoadingSheet(ctxt: context);
     var responsse = await RemoteServices().deletSingleTontine(id: tontineId);
     if (responsse == 500) {
       // ignore: use_build_context_synchronously
@@ -183,15 +207,123 @@ class _ButtonsRowState extends State<ButtonsRow> {
       currentUSerTontineList
           .removeWhere((element) => element == widget.widget.tontine);
 
+      Fluttertoast.showToast(
+        msg: 'Tontine supprimée !',
+        backgroundColor: Palette.appPrimaryColor,
+      );
+
       // ignore: use_build_context_synchronously
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-        builder: (context) {
-          return MesTontinesScreen(
-            //tontineList: currentUSerTontineList,
-            user: widget.widget.user,
-          );
+      Future.delayed(const Duration(seconds: 3)).then(
+        (_) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            builder: (context) {
+              return MesTontinesScreen(
+                //tontineList: currentUSerTontineList,
+                user: widget.widget.user,
+              );
+            },
+          ), (route) => false);
         },
-      ), (route) => false);
+      );
     }
+  }
+
+  showModal({required bool isDeleteProcess, required Function onTap}) {
+    return showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          height: 200,
+          decoration: const BoxDecoration(
+            color: Palette.whiteColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25.0),
+              topRight: Radius.circular(25.0),
+            ),
+          ),
+          child: ConfirmSheet(isDeleteProcess: isDeleteProcess, onTap: onTap),
+        );
+      },
+    );
+  }
+}
+
+class ConfirmSheet extends StatelessWidget {
+  final bool isDeleteProcess;
+  final Function onTap;
+  const ConfirmSheet({
+    super.key,
+    required this.isDeleteProcess,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            margin: const EdgeInsets.only(top: 5),
+            height: 4,
+            width: 60,
+            decoration: BoxDecoration(
+              color: Palette.greyColor.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(),
+              Text(
+                isDeleteProcess
+                    ? 'Souhaitez vous vraiment supprimer cette tontine ?\nCette action est irréversible'
+                    : 'Souhaitez vous suspendre cette tontine?\nVous pouvez la réactivée plutard',
+                textAlign: TextAlign.center,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20, right: 15, left: 15),
+                child: Column(
+                  children: [
+                    CustomButton(
+                      isSetting: true,
+                      fontsize: 13,
+                      color: Palette.appPrimaryColor,
+                      width: double.infinity,
+                      height: 35,
+                      radius: 50,
+                      text: 'Confirmer',
+                      onPress: () => onTap(),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    CustomButton(
+                      isSetting: true,
+                      fontsize: 13,
+                      color: Palette.primaryColor,
+                      width: double.infinity,
+                      height: 35,
+                      radius: 50,
+                      text: 'Annuler',
+                      onPress: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              //Container()
+            ],
+          ),
+        )
+      ],
+    );
   }
 }

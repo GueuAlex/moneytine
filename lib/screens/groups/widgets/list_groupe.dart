@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/screens/groups/widgets/add_user_to_group.dart';
-import 'package:moneytine/screens/single_tontine/widgets/export_widgets.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../functions/functions.dart';
 import '../../../models/single_group_data.dart';
 import '../../../models/tontine.dart';
+import '../../../models/user.dart';
+import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
+import '../../../widgets/generate_groupe_button.dart';
 import 'Group_memb_list.dart';
+import 'add_user_to_group.dart';
 import 'group_card.dart';
 import 'group_member_shimmer.dart';
 
@@ -86,36 +86,6 @@ class _ListGroupState extends State<ListGroup> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            /* Padding(
-              padding: const EdgeInsets.only(
-                bottom: 10.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Liste de grupe',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black.withOpacity(0.6),
-                        ),
-                  ),
-                  GenerateGroupeButton(
-                    text: 'Générer',
-                    color: Palette.appSecondaryColor,
-                    icon: CupertinoIcons.arrow_2_circlepath_circle,
-                    onTap: () {
-                      generateGroup(
-                        creatorId: widget.tontine.creatorId,
-                        tontineId: widget.tontine.id,
-                        userId: widget.user.id,
-                      );
-                    },
-                  )
-                ],
-              ), 
-            ),*/
             const SizedBox(
               height: 10.0,
             ),
@@ -132,8 +102,8 @@ class _ListGroupState extends State<ListGroup> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(10.0),
-                          width: 60,
-                          height: 60,
+                          width: 50,
+                          height: 45,
                           margin: const EdgeInsets.only(right: 8.0),
                           decoration: BoxDecoration(
                             color: Palette.appPrimaryColor.withOpacity(0.2),
@@ -149,8 +119,8 @@ class _ListGroupState extends State<ListGroup> {
                             },
                             child: Container(
                               //padding: const EdgeInsets.all(8.0),
-                              height: 30,
-                              width: 30,
+                              height: 20,
+                              width: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Palette.secondaryColor,
@@ -159,7 +129,7 @@ class _ListGroupState extends State<ListGroup> {
                                 child: Icon(
                                   CupertinoIcons.add,
                                   color: Palette.whiteColor,
-                                  size: 16,
+                                  size: 12,
                                 ),
                               ),
                             ),
@@ -260,7 +230,9 @@ class _ListGroupState extends State<ListGroup> {
                           const SizedBox(
                             height: 30.0,
                           ),
-                          const Text('Veuillez ajouter des membres à groupe'),
+                          const Text(
+                            'Veuillez ajouter des membres à ce groupe',
+                          ),
                           const SizedBox(
                             height: 10.0,
                           ),
@@ -301,14 +273,20 @@ class _ListGroupState extends State<ListGroup> {
         groupeName: groupeName,
       );
       if (response != null) {
-        Future.delayed(const Duration(seconds: 3)).then((value) {
+        Future.delayed(const Duration(seconds: 3)).then((value) async {
+          Groupe? g = await RemoteServices().getSingleGroupe(
+            groupeId: int.parse(response),
+          );
           Groupe newGroupe = Groupe(
             nom: groupeName,
             id: int.parse(response),
           );
-          setState(() {
-            widget.tontine.groupes.add(newGroupe);
-          });
+          if (g != null) {
+            //print('difffff');
+            setState(() {
+              widget.tontine.groupes.add(g);
+            });
+          }
           Navigator.pop(context);
           Fluttertoast.showToast(
             msg: 'Ajouté !',

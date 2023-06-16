@@ -5,12 +5,12 @@ import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/widgets/custom_button.dart';
 import 'package:intl/intl.dart';
 
+import '../../functions/functions.dart';
+import '../../models/user.dart';
 import '../../style/palette.dart';
+import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text.dart';
 import 'widgets/add_tontine_sheet_content.dart';
 
@@ -116,7 +116,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                       setState(() {
                         _selectedDate1 = newDate;
                         _selectedDate2 = newDate;
-                        print(newDate.toString());
+                        // print(newDate.toString());
                       });
                     },
                     minimumYear: 1900,
@@ -325,7 +325,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
           Icons.arrow_drop_down,
           color: Palette.appPrimaryColor,
         ), */
-        contentPadding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+        contentPadding: const EdgeInsets.only(top: 2.0),
         hintStyle: const TextStyle(color: Palette.secondaryColor),
 
         hintText: _selectedType == 'Mensuel'
@@ -371,7 +371,7 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
           Icons.arrow_drop_down,
           color: Palette.appPrimaryColor,
         ), */
-        contentPadding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+        contentPadding: const EdgeInsets.only(top: 2.0),
         hintStyle: TextStyle(color: Palette.secondaryColor),
 
         hintText: 'Entrer un montant de contribution',
@@ -660,13 +660,15 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
               CustomButton(
                 color: Palette.appPrimaryColor,
                 width: double.infinity,
-                height: 45,
+                isSetting: true,
+                fontsize: 13,
+                height: 40,
                 radius: 50.0,
                 text: 'Suivant',
                 onPress: () {
                   if (_formKey.currentState!.validate()) {
                     Functions.showLoadingSheet(ctxt: context);
-                    print('type : $_selectedType');
+                    /* print('type : $_selectedType');
                     print('nombre type : ${_numberOfController.text}');
                     print(
                         'Date debut : ${DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDate1)}');
@@ -674,12 +676,12 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
                         'Premier paie : ${DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDate2)}');
 
                     print('montant : ${_contributeAmountController.text}');
-                    print(DateTime.now());
+                    print(DateTime.now()); */
 
                     double amount =
                         double.parse(_contributeAmountController.text);
                     var part = (amount * (1 / 2));
-                    print(part.toString());
+                    //print(part.toString());
 
                     Future.delayed(const Duration(seconds: 2)).then((value) {
                       Navigator.pop(context);
@@ -723,22 +725,26 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
               });
             }
           }
-          showSnackBar(list.toString());
+          //showSnackBar(list.toString());
         },
         enableMultipleSelection: false,
       ),
     ).showModal(context);
   }
 
-  void showSnackBar(String message) {
+  /* void showSnackBar(String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
-  }
+  } */
 
   void _showBottomSheet({required BuildContext context, required MyUser user}) {
+    //print(_selectedDate2);
+    //print(_selectedDate1);
     int uniqueCode = Random().nextInt(999999);
-    DateTime dateDernierPaie =
-        calculerDateFin(_selectedDate2, int.parse(_numberOfController.text));
+    DateTime dateDernierPaie = Functions.calculerDateFin(
+      dateDebut: _selectedDate2,
+      nombreMois: int.parse(_numberOfController.text),
+    );
     showModalBottomSheet(
         isDismissible: true,
         backgroundColor: Colors.transparent,
@@ -768,18 +774,5 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
             ),
           );
         });
-  }
-
-  DateTime calculerDateFin(DateTime dateDebut, int nombreMois) {
-    // Ajouter le nombre de mois à la date de début
-    DateTime dateFin = dateDebut.add(Duration(days: (30 * nombreMois)));
-    //dateDebut.add(duration)
-
-    // Vérifier si la date de fin est valide
-    if (dateFin.month > (dateDebut.month + nombreMois) % 12) {
-      dateFin = DateTime(dateDebut.year, dateDebut.month + nombreMois + 1, 0);
-    }
-
-    return dateFin;
   }
 }

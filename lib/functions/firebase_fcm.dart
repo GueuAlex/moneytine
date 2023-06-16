@@ -17,6 +17,49 @@ class FirebaseFCM {
     );
   }
 
+  static Future<bool?> getIsNotif() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return null;
+    }
+
+    final documentSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (!documentSnapshot.exists) {
+      return null;
+    }
+
+    final data = documentSnapshot.data()!;
+    return data['isNotif'] as bool?;
+  }
+/////////////////:
+  ///
+  ///
+
+  static Future<void> updateUserIsNotifField(
+      {required String email, required bool isNotif}) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    final DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+    final String documentId = documentSnapshot.id;
+    final Map<String, dynamic> data =
+        documentSnapshot.data()! as Map<String, dynamic>;
+
+    // Ajoutez un nouveau champ "isNotif" à la carte de données de l'utilisateur spécifié
+    data['isNotif'] = isNotif;
+
+    // Mettez à jour le document dans Firestore
+    await firestore.collection('users').doc(documentId).update(data);
+  }
+
   static Future<String?> getTokenNotificationByEmail(
       {required String userEmail}) async {
     // Récupérer la référence à la collection "utilisateurs" dans Firestore
@@ -32,12 +75,12 @@ class FirebaseFCM {
       final userToken = userData['token'];
 
       // Retourner le token de notification
-      print("trouvvvvvvvvvvv");
-      print(userToken);
+      //print("trouvvvvvvvvvvv");
+      //print(userToken);
       return userToken;
     } else {
       // Si le document n'est pas trouvé, renvoyer null
-      print('L\'utilisateur n\'a pas été trouvé dans Firestore');
+      //print('L\'utilisateur n\'a pas été trouvé dans Firestore');
       return null;
     }
   }
@@ -75,9 +118,9 @@ class FirebaseFCM {
           body: body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print("It send");
+        // print("It send");
       } else {
-        print("Not send");
+        //print("Not send");
       }
     } catch (e) {
       //

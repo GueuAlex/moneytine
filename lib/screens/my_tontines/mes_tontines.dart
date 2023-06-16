@@ -4,18 +4,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/functions/firebase_fcm.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/screens/add_tontine/add_tontine.dart';
-import 'package:moneytine/screens/all_transactions_history/all_transations_history.dart';
 
+import '../../functions/firebase_fcm.dart';
 import '../../models/money_transaction.dart';
+import '../../models/tontine.dart';
 import '../../models/transation_by_date.dart';
+import '../../models/user.dart';
+import '../../remote_services/remote_services.dart';
 import '../../style/palette.dart';
 import '../../widgets/loading_container.dart';
 import '../../widgets/transactions_widget.dart';
+import '../add_tontine/add_tontine.dart';
+import '../all_transactions_history/all_transations_history.dart';
 import 'widgets/create_tontine_sheet_content.dart';
 import '../../widgets/empty_transaction.dart';
 import 'widgets/join_create_buttons.dart';
@@ -63,7 +63,8 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
     if (allTransactions.isNotEmpty) {
       _allTransactions.clear();
       for (MoneyTransaction element in allTransactions) {
-        if (element.userId == widget.user.id) {
+        if (element.tontineCreatorId == widget.user.id ||
+            element.userId == widget.user.id) {
           setState(() {
             _allTransactions.add(element);
           });
@@ -225,7 +226,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
           });
         }
       }
-      print('je participe à : $allTontineWhereCurrentUserParticipe');
+      // print('je participe à : $allTontineWhereCurrentUserParticipe');
     }
 
     _tontineListController.add(allTontineWhereCurrentUserParticipe);
@@ -244,8 +245,8 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
             updatedAllTontineWhereCurrentUserParticipe.add(element);
           }
         }
-        print(
-            'je participe à (updated): $updatedAllTontineWhereCurrentUserParticipe');
+        /* print(
+            'je participe à (updated): $updatedAllTontineWhereCurrentUserParticipe'); */
       }
 
       return updatedAllTontineWhereCurrentUserParticipe;
@@ -372,7 +373,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                           children: [
                             !isHiden
                                 ? const SizedBox(
-                                    height: 80,
+                                    height: 10,
                                   )
                                 : Container(),
                             Container(
@@ -444,6 +445,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                                                 .push(MaterialPageRoute(
                                                     builder: (context) {
                                               return AllTransactionsHistory(
+                                                user: widget.user,
                                                 trasansactionsByDate:
                                                     _trasansactionsByDate,
                                               );
@@ -477,7 +479,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                                             ////////// decommenter plutard pour voir tout les transaction du user connecter /////////////
                                             ///
                                             (index) => TransactionsWidget(
-                                              // user: widget.user,
+                                              user: widget.user,
                                               trasansactionsByDate:
                                                   _trasansactionsByDate[index],
                                             ),

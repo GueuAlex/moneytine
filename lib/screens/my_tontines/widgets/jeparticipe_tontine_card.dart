@@ -1,18 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/style/palette.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../models/tontine.dart';
 import '../../../models/user.dart';
+import '../../../remote_services/remote_services.dart';
+import '../../../style/palette.dart';
 import 'contribution_infos.dart';
 
 class JeParticipeTontineCard extends StatefulWidget {
-  const JeParticipeTontineCard(
-      {super.key, required this.tontine, required this.onTap});
+  const JeParticipeTontineCard({
+    super.key,
+    required this.tontine,
+    required this.onTap,
+  });
   final Tontine tontine;
   final VoidCallback onTap;
 

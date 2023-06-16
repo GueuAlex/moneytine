@@ -18,7 +18,7 @@ class EmptyTransactios extends StatelessWidget {
       width: double.infinity,
       height: MediaQuery.of(context).size.height / 3,
       child: Center(
-        child: Text('Aucune trnasaction pour le moment'),
+        child: Text('Aucune transaction pour le moment'),
       ),
     );
   }

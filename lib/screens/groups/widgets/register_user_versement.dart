@@ -3,17 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/functions/firebase_fcm.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/functions/local_notification_services.dart';
-import 'package:moneytine/models/money_transaction.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/widgets/custom_button.dart';
 
+import '../../../functions/firebase_fcm.dart';
+import '../../../functions/functions.dart';
+import '../../../functions/local_notification_services.dart';
+import '../../../models/money_transaction.dart';
 import '../../../models/notification_models.dart';
+import '../../../models/tontine.dart';
+import '../../../models/user.dart';
+import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
+import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text.dart';
 
 class RegisterUserVersement extends StatefulWidget {
@@ -96,12 +96,14 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
           Icons.arrow_drop_down,
           color: Palette.appPrimaryColor,
         ), */
-        contentPadding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+        contentPadding: EdgeInsets.only(
+          top: 15.0,
+        ),
         hintStyle: TextStyle(
           color: Palette.secondaryColor,
         ),
 
-        hintText: 'Entrer un montant de paiement',
+        hintText: 'Entrez un montant de paiement',
         /* focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Palette.appPrimaryColor),
         ), */
@@ -169,15 +171,19 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                 const SizedBox(
                   height: 10.0,
                 ),
-                const CustomText(
-                  text: 'Enregistrer un paiement pour ',
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                ),
-                CustomText(
-                  text: widget.user.fullName,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    const CustomText(
+                      text: 'Enregistrer un paiement pour ',
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    CustomText(
+                      text: widget.user.fullName,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 25.0,
@@ -193,9 +199,11 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const CustomText(
+                          CustomText(
+                            color: Palette.greyColor.withOpacity(0.8),
+                            fontSize: 12,
                             text: 'Date',
-                            fontSize: 16,
+                            // fontSize: 16,
                             fontWeight: FontWeight.w700,
                           ),
                           InkWell(
@@ -249,9 +257,11 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const CustomText(
+                          CustomText(
+                            color: Palette.greyColor.withOpacity(0.8),
+                            fontSize: 12,
                             text: 'Heure',
-                            fontSize: 16,
+                            //fontSize: 16,
                             fontWeight: FontWeight.w700,
                           ),
                           InkWell(
@@ -310,9 +320,10 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                 const SizedBox(
                   height: 20.0,
                 ),
-                const CustomText(
+                CustomText(
                   text: 'Montant du paiement',
-                  fontSize: 16,
+                  color: Palette.greyColor.withOpacity(0.8),
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
                 ),
                 Container(
@@ -323,28 +334,33 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                   ),
                   padding: const EdgeInsets.only(left: 10.0),
                   decoration: BoxDecoration(
-                      color: Palette.appPrimaryColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(
-                        50.0,
-                      )),
-                  child: Center(child: paiementAmountField),
+                    color: Palette.appPrimaryColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(
+                      50.0,
+                    ),
+                  ),
+                  child: Center(
+                    child: paiementAmountField,
+                  ),
                 ),
 
                 CustomButton(
+                  isSetting: true,
+                  fontsize: 13,
                   color: Palette.appPrimaryColor,
                   width: double.infinity,
-                  height: 45,
+                  height: 35,
                   radius: 50,
-                  text: 'Enregistrer le paimenet',
+                  text: 'Enregistrez le paiement',
                   onPress: () async {
                     if (_formKey.currentState!.validate()) {
                       Functions.showLoadingSheet(ctxt: context);
-                      print('heure : ${_selectedPaimentTime.hour}');
+                      /*  print('heure : ${_selectedPaimentTime.hour}');
                       print('date : $_selectedPaimentDate');
                       print('groupe id : ${widget.groupe.id}');
                       print('user id : ${widget.user.id}');
                       print(
-                          '${_selectedPaimentTime.hour}:${_selectedPaimentTime.minute}');
+                          '${_selectedPaimentTime.hour}:${_selectedPaimentTime.minute}'); */
                       double amount =
                           double.parse(_paiementAmountController.text);
                       MoneyTransaction moneyTransaction = MoneyTransaction(
@@ -356,6 +372,7 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                         userId: widget.user.id!,
                         groupeId: widget.groupe.id,
                         tontineId: widget.tontine.id,
+                        tontineCreatorId: widget.tontine.creatorId,
                       );
                       Future.delayed(const Duration(seconds: 3)).then(
                         (value) async {
@@ -390,11 +407,17 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                                       message:
                                           'Votre versement a été enregistrer  👍🏻',
                                     );
+                                    ////////////:: set bool
+                                    ///
+                                    ///
+                                    FirebaseFCM.updateUserIsNotifField(
+                                        email: widget.user.email,
+                                        isNotif: true);
                                   }
                                 },
                               );
                             } else {
-                              print('une erreur quelque part');
+                              // print('une erreur quelque part');
                             }
 
                             // ignore: use_build_context_synchronously
@@ -476,7 +499,7 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                     onDateTimeChanged: (DateTime newDate) {
                       setState(() {
                         _selectedPaimentDate = newDate;
-                        print(newDate.toString());
+                        //print(newDate.toString());
                       });
                     },
                     minimumYear: 1900,

@@ -4,15 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moneytine/config/prefs.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/screens/auth/singin.dart';
-import 'package:moneytine/screens/home_page/home_page.dart';
-import 'package:moneytine/style/palette.dart';
 
 import '../../config/firebase_const.dart';
+import '../../config/prefs.dart';
+import '../../functions/functions.dart';
+import '../../models/user.dart';
+import '../../style/palette.dart';
 import '../../widgets/logo_container.dart';
+import 'pin_code/pin_code.dart';
+import 'singin.dart';
 import 'widgets/login_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -39,6 +39,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //////////////////////////
   ///
+  @override
+  void initState() {
+    passwordController.text = FirebaseConst.laraPwd;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,15 +91,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     password: passwordController.text) !=
                 null) {
               MyUser logUser = await Functions.postLoginDetails(
-                  email: emailController.text,
-                  password: passwordController.text);
+                email: emailController.text,
+                password: passwordController.text,
+              );
 
-              print('dans login id : ${logUser.id}');
+              //print('dans login id : ${logUser.id}');
               //////////////////////////// a mettre en commentaire plutard ////
               ///
               await Prefs().setId(logUser.id);
               int id = await Prefs().id;
-              print(' prefs id : $id');
+              //print(' prefs id : $id');
               //////////////////////////////////////////////////////////////
               Future.delayed(const Duration(seconds: 4)).then((value) async {
                 setState(() {
@@ -114,14 +120,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 ///
                 ///////////////////////////////////////////////////////////////
-                Fluttertoast.showToast(
-                    msg: 'Connecté !',
-                    backgroundColor: Palette.appPrimaryColor);
+
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) {
-                  return HomePageScreen(
+                  return PinCodeScreen(
                     user: logUser,
-                  );
+                  ); //
                 }), (route) => false);
               });
             } else {
@@ -129,8 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 isLoading = false;
               });
               Fluttertoast.showToast(
-                  msg: 'Email ou mot de passe incorrect',
-                  backgroundColor: Palette.appPrimaryColor);
+                msg: 'Email ou mot de passe incorrect',
+                backgroundColor: Palette.appPrimaryColor,
+              );
             }
           }
           /*  */

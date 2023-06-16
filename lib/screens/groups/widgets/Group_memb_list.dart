@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/single_group_data.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
 
+import '../../../models/single_group_data.dart';
 import '../../../models/tontine.dart';
 import '../../../models/user.dart';
+import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
 import 'member_infos_container.dart';
 

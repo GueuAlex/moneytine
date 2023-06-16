@@ -3,13 +3,13 @@ import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/widgets/custom_button.dart';
 
+import '../../../functions/functions.dart';
+import '../../../models/tontine.dart';
 import '../../../models/user.dart';
+import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
+import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text.dart';
 import 'createMemberContainer.dart';
 
@@ -107,7 +107,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
       },
       validator: (value) {
         if (_selectedType.isEmpty) {
-          return 'Veuillez selectionner un type de tontine';
+          return 'Veuillez sélectionner un type de tontine';
         }
       },
       decoration: InputDecoration(
@@ -127,7 +127,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
         contentPadding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
 
         hintText:
-            _selectedType.isNotEmpty ? _selectedType : 'Selectionner un membre',
+            _selectedType.isNotEmpty ? _selectedType : 'Sélectionner un membre',
 
         // les autres propriétés de décoration que vous voulez utiliser
 
@@ -149,7 +149,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
       },
       validator: (value) {
         if (_selectedPart == '0.0') {
-          return 'Veuillez selectionner un type de tontine';
+          return 'Veuillez sélectionner un type de tontine';
         }
         return null;
       },
@@ -171,7 +171,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
         hintText: _selectedPart != '0.0'
             ? _selectedPart.toString()
-            : 'Selectionner une part',
+            : 'Sélectionner une part',
 
         // les autres propriétés de décoration que vous voulez utiliser
 
@@ -189,7 +189,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
         title: Text(
           'Ajout d\'un membre',
         ),
-        actions: [
+        /* actions: [
           InkWell(
             borderRadius: BorderRadius.circular(50),
             onTap: () {
@@ -215,7 +215,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
               ),
             ),
           )
-        ],
+        ], */
       ),
       body: SafeArea(
         child: Padding(
@@ -230,7 +230,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const CustomText(
-                  text: 'Part restant',
+                  text: 'Part restantes',
                   fontSize: 12,
                   color: Palette.greyColor,
                   fontWeight: FontWeight.w700,
@@ -258,7 +258,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   ),
                 ),
                 const CustomText(
-                  text: 'Membre',
+                  text: 'Membres',
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: Palette.greyColor,
@@ -282,7 +282,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   height: 20,
                 ),
                 const CustomText(
-                  text: 'Selectionner une part',
+                  text: 'Sélectionner une part',
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: Palette.greyColor,
@@ -312,10 +312,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   child: CustomButton(
                     color: Palette.appPrimaryColor,
                     width: double.infinity,
-                    height: 40,
+                    height: 35,
                     radius: 50,
                     isSetting: true,
-                    fontsize: 12,
+                    fontsize: 13,
                     text: 'Ajouter',
                     onPress: () async {
                       if (_formKey.currentState!.validate()) {
@@ -358,6 +358,30 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       }
                     },
                   ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Center(child: Text('OU'))),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    right: 10.0,
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: CustomButton(
+                    isSetting: true,
+                    fontsize: 13,
+                    color: Palette.primaryColor,
+                    width: double.infinity,
+                    height: 35,
+                    radius: 50,
+                    text: 'Créer un membre',
+                    onPress: () => _showBottomSheet(
+                      ctxt: context,
+                      groupe: widget.groupe,
+                      tontine: widget.tontine,
+                    ),
+                  ),
                 )
               ],
             ),
@@ -396,7 +420,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
               });
             }
           }
-          showSnackBar(list.toString());
+          // showSnackBar(list.toString());
         },
         enableMultipleSelection: false,
       ),
@@ -407,7 +431,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     DropDownState(
       DropDown(
         bottomSheetTitle: const Text(
-          'Membres de la tontine',
+          'Parts',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18.0,
@@ -435,17 +459,17 @@ class _AddUserScreenState extends State<AddUserScreen> {
               });
             }
           }
-          showSnackBar(list.toString());
+          //showSnackBar(list.toString());
         },
         enableMultipleSelection: false,
       ),
     ).showModal(context);
   }
 
-  void showSnackBar(String message) {
+  /* void showSnackBar(String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
-  }
+  } */
 
   _showBottomSheet({
     required BuildContext ctxt,
@@ -488,4 +512,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
       ),
     );
   }
+
+  //////////
+  ///
+  ///
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/notification_models.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/remote_services/remote_services.dart';
-import 'package:moneytine/style/palette.dart';
-import 'package:moneytine/widgets/loading_container.dart';
 
+import '../../functions/firebase_fcm.dart';
+import '../../models/notification_models.dart';
 import '../../models/transation_by_date.dart';
+import '../../models/user.dart';
+import '../../remote_services/remote_services.dart';
+import '../../style/palette.dart';
+import '../../widgets/loading_container.dart';
 import 'widgets/filter_box.dart';
 import 'widgets/notifications_list.dart';
 
@@ -41,7 +42,7 @@ class _NotifsScreenState extends State<NotifsScreen> {
   getNotifList() async {
     List<NotificationModel> thisUserNotifLis =
         await RemoteServices().getCurrentUserNotifsList(id: widget.user.id!);
-    print(thisUserNotifLis);
+    // print(thisUserNotifLis);
 
     if (thisUserNotifLis.isNotEmpty) {
       _thisUserNotifLis.clear();
@@ -91,6 +92,12 @@ class _NotifsScreenState extends State<NotifsScreen> {
 
   @override
   void initState() {
+    /////////////////:
+    ///
+    FirebaseFCM.updateUserIsNotifField(
+      email: widget.user.email,
+      isNotif: false,
+    );
     getNotifList();
     Future.delayed(const Duration(seconds: 5)).then((_) {
       setState(() {
@@ -167,7 +174,7 @@ class _NotifsScreenState extends State<NotifsScreen> {
                             _selectedDates = dtr;
                           });
                         }
-                        print(_selectedDates);
+                        // print(_selectedDates);
                         // Filtrer les transactions qui sont incluses dans l'intervalle spécifié
                         setState(() {
                           _thisUserNotifLisByDateFiltrer =

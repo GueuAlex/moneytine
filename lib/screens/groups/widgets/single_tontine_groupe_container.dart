@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/style/palette.dart';
 
 import '../../../functions/functions.dart';
 import '../../../models/tontine.dart';
+import '../../../models/user.dart';
 import '../../../remote_services/remote_services.dart';
+import '../../../style/palette.dart';
 import '../../single_tontine/widgets/export_widgets.dart';
 //import 'export_widgets.dart';
 
@@ -57,7 +57,7 @@ class _SingleTontineGroupeContainerState
     );
   }
 
-  void generateGroup({
+  /*  void generateGroup({
     required int? userId,
     required int creatorId,
     required int tontineId,
@@ -80,6 +80,62 @@ class _SingleTontineGroupeContainerState
           setState(() {
             widget.tontine.groupes.add(newGroupe);
           });
+          Navigator.pop(context);
+          Fluttertoast.showToast(
+            msg: 'Ajouté !',
+            backgroundColor: Palette.appPrimaryColor,
+          );
+        });
+      } else {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+        Fluttertoast.showToast(
+          msg: 'Veuillez réessayer !',
+          backgroundColor: Palette.appPrimaryColor,
+        );
+      }
+    } else {
+      Navigator.pop(context);
+      Fluttertoast.showToast(
+        msg: 'Vous n\'est pas l\'administrateur de cette tontine !',
+        backgroundColor: Palette.appPrimaryColor,
+      );
+    }
+  } */
+
+  //////////////////// function to generate group //////////////////////////
+  ///
+  ///
+  ///
+  void generateGroup({
+    required int? userId,
+    required int creatorId,
+    required int tontineId,
+  }) async {
+    if (userId == creatorId) {
+      Functions.showLoadingSheet(ctxt: context);
+
+      String groupeName = 'Groupe_${(widget.tontine.groupes.length + 1)}';
+      var response = await RemoteServices().postGeneratGroupeDetails(
+        api: 'groups',
+        tontineId: tontineId,
+        groupeName: groupeName,
+      );
+      if (response != null) {
+        Future.delayed(const Duration(seconds: 3)).then((value) async {
+          Groupe? g = await RemoteServices().getSingleGroupe(
+            groupeId: int.parse(response),
+          );
+          Groupe newGroupe = Groupe(
+            nom: groupeName,
+            id: int.parse(response),
+          );
+          if (g != null) {
+            print('difffff');
+            setState(() {
+              widget.tontine.groupes.add(g);
+            });
+          }
           Navigator.pop(context);
           Fluttertoast.showToast(
             msg: 'Ajouté !',

@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
 
 class OteTextField extends StatefulWidget {
@@ -72,17 +71,17 @@ class _OteTextFieldState extends State<OteTextField> {
       errorAnimationController: errorController,
       controller: widget.textEditingController,
       onCompleted: (v) {
-        print("Completed");
-        print(widget.textEditingController.text);
+        // print("Completed");
+        // print(widget.textEditingController.text);
       },
       onChanged: (value) {
-        print(value);
+        //print(value);
         setState(() {
           otpCode = value;
         });
       },
       beforeTextPaste: (text) {
-        print("Allowing to paste $text");
+        //print("Allowing to paste $text");
         //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
         //but you can show anything you want here, like your pop up saying wrong paste format or etc
         return true;

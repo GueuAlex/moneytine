@@ -3,13 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
-import 'package:moneytine/style/palette.dart';
 
+import '../../models/tontine.dart';
+import '../../models/user.dart';
+import '../../style/palette.dart';
 import 'widgets/buttons_row.dart';
 import 'widgets/single_tontine_header.dart';
 import 'widgets/single_tontine_last_transactions.dart';
+import 'widgets/tontine_member_contribution.dart';
 import 'widgets/top_box.dart';
 
 //import 'widgets/export_widgets.dart';
@@ -63,7 +64,8 @@ class _SingleTontineState extends State<SingleTontine> {
                       ? CupertinoIcons.chevron_back
                       : CupertinoIcons.arrow_left,
                   color: Palette.whiteColor,
-                )),
+                ),
+              ),
         backgroundColor: Palette.secondaryColor,
         title: Text(widget.tontine.tontineName),
       ),
@@ -74,31 +76,43 @@ class _SingleTontineState extends State<SingleTontine> {
             Column(
               children: <Widget>[
                 const SizedBox(
-                  height: 220,
+                  height: 250,
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: ButtonsRow(
-                    widget: widget,
-                  ),
+                  child: widget.user.id == widget.tontine.id
+                      ? ButtonsRow(
+                          widget: widget,
+                        )
+                      : Container(),
                 ),
                 Expanded(
                   /////////// it's last transactions right now ///////////////
-                  child: SingleTontineLastTransactions(
-                    tontine: widget.tontine,
-                  ),
+                  child: widget.user.id == widget.tontine.creatorId
+                      ? SingleTontineLastTransactions(
+                          user: widget.user,
+                          tontine: widget.tontine,
+                        )
+                      : TontineMemberContribution(
+                          //groupe: 0,
+                          tontine: widget.tontine,
+                          user: widget.user,
+                        ),
                   ////////////////////////////////////////////////////////////
                 )
               ],
             ),
             Positioned(
-                //top: 20,
-                child: Padding(
-              padding: const EdgeInsets.only(right: 55.0, left: 55.0, top: 85),
-              child: TopBox(
-                tontine: widget.tontine,
+              //top: 20,
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(right: 55.0, left: 55.0, top: 130),
+                child: TopBox(
+                  tontine: widget.tontine,
+                  user: widget.user,
+                ),
               ),
-            ))
+            )
           ],
         ),
       ),

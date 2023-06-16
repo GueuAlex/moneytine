@@ -29,6 +29,11 @@ class Prefs {
     prefs.setString('birthdate', (birthdate) as String);
   }
 
+  Future<void> setPincode({required String? pincode}) async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.setString('pincode', (pincode) as String);
+  }
+
   Future<void> setGender({required String? gender}) async {
     final SharedPreferences prefs = await _prefs;
     prefs.setString('gender', (gender) as String);
@@ -62,6 +67,11 @@ class Prefs {
   get birthdate async {
     final SharedPreferences prefs = await _prefs;
     return prefs.getString('birthdate');
+  }
+
+  get pincode async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getString('pincode');
   }
 
   get password async {

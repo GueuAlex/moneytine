@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/screens/auth/login.dart';
-import 'package:moneytine/style/palette.dart';
 
+import '../../functions/functions.dart';
+import '../../style/palette.dart';
 import '../../widgets/leading.dart';
+import 'login.dart';
 import 'otp_screen.dart';
 import 'widgets/reset_email_text_field.dart';
 
@@ -41,7 +41,7 @@ class _ResetEmailScreenState extends State<ResetEmailScreen> {
                 isLoading = true;
               });
               int code = await Functions.postEmail(
-                api: 'users/verification/email',
+                api: 'users/email/password/reset',
                 email: emailController.text,
               );
               Future.delayed(const Duration(seconds: 3)).then((value) {

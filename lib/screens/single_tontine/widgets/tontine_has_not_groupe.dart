@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:moneytine/style/palette.dart';
 
+import '../../../style/palette.dart';
 import '../../../widgets/generate_groupe_button.dart';
 
 class TontineHasNotGroup extends StatelessWidget {
@@ -26,7 +26,7 @@ class TontineHasNotGroup extends StatelessWidget {
         child: Column(
           children: [
             const Text(
-              'Cette tontine ne comporte aucun groupe actuelement.',
+              'Cette tontine ne comporte aucun groupe.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -37,7 +37,7 @@ class TontineHasNotGroup extends StatelessWidget {
               height: 30.0,
             ),
             GenerateGroupeButton(
-              text: 'Générer un groupe',
+              text: 'Créer un groupe',
               color: Palette.appPrimaryColor,
               icon: CupertinoIcons.arrow_2_circlepath,
               onTap: onTap,

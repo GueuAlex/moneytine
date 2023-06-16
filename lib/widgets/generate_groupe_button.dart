@@ -28,7 +28,7 @@ class GenerateGroupeButton extends StatelessWidget {
           left: 8.0,
         ),
         height: 45,
-        width: isGenerate ? 160 : 110,
+        width: isGenerate ? 160 : 120,
         decoration: BoxDecoration(
           color: color.withOpacity(0.2),
 

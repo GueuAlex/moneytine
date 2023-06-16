@@ -39,20 +39,5 @@ class AppBarAction {
         )
       ],
     ),
-    /* Container(
-      width: 50,
-      height: 50,
-      padding: const EdgeInsets.all(10.0),
-      margin: const EdgeInsets.only(
-        right: 8.0,
-        bottom: 8.0,
-        top: 4.0,
-      ),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Palette.primaryColor.withOpacity(0.3),
-      ),
-      child: const Icon(CupertinoIcons.person_fill),
-    ), */
   ];
 }

@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:moneytine/models/money_transaction.dart';
-import 'package:moneytine/models/notification_models.dart';
-import 'package:moneytine/models/tontine.dart';
-import 'package:moneytine/models/user.dart';
 
+import '../models/group_with_tontine_data.dart';
+import '../models/money_transaction.dart';
+import '../models/notification_models.dart';
 import '../models/single_group_data.dart';
+import '../models/tontine.dart';
+import '../models/tontine_members_status.dart';
+import '../models/user.dart';
 
 ///////////////// base uri//////////////
 const baseUri = 'http://194.163.136.227:8087/api/';
@@ -36,7 +38,7 @@ class RemoteServices {
 
     var response = await client.post(url, body: payload, headers: headers);
     //print(response.statusCode);
-    print(response.body);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       return jsonDecode(response.body);
     } else if (response.statusCode == 422) {
@@ -64,8 +66,8 @@ class RemoteServices {
     //////////////// post user ////////////
     var response = await client.post(url, body: payload, headers: headers);
 
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       return response.body;
     } else if (response.statusCode == 422) {
@@ -96,8 +98,8 @@ class RemoteServices {
     //////////////// post user ////////////
     var response = await client.post(url, body: payload, headers: headers);
 
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       return response.body;
     }
@@ -150,6 +152,23 @@ class RemoteServices {
       //print(response.body);
       MyUser user = userFromJson(json);
       return user;
+    }
+    return null;
+  }
+
+  //////////////////////////////// get tontine members status //////////////////////
+  ///
+  Future<TontineMembersStatus?> getTontineMemberStatus(
+      {required int id}) async {
+    var uri = Uri.parse(baseUri + 'tontines/$id/users/status');
+    var response = await client.get(uri);
+    //print('Dans remote : ${response.body}');
+    //print('Dans remote : ${response.statusCode}');
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var json = response.body;
+      //print(response.body);
+      TontineMembersStatus status = statusFromJson(json);
+      return status;
     }
     return null;
   }
@@ -208,6 +227,46 @@ class RemoteServices {
     return null;
   }
 
+  //////////////////////////////// get group part by id //////////////////////
+  ////////////////:
+  ///
+  Future<Groupe?> getSingleGroupe({required int groupeId}) async {
+    var uri = Uri.parse('${baseUri}groups/$groupeId');
+    var response = await client.get(uri);
+    //print('Dans remote user liste : ${response.body}');
+    //print('Dans remote : ${response.statusCode}');
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var json = jsonDecode(response.body);
+      //print(json["Part_remaining"]);
+      Groupe g = Groupe.fromJson(json);
+
+      return g;
+    }
+    return null;
+  }
+
+  //////////////////////////////// get group part by id //////////////////////
+  ////////////////:
+  ///
+
+  //////////////////////////////// get single user by id //////////////////////
+  ///
+  Future<List<GroupWithTontineData>> getGroupWithTontineData() async {
+    var uri = Uri.parse('${baseUri}groups');
+    var response = await client.get(uri);
+    //print('Dans remote user liste : ${response.body}');
+    //print('Dans remote : ${response.statusCode}');
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var json = response.body;
+      //print(response.body);
+      List<GroupWithTontineData> gwtd = groupWithTontineDataFromJson(json);
+      //print(userList);
+
+      return gwtd;
+    }
+    return [];
+  }
+
   /////////////////////////////////// post new totine /////////////////////
   ///
   ///
@@ -252,8 +311,8 @@ class RemoteServices {
     };
 
     var response = await client.post(url, body: payload, headers: headers);
-    print(response.statusCode);
-    print(response.body);
+    // print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       //Tontine tontine = tontineFromJson(response.body);
       var jsdecod = jsonDecode(response.body);
@@ -506,8 +565,8 @@ class RemoteServices {
     };
 
     var response = await client.post(url, body: payload, headers: headers);
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       //Tontine tontine = tontineFromJson(response.body);
       var jsdecod = jsonDecode(response.body);

@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:moneytine/models/user.dart';
 
 import '../models/money_transaction.dart';
+import '../models/user.dart';
 import '../remote_services/remote_services.dart';
 
 class Functions {
@@ -247,5 +247,46 @@ class Functions {
       return true;
     }
     return false;
+  }
+
+  static DateTime calculerDateFin(
+      {required DateTime dateDebut, required int nombreMois}) {
+    // Ajouter le nombre de mois à la date de début
+    DateTime dateFin = dateDebut.add(Duration(days: (30 * nombreMois)));
+    //dateDebut.add(duration)
+
+    // Vérifier si la date de fin est valide
+    if (dateFin.month > (dateDebut.month + nombreMois) % 12) {
+      dateFin = DateTime(dateDebut.year, dateDebut.month + nombreMois + 1, 0);
+    }
+
+    return dateFin;
+  }
+
+  static String addSpaceAfterThreeDigits(String input) {
+    // Supprimer les espaces de la chaîne
+    String stringWithoutSpaces = input.replaceAll(' ', '');
+
+    // Supprimer le ".0" à la fin de la chaîne si présent
+    if (stringWithoutSpaces.endsWith('.0')) {
+      stringWithoutSpaces =
+          stringWithoutSpaces.substring(0, stringWithoutSpaces.length - 2);
+    }
+
+    // Ajouter un espace après chaque groupe de 3 chiffres
+    StringBuffer result = StringBuffer();
+    int digitCount = 0;
+    for (int i = stringWithoutSpaces.length - 1; i >= 0; i--) {
+      result.write(stringWithoutSpaces[i]);
+      digitCount++;
+      if (digitCount % 3 == 0 && i != 0) {
+        result.write(' ');
+      }
+    }
+
+    // Inverser la chaîne résultante pour obtenir l'ordre correct
+    String reversedResult = result.toString().split('').reversed.join();
+
+    return reversedResult;
   }
 }

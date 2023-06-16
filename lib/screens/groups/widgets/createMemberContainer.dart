@@ -203,13 +203,11 @@ class _CreateMemberContainerState extends State<CreateMemberContainer> {
                 String name = firstNameController.text.trim();
                 String email = emailController.text.trim();
                 String password = Functions.generatePassword();
-                int tontineId = widget.tontine.id;
-                int groupeId = widget.groupe.id;
-                print('nom: $name');
+                /*  print('nom: $name');
                 print('email: $email');
                 print('id tontine: $tontineId');
                 print('id groupe: $groupeId');
-                print('id groupe: $password');
+                print('id groupe: $password'); */
                 if (name.isNotEmpty) {
                   if (email.isNotEmpty &&
                       RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")

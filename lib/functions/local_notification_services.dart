@@ -26,11 +26,11 @@ class LocalNotificationService {
   void display(RemoteMessage message) async {
     try {
       ////
-      print("In notif method");
+      //print("In notif method");
       Random random = Random();
       int id = random.nextInt(999999999);
       //final NotificationDetails notificationDetails =
-      print("my id is $id");
+      //print("my id is $id");
       await _flutterLocalNotificationsPlugin.show(
         id,
         message.notification!.title,
@@ -39,7 +39,7 @@ class LocalNotificationService {
       );
     } on Exception catch (e) {
       ///
-      print("errro is : $e");
+      // print("errro is : $e");
     }
   }
 

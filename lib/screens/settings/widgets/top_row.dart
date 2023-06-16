@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:moneytine/functions/functions.dart';
-import 'package:moneytine/models/user.dart';
 
+import '../../../functions/functions.dart';
+import '../../../models/user.dart';
 import '../../../style/palette.dart';
 import '../../../widgets/custom_text.dart';
 import 'name_container.dart';

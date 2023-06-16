@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytine/models/notification_models.dart';
 
+import '../../../models/notification_models.dart';
 import '../../../style/palette.dart';
 
 class RapelNotification extends StatelessWidget {
