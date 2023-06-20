@@ -188,7 +188,7 @@ class _ResetPinOtpScreenState extends State<ResetPinOtpScreen> {
                                 isNewOptProcess = true;
                               });
                               int newOtp = await Functions.postEmail(
-                                api: 'users/verification/email',
+                                api: 'users/email/password/reset',
                                 email: widget.email,
                               );
                               Future.delayed(const Duration(seconds: 4))

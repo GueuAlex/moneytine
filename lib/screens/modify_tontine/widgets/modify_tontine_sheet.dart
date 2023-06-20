@@ -135,76 +135,88 @@ class _ModifyTontineSheetContentState extends State<ModifyTontineSheetContent> {
                 width: double.infinity,
                 child: Column(
                   children: [
-                    CustomButton(
-                      color: Palette.appPrimaryColor,
-                      width: double.infinity,
-                      height: 45,
-                      radius: 50,
-                      text: 'Soumettre les modifications',
-                      onPress: () async {
-                        Functions.showLoadingSheet(ctxt: context);
-                        Tontine newTontine = Tontine(
-                          id: 0,
-                          uniqueCode: widget.uniqueCode,
-                          tontineName: widget.tontineName,
-                          type: widget.type,
-                          numberOfType: widget.monbreType,
-                          contribution: widget.amount,
-                          startDate: widget.dateDebut,
-                          firstPaiemntDate: widget.datePremierePaie,
-                          creatorId: int.parse(
-                            widget.user.id.toString(),
-                          ),
-                        );
-                        int? responseId = await RemoteServices().putTontine(
-                          api: 'tontines/${widget.tontineID}',
-                          tontine: newTontine,
-                        );
-
-                        if (responseId != null) {
-                          Tontine? tontine =
-                              await RemoteServices().getSingleTontine(
-                            id: responseId,
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10, right: 8.0, left: 8.0),
+                      child: CustomButton(
+                        color: Palette.appPrimaryColor,
+                        width: double.infinity,
+                        height: 40,
+                        isSetting: true,
+                        fontsize: 13,
+                        radius: 50,
+                        text: 'Soumettre les modifications',
+                        onPress: () async {
+                          Functions.showLoadingSheet(ctxt: context);
+                          Tontine newTontine = Tontine(
+                            id: 0,
+                            uniqueCode: widget.uniqueCode,
+                            tontineName: widget.tontineName,
+                            type: widget.type,
+                            numberOfType: widget.monbreType,
+                            contribution: widget.amount,
+                            startDate: widget.dateDebut,
+                            firstPaiemntDate: widget.datePremierePaie,
+                            creatorId: int.parse(
+                              widget.user.id.toString(),
+                            ),
                           );
-                          setState(() {
-                            currentUSerTontineList.remove(widget.tontine);
-                            currentUSerTontineList.add(tontine!);
-                          });
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
-                          if (tontine != null) {
-                            // ignore: use_build_context_synchronously
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return SingleTontine(
-                                    tontine: tontine,
-                                    user: widget.user,
-                                    isFiret: true,
-                                  );
-                                },
-                              ),
+                          int? responseId = await RemoteServices().putTontine(
+                            api: 'tontines/${widget.tontineID}',
+                            tontine: newTontine,
+                          );
+
+                          if (responseId != null) {
+                            Tontine? tontine =
+                                await RemoteServices().getSingleTontine(
+                              id: responseId,
                             );
+                            setState(() {
+                              currentUSerTontineList.remove(widget.tontine);
+                              currentUSerTontineList.add(tontine!);
+                            });
+                            // ignore: use_build_context_synchronously
+                            Navigator.pop(context);
+                            if (tontine != null) {
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return SingleTontine(
+                                      tontine: tontine,
+                                      user: widget.user,
+                                      isFiret: true,
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                          } else {
+                            // ignore: use_build_context_synchronously
+                            Navigator.pop(context);
                           }
-                        } else {
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
-                        }
-                      },
+                        },
+                      ),
                     ),
                     const SizedBox(
                       height: 10.0,
                     ),
-                    CustomButton(
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                      child: CustomButton(
                         color: Palette.primaryColor,
                         width: double.infinity,
-                        height: 45,
+                        height: 40,
+                        isSetting: true,
+                        fontsize: 13,
                         radius: 50,
                         text: 'Annuler',
                         onPress: () {
                           Navigator.pop(context);
-                        }),
+                        },
+                      ),
+                    ),
                   ],
                 ),
               )

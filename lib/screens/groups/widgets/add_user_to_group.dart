@@ -226,164 +226,167 @@ class _AddUserScreenState extends State<AddUserScreen> {
           ),
           child: Form(
             key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const CustomText(
-                  text: 'Part restantes',
-                  fontSize: 12,
-                  color: Palette.greyColor,
-                  fontWeight: FontWeight.w700,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0, left: 20.0),
-                  margin: const EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10.0,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const CustomText(
+                    text: 'Part restantes',
+                    fontSize: 12,
+                    color: Palette.greyColor,
+                    fontWeight: FontWeight.w700,
                   ),
-                  width: double.infinity,
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Palette.greyColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(
-                      50,
+                  Container(
+                    padding: const EdgeInsets.only(top: 14.0, left: 20.0),
+                    margin: const EdgeInsets.only(
+                      top: 10.0,
+                      bottom: 10.0,
+                    ),
+                    width: double.infinity,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Palette.greyColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(
+                        50,
+                      ),
+                    ),
+                    child: Text(
+                      _partFromApi.toString(),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  child: Text(
-                    _partFromApi.toString(),
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                  const CustomText(
+                    text: 'Membres',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: Palette.greyColor,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      top: 10.0,
+                    ),
+                    width: double.infinity,
+                    height: 45,
+                    decoration: BoxDecoration(
+                        color: Palette.appPrimaryColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(
+                          50,
+                        )),
+                    child: Center(
+                      child: selectedField,
                     ),
                   ),
-                ),
-                const CustomText(
-                  text: 'Membres',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: Palette.greyColor,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                    top: 10.0,
+                  const SizedBox(
+                    height: 20,
                   ),
-                  width: double.infinity,
-                  height: 45,
-                  decoration: BoxDecoration(
+                  const CustomText(
+                    text: 'Sélectionner une part',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: Palette.greyColor,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      top: 10.0,
+                    ),
+                    width: double.infinity,
+                    height: 45,
+                    decoration: BoxDecoration(
                       color: Palette.appPrimaryColor.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(
                         50,
-                      )),
-                  child: Center(
-                    child: selectedField,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const CustomText(
-                  text: 'Sélectionner une part',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: Palette.greyColor,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                    top: 10.0,
-                  ),
-                  width: double.infinity,
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Palette.appPrimaryColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(
-                      50,
+                      ),
+                    ),
+                    child: Center(
+                      child: partSelector,
                     ),
                   ),
-                  child: Center(
-                    child: partSelector,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 10.0,
-                    left: 10.0,
-                    top: 40.0,
-                  ),
-                  child: CustomButton(
-                    color: Palette.appPrimaryColor,
-                    width: double.infinity,
-                    height: 35,
-                    radius: 50,
-                    isSetting: true,
-                    fontsize: 13,
-                    text: 'Ajouter',
-                    onPress: () async {
-                      if (_formKey.currentState!.validate()) {
-                        if (_partFromApi < 0) {
-                          Fluttertoast.showToast(
-                            msg: 'Cette action ne peut-être réalisée !',
-                            backgroundColor: Palette.appPrimaryColor,
-                          );
-                        } else {
-                          Functions.showLoadingSheet(ctxt: context);
-                          bool response = await RemoteServices().addUserToGroup(
-                            api: 'groups/membership',
-                            part: _selectedPartValue,
-                            userId: int.parse(_selectedId),
-                            groupId: widget.groupe.id,
-                          );
-                          Future.delayed(const Duration(seconds: 3))
-                              .then((value) {
-                            if (response) {
-                              int newId = int.parse(_selectedId);
-                              setState(() {
-                                widget.groupe.membrsId.add(newId);
-                              });
-                              Navigator.pop(context);
-                              Fluttertoast.showToast(
-                                msg: 'Utilisateur ajouté !',
-                                backgroundColor: Palette.appPrimaryColor,
-                              );
-                              Navigator.pop(context);
-                            } else {
-                              Navigator.pop(context);
-                              Fluttertoast.showToast(
-                                msg:
-                                    'Cet utilisateur appartient déjà au groupe !',
-                                backgroundColor: Palette.appPrimaryColor,
-                              );
-                            }
-                          });
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 10.0,
+                      left: 10.0,
+                      top: 40.0,
+                    ),
+                    child: CustomButton(
+                      color: Palette.appPrimaryColor,
+                      width: double.infinity,
+                      height: 35,
+                      radius: 50,
+                      isSetting: true,
+                      fontsize: 13,
+                      text: 'Ajouter',
+                      onPress: () async {
+                        if (_formKey.currentState!.validate()) {
+                          if (_partFromApi < 0) {
+                            Fluttertoast.showToast(
+                              msg: 'Cette action ne peut-être réalisée !',
+                              backgroundColor: Palette.appPrimaryColor,
+                            );
+                          } else {
+                            Functions.showLoadingSheet(ctxt: context);
+                            bool response =
+                                await RemoteServices().addUserToGroup(
+                              api: 'groups/membership',
+                              part: _selectedPartValue,
+                              userId: int.parse(_selectedId),
+                              groupId: widget.groupe.id,
+                            );
+                            Future.delayed(const Duration(seconds: 3))
+                                .then((value) {
+                              if (response) {
+                                int newId = int.parse(_selectedId);
+                                setState(() {
+                                  widget.groupe.membrsId.add(newId);
+                                });
+                                Navigator.pop(context);
+                                Fluttertoast.showToast(
+                                  msg: 'Utilisateur ajouté !',
+                                  backgroundColor: Palette.appPrimaryColor,
+                                );
+                                Navigator.pop(context);
+                              } else {
+                                Navigator.pop(context);
+                                Fluttertoast.showToast(
+                                  msg:
+                                      'Cet utilisateur appartient déjà au groupe !',
+                                  backgroundColor: Palette.appPrimaryColor,
+                                );
+                              }
+                            });
+                          }
                         }
-                      }
-                    },
-                  ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Center(child: Text('OU'))),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 10.0,
-                    left: 10.0,
-                    top: 10.0,
-                  ),
-                  child: CustomButton(
-                    isSetting: true,
-                    fontsize: 13,
-                    color: Palette.primaryColor,
-                    width: double.infinity,
-                    height: 35,
-                    radius: 50,
-                    text: 'Créer un membre',
-                    onPress: () => _showBottomSheet(
-                      ctxt: context,
-                      groupe: widget.groupe,
-                      tontine: widget.tontine,
+                      },
                     ),
                   ),
-                )
-              ],
+                  Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Center(child: Text('OU'))),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 10.0,
+                      left: 10.0,
+                      top: 10.0,
+                    ),
+                    child: CustomButton(
+                      isSetting: true,
+                      fontsize: 13,
+                      color: Palette.primaryColor,
+                      width: double.infinity,
+                      height: 35,
+                      radius: 50,
+                      text: 'Créer un membre',
+                      onPress: () => _showBottomSheet(
+                        ctxt: context,
+                        groupe: widget.groupe,
+                        tontine: widget.tontine,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

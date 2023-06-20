@@ -29,7 +29,7 @@ class AllTransactionsHistory extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8.0),
             child: Column(
               children: List.generate(
-                2,
+                trasansactionsByDate.length,
                 (index) => TransactionsWidget(
                   user: user,
                   trasansactionsByDate: trasansactionsByDate[index],

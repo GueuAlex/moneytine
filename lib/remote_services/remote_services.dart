@@ -10,7 +10,7 @@ import '../models/tontine_members_status.dart';
 import '../models/user.dart';
 
 ///////////////// base uri//////////////
-const baseUri = 'http://194.163.136.227:8087/api/';
+const baseUri = 'https://moneytine.com/api/';
 ///////////////////////////////////////
 
 class RemoteServices {
@@ -37,8 +37,8 @@ class RemoteServices {
     };
 
     var response = await client.post(url, body: payload, headers: headers);
-    //print(response.statusCode);
-    //print(response.body);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       return jsonDecode(response.body);
     } else if (response.statusCode == 422) {

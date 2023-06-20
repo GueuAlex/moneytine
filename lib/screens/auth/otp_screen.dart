@@ -265,7 +265,9 @@ class _OtpScreenState extends State<OtpScreen> {
                                 isNewOptProcess = true;
                               });
                               int newOtp = await Functions.postEmail(
-                                api: 'users/email/password/reset',
+                                api: widget.isSiginProcess
+                                    ? 'users/verification/email'
+                                    : 'users/email/password/reset',
                                 email: widget.email,
                               );
                               Future.delayed(const Duration(seconds: 4))

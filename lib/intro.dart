@@ -135,7 +135,7 @@ class _SheetContentState extends State<SheetContent> {
             ),
           ),
           Text(
-            "Termes et Conditions d'utulisation",
+            "Termes et Conditions d'utilisation",
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),

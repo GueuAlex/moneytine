@@ -440,16 +440,20 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                                         ),
                                         TextButton(
                                           onPressed: () {
+                                            //print(_trasansactionsByDate.length);
                                             Navigator.of(context,
                                                     rootNavigator: true)
-                                                .push(MaterialPageRoute(
-                                                    builder: (context) {
-                                              return AllTransactionsHistory(
-                                                user: widget.user,
-                                                trasansactionsByDate:
-                                                    _trasansactionsByDate,
-                                              );
-                                            }));
+                                                .push(
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return AllTransactionsHistory(
+                                                    user: widget.user,
+                                                    trasansactionsByDate:
+                                                        _trasansactionsByDate,
+                                                  );
+                                                },
+                                              ),
+                                            );
                                           },
                                           child: Text(
                                             'Tout afficher',
