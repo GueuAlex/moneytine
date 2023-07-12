@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/style/palette.dart';
 
 import '../../../models/money_transaction.dart';
 import '../../../models/tontine.dart';
 import '../../../models/transation_by_date.dart';
 import '../../../models/user.dart';
-import '../../../remote_services/remote_services.dart';
 import '../../../widgets/loading_container.dart';
 import '../../../widgets/transactions_widget.dart';
 
@@ -32,13 +35,13 @@ class _GroupUserContributionState extends State<GroupUserContribution> {
   final List<MoneyTransaction> _allTransactions = [];
   List<DataByDate<MoneyTransaction>> _trasansactionsByDate = [];
 
-  getAllTransactions() async {
-    List<MoneyTransaction> allTransactions =
-        await RemoteServices().getTransactionsList();
+  Future<void> getAllTransactions() async {
+    /* List<MoneyTransaction> allTransactions =
+        await RemoteServices().getTransactionsList(); */
 
-    if (allTransactions.isNotEmpty) {
+    if (globalTransactionsList.isNotEmpty) {
       _allTransactions.clear();
-      for (MoneyTransaction element in allTransactions) {
+      for (MoneyTransaction element in globalTransactionsList) {
         if (element.userId == widget.user.id &&
             element.groupeId == widget.groupe.id) {
           setState(() {
@@ -102,34 +105,83 @@ class _GroupUserContributionState extends State<GroupUserContribution> {
                       textAlign: TextAlign.center,
                     ),
                   )
-                : SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        // right: 8.0,
-                        left: 8.0,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('  '),
-                          Column(
-                            children: List.generate(
-                              _trasansactionsByDate.length,
-                              (index) => TransactionsWidget(
-                                user: widget.user,
-                                trasansactionsByDate:
-                                    _trasansactionsByDate[index],
-                                //user: widget.user,
-                                //groupe: widget.groupe,
-                                //tontine: widget.tontine,
-                              ),
-                              //(index) => Container(),
+                : _allTransactions.length > 3
+                    ? LiquidPullToRefresh(
+                        backgroundColor: Palette.secondaryColor,
+                        color: Palette.whiteColor,
+                        onRefresh: getAllTransactions,
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              // right: 8.0,
+                              left: 8.0,
+                              bottom: 60,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('  '),
+                                Column(
+                                  children: List.generate(
+                                    _trasansactionsByDate.length,
+                                    (index) => TransactionsWidget(
+                                      user: widget.user,
+                                      trasansactionsByDate:
+                                          _trasansactionsByDate[index],
+                                      //user: widget.user,
+                                      //groupe: widget.groupe,
+                                      //tontine: widget.tontine,
+                                    ),
+                                    //(index) => Container(),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  )
+                        ),
+                      )
+                    : GestureDetector(
+                        onVerticalDragCancel: () {
+                          getAllTransactions();
+                          Functions.showLoadingSheet(ctxt: context);
+                          Future.delayed(const Duration(seconds: 5)).then((_) {
+                            Navigator.pop(context);
+                            Fluttertoast.showToast(
+                              msg: 'Mise à jour de la liste effectuée.',
+                              backgroundColor: Palette.appPrimaryColor,
+                            );
+                          });
+                        },
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              // right: 8.0,
+                              left: 8.0,
+                              bottom: 60,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('  '),
+                                Column(
+                                  children: List.generate(
+                                    _trasansactionsByDate.length,
+                                    (index) => TransactionsWidget(
+                                      user: widget.user,
+                                      trasansactionsByDate:
+                                          _trasansactionsByDate[index],
+                                      //user: widget.user,
+                                      //groupe: widget.groupe,
+                                      //tontine: widget.tontine,
+                                    ),
+                                    //(index) => Container(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
             : Center(
                 child: LoadingContainer(),
               ),

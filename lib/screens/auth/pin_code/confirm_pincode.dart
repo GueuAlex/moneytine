@@ -106,7 +106,7 @@ class _ConfirmCodeScreenState extends State<ConfirmCodeScreen> {
           }
         } else {
           Fluttertoast.showToast(
-            msg: 'Les code ne correspondent pas !',
+            msg: 'Les codes ne correspondent pas !',
             backgroundColor: Palette.appPrimaryColor,
           );
         }

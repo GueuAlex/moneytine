@@ -37,8 +37,8 @@ class RemoteServices {
     };
 
     var response = await client.post(url, body: payload, headers: headers);
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       return jsonDecode(response.body);
     } else if (response.statusCode == 422) {
@@ -130,7 +130,7 @@ class RemoteServices {
     //////////////// post user ////////////
     var response = await client.post(url, body: payload, headers: headers);
 
-    //print(response.statusCode);
+    // print(response.statusCode);
     //print(response.body);
     if (response.statusCode == 201 || response.statusCode == 200) {
       MyUser logUser = userFromJson(response.body);
@@ -143,17 +143,26 @@ class RemoteServices {
   //////////////////////////////// get single user by id //////////////////////
   ///
   Future<MyUser?> getSingleUser({required int id}) async {
-    var uri = Uri.parse(baseUri + 'users/$id');
-    var response = await client.get(uri);
-    //print('Dans remote : ${response.body}');
-    //print('Dans remote : ${response.statusCode}');
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      var json = response.body;
-      //print(response.body);
-      MyUser user = userFromJson(json);
-      return user;
+    try {
+      var uri = Uri.parse(baseUri + 'users/$id');
+      var response = await client.get(uri);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var json = response.body;
+        MyUser user = userFromJson(json);
+        return user;
+      } else {
+        // Gérer les cas où la réponse du serveur n'est pas valide
+        // ou où le statut de la réponse est différent de 200 ou 201.
+        // Par exemple, vous pouvez lancer une exception ou retourner une valeur par défaut.
+        return null;
+      }
+    } catch (e) {
+      // Gérer les erreurs potentielles survenues lors de l'appel réseau.
+      // Par exemple, vous pouvez afficher un message d'erreur ou lancer une exception personnalisée.
+      // print('Erreur lors de la récupération des données utilisateur: $e');
+      return null;
     }
-    return null;
   }
 
   //////////////////////////////// get tontine members status //////////////////////
@@ -219,7 +228,7 @@ class RemoteServices {
     //print('Dans remote : ${response.statusCode}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       var json = jsonDecode(response.body);
-      //print(json["Part_remaining"]);
+      //print('ouuuu :${json["Part_remaining"]}');
       double part = double.parse(json["Part_remaining"].toString());
 
       return part;
@@ -484,9 +493,9 @@ class RemoteServices {
     var response = await client.get(uri);
     //print('list transactions Dans remote : ${response.body}');
     //print('code Dans remote : ${response.statusCode}');
+    // print(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
-      var json = response.body;
-      //print(response.body);
+      // print(response.body);
       List<MoneyTransaction> mTransactions =
           moneyTransactionListFromJson(response.body);
       return mTransactions;

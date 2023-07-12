@@ -34,6 +34,8 @@ class MoneyTransaction {
     required this.groupeId,
     required this.tontineId,
     required this.tontineCreatorId,
+    required this.userName,
+    required this.tontineName,
   });
 
   int? id;
@@ -45,6 +47,8 @@ class MoneyTransaction {
   int groupeId;
   int tontineId;
   int tontineCreatorId;
+  String userName;
+  String tontineName;
 
   factory MoneyTransaction.fromJson(Map<String, dynamic> json) =>
       MoneyTransaction(
@@ -57,6 +61,8 @@ class MoneyTransaction {
         groupeId: json["group_id"],
         tontineId: json["tontine_id"],
         tontineCreatorId: json["tontine_creator_id"],
+        tontineName: json["tontine_name"],
+        userName: json["user_name"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -69,5 +75,9 @@ class MoneyTransaction {
         "group_id": groupeId,
         "tontine_id": tontineId,
         "tontine_creator_id": tontineCreatorId,
+        "tontine_name": tontineName,
+        "user_name": userName,
       };
 }
+
+final List<MoneyTransaction> globalTransactionsList = [];

@@ -741,9 +741,14 @@ class _AddTontineScreenState extends State<AddTontineScreen> {
     //print(_selectedDate2);
     //print(_selectedDate1);
     int uniqueCode = Random().nextInt(999999);
-    DateTime dateDernierPaie = Functions.calculerDateFin(
+    /* Functions.afficherBonjourAvantDatePaiement(
+        dateDebut: _selectedDate2,
+        nombreMois: int.parse(_numberOfController.text),
+        dateLimitePremierPaiement: _selectedDate1); */
+    DateTime dateDernierPaie = Functions.calculerDateLimiteDernierPaiement(
       dateDebut: _selectedDate2,
       nombreMois: int.parse(_numberOfController.text),
+      dateLimitePremierPaiement: _selectedDate1,
     );
     showModalBottomSheet(
         isDismissible: true,

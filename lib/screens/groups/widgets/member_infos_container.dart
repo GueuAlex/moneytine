@@ -346,6 +346,8 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
             String hours = DateFormat('HH:mm').format(DateTime.now());
             // print('retrait stard ok !');
             MoneyTransaction newTrasanction = MoneyTransaction(
+              userName: widget.user.fullName,
+              tontineName: widget.tontine.tontineName,
               type: 'Retrait',
               amunt: gain,
               hours: hours,
@@ -369,6 +371,8 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
               Future.delayed(const Duration(seconds: 5)).then((value) async {
                 /////////////////////////// create notif
                 ///and send it
+                globalTransactionsList.add(newTrasanction);
+
                 NotificationModel newNotif = NotificationModel(
                   amount: gain,
                   recipientId: widget.user.id!,
@@ -392,7 +396,7 @@ class _MemberInfosContainerState extends State<MemberInfosContainer> {
                         FirebaseFCM.sendNotification(
                           title: 'Transaction',
                           token: token,
-                          message: 'Votre retrait a été enregistrer  👍🏻',
+                          message: 'Votre retrait a été enregistré  👍🏻',
                         );
                         /////////////////:
                         ///

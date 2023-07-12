@@ -15,8 +15,9 @@ class SingleTontineHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime dateFin = Functions.calculerDateFin(
-      dateDebut: tontine.firstPaiemntDate,
+    DateTime dateFin = Functions.calculerDateLimiteDernierPaiement(
+      dateDebut: tontine.startDate,
+      dateLimitePremierPaiement: tontine.firstPaiemntDate,
       nombreMois: tontine.numberOfType,
     );
     return Container(
@@ -74,7 +75,7 @@ class SingleTontineHeader extends StatelessWidget {
             height: 5.0,
           ),
           Text(
-            DateFormat('dd MMM yyyy').format(dateFin),
+            DateFormat('dd MMM yyyy', 'fr_FR').format(dateFin),
             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                   color: Palette.whiteColor,
                   fontWeight: FontWeight.w700,

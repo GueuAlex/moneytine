@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import '../../functions/firebase_fcm.dart';
 import '../../models/notification_models.dart';
@@ -39,12 +40,20 @@ class _NotifsScreenState extends State<NotifsScreen> {
   List<DataByDate<NotificationModel>> _thisUserNotifLisByDate = [];
   List<DataByDate<NotificationModel>> _thisUserNotifLisByDateFiltrer = [];
 
-  getNotifList() async {
+  Future<void> getNotifList() async {
     List<NotificationModel> thisUserNotifLis =
         await RemoteServices().getCurrentUserNotifsList(id: widget.user.id!);
     // print(thisUserNotifLis);
 
     if (thisUserNotifLis.isNotEmpty) {
+      /*  thisUserNotifLis.sort((a, b) {
+        int dateComparison = b.date.compareTo(a.date);
+        if (dateComparison != 0) {
+          return dateComparison;
+        }
+        return b.hour.compareTo(a.hour);
+      }); */
+
       _thisUserNotifLis.clear();
       for (NotificationModel element in thisUserNotifLis) {
         //if (element.userId == widget.user.id &&
@@ -54,9 +63,13 @@ class _NotifsScreenState extends State<NotifsScreen> {
         });
         //}
       }
-      _thisUserNotifLis.sort(
-        (a, b) => a.date.compareTo(b.date),
-      );
+      _thisUserNotifLis.sort((a, b) {
+        int dateComparison = b.date.compareTo(a.date);
+        if (dateComparison != 0) {
+          return dateComparison;
+        }
+        return a.hour.compareTo(b.hour);
+      });
       // Créer une liste de TransactionsByDate à partir de la liste triée
       List<DataByDate<NotificationModel>> notifsTrier = [];
       for (var t in _thisUserNotifLis) {
@@ -146,89 +159,94 @@ class _NotifsScreenState extends State<NotifsScreen> {
       ),
       body: NotificationListener(
         child: SafeArea(
-          child: Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 100,
-                decoration: const BoxDecoration(
-                  color: Palette.secondaryColor,
-                  borderRadius: BorderRadius.only(
-                      bottomRight: Radius.elliptical(200, 10),
-                      bottomLeft: Radius.elliptical(200, 10)),
-                ),
-              ),
-              Positioned(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    right: 55,
-                    left: 55,
-                    top: 25,
+          child: LiquidPullToRefresh(
+            color: Palette.secondaryColor,
+            springAnimationDurationInMilliseconds: 400,
+            onRefresh: getNotifList,
+            child: Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 100,
+                  decoration: const BoxDecoration(
+                    color: Palette.secondaryColor,
+                    borderRadius: BorderRadius.only(
+                        bottomRight: Radius.elliptical(200, 10),
+                        bottomLeft: Radius.elliptical(200, 10)),
                   ),
-                  child: InkWell(
-                      onTap: () async {
-                        DateTimeRange? dtr = await dateTimeRange();
-
-                        if (dtr != null) {
-                          setState(() {
-                            _selectedDates = dtr;
-                          });
-                        }
-                        // print(_selectedDates);
-                        // Filtrer les transactions qui sont incluses dans l'intervalle spécifié
-                        setState(() {
-                          _thisUserNotifLisByDateFiltrer =
-                              _thisUserNotifLisByDate.where((element) {
-                            //DateTime transactionDate = DateTime.parse(element.date.toString());
-                            return element.date.isAfter(_selectedDates.start
-                                    .subtract(Duration(days: 1))) &&
-                                element.date.isBefore(
-                                    _selectedDates.end.add(Duration(days: 1)));
-                          }).toList();
-                        });
-                      },
-                      child: FilterBox(
-                        interval: _selectedDates,
-                        data: _thisUserNotifLisByDateFiltrer,
-                      )),
                 ),
-              ),
-              !isLoading
-                  ? _thisUserNotifLisByDateFiltrer.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 160),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: List.generate(
-                                _thisUserNotifLisByDateFiltrer.length,
-                                (index) => NotificationList(
-                                  notificationModelByDate:
-                                      _thisUserNotifLisByDateFiltrer[index],
+                Positioned(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      right: 55,
+                      left: 55,
+                      top: 25,
+                    ),
+                    child: InkWell(
+                        onTap: () async {
+                          DateTimeRange? dtr = await dateTimeRange();
+
+                          if (dtr != null) {
+                            setState(() {
+                              _selectedDates = dtr;
+                            });
+                          }
+                          // print(_selectedDates);
+                          // Filtrer les transactions qui sont incluses dans l'intervalle spécifié
+                          setState(() {
+                            _thisUserNotifLisByDateFiltrer =
+                                _thisUserNotifLisByDate.where((element) {
+                              //DateTime transactionDate = DateTime.parse(element.date.toString());
+                              return element.date.isAfter(_selectedDates.start
+                                      .subtract(Duration(days: 1))) &&
+                                  element.date.isBefore(_selectedDates.end
+                                      .add(Duration(days: 1)));
+                            }).toList();
+                          });
+                        },
+                        child: FilterBox(
+                          interval: _selectedDates,
+                          data: _thisUserNotifLisByDateFiltrer,
+                        )),
+                  ),
+                ),
+                !isLoading
+                    ? _thisUserNotifLisByDateFiltrer.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 160),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: List.generate(
+                                  _thisUserNotifLisByDateFiltrer.length,
+                                  (index) => NotificationList(
+                                    notificationModelByDate:
+                                        _thisUserNotifLisByDateFiltrer[index],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                      : Container(
-                          margin: const EdgeInsets.only(top: 250),
-                          padding: const EdgeInsets.all(30),
-                          width: double.infinity,
-                          height: 300,
-                          child: Column(
-                            children: [
-                              /* Image.asset(
-                                'assets/images/missing_notif.jpg',
-                                width: 200,
-                              ), */
-                              Text('Pas de notifications pour cette intervalle')
-                            ],
-                          ),
-                        )
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 100),
-                      child: LoadingContainer(),
-                    )
-            ],
+                          )
+                        : Container(
+                            margin: const EdgeInsets.only(top: 250),
+                            padding: const EdgeInsets.all(30),
+                            width: double.infinity,
+                            height: 300,
+                            child: Column(
+                              children: [
+                                /* Image.asset(
+                                  'assets/images/missing_notif.jpg',
+                                  width: 200,
+                                ), */
+                                Text('Pas de notifications pour cet intervalle')
+                              ],
+                            ),
+                          )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 100),
+                        child: LoadingContainer(),
+                      )
+              ],
+            ),
           ),
         ),
       ),

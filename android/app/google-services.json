@@ -7,6 +7,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:605027721323:android:454752b414fdf7e779512e",
+        "android_client_info": {
+          "package_name": "com.digifaz.moneytine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605027721323-pirdcuepo9llepvkp6s3vtfufnj5sakn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.digifaz.moneytine",
+            "certificate_hash": "d3958e6eef53ae744a851354ac64a0b04e2d3d37"
+          }
+        },
+        {
+          "client_id": "605027721323-enild4t98p5lgce5gifd9lbuj7u6hk4h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBljYoKFf7_A9uZvCGDF99q3dpz_DOC-60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605027721323-enild4t98p5lgce5gifd9lbuj7u6hk4h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "605027721323-hoe4kck2bd4c1vc31u6dgqj3b4dpjptv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.digifaz.moneytine"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:605027721323:android:2b3baa9809cc98da79512e",
         "android_client_info": {
           "package_name": "com.example.moneytine"

@@ -3,6 +3,9 @@ import 'package:moneytine/style/palette.dart';
 
 import 'config/prefs.dart';
 import 'intro.dart';
+import 'models/money_transaction.dart';
+import 'models/tontine.dart';
+import 'models/transation_by_date.dart';
 import 'models/user.dart';
 import 'remote_services/remote_services.dart';
 import 'screens/auth/login.dart';
@@ -18,7 +21,7 @@ class SplashCreen extends StatefulWidget {
 class _SplashCreenState extends State<SplashCreen> {
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 3)).then((value) async {
+    Future.delayed(const Duration(seconds: 5)).then((value) async {
       /* print(await Prefs().id);
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) {
@@ -50,6 +53,8 @@ class _SplashCreenState extends State<SplashCreen> {
         // ignore: use_build_context_synchronously
         if (response != null) {
           MyUser user = response;
+          getAllTontineListWhereCurrentUserParticiped(id: user.id!);
+          getAllTransactions(id: user.id);
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
@@ -98,5 +103,70 @@ class _SplashCreenState extends State<SplashCreen> {
         ),
       ),
     );
+  }
+
+  void getAllTontineListWhereCurrentUserParticiped({required int id}) async {
+    List<Tontine?> tontineList1 = await RemoteServices().getAllTontineList();
+    //List<Tontine> allTontineWhereCurrentUserParticipe = [];
+
+    if (tontineList1.isNotEmpty) {
+      //allTontineWhereCurrentUserParticipe.clear();
+      for (var element in tontineList1) {
+        if (element?.creatorId != id && element!.membersId.contains(id)) {
+          //setState(() {
+          allTontineWhereCurrentUserParticipe.add(element);
+          // });
+        }
+        if (element?.creatorId == id) {
+          // setState(() {
+          currentUSerTontineList.add(element!);
+          // });
+        }
+      }
+      // print('je participe à : $allTontineWhereCurrentUserParticipe');
+    }
+  }
+
+  Future<void> getAllTransactions({required id}) async {
+    List<MoneyTransaction> allTransactions =
+        await RemoteServices().getTransactionsList();
+
+    if (allTransactions.isNotEmpty) {
+      globalTransactionsList.clear();
+      for (MoneyTransaction element in allTransactions) {
+        if (element.tontineCreatorId == id || element.userId == id) {
+          //setState(() {
+          globalTransactionsList.add(element);
+          // });
+        }
+      }
+      globalTransactionsList.sort(
+        (a, b) => a.date.compareTo(b.date),
+      );
+      globalTransactionsList.sort((a, b) {
+        int dateComparison = b.date.compareTo(a.date);
+        if (dateComparison != 0) {
+          return dateComparison;
+        }
+        return a.hours.compareTo(b.hours);
+      });
+      // Créer une liste de TransactionsByDate à partir de la liste triée
+      List<DataByDate<MoneyTransaction>> transactionsByDate = [];
+      for (var t in globalTransactionsList) {
+        DataByDate? last =
+            transactionsByDate.isNotEmpty ? transactionsByDate.last : null;
+        if (last == null || last.date != t.date) {
+          transactionsByDate.add(DataByDate<MoneyTransaction>(
+            date: t.date,
+            data: [t],
+          ));
+        } else {
+          last.data.add(t);
+        }
+      }
+      //setState(() {
+      AlltrasansactionsByDate = transactionsByDate;
+      // });
+    }
   }
 }

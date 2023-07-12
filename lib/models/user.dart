@@ -25,6 +25,7 @@ class MyUser {
     this.gender,
     this.birthDate,
     this.uid,
+    required this.isActive,
   });
 
   int? id;
@@ -34,6 +35,7 @@ class MyUser {
   String? gender;
   DateTime? birthDate;
   String? uid;
+  int isActive;
 
   factory MyUser.fromJson(Map<String, dynamic> json) => MyUser(
         id: json["id"],
@@ -41,6 +43,7 @@ class MyUser {
         email: json["email"],
         password: json["password"],
         gender: json["gender"],
+        isActive: json["active"],
         // birthDate: DateTime.parse(json["birthDate"]),
       );
 
@@ -52,17 +55,18 @@ class MyUser {
         "gender": gender,
         "birthDate": birthDate?.toIso8601String(),
         "uid": uid,
+        "active": isActive,
       };
 }
 
 List<MyUser> creatorList = [];
 
 List<MyUser> groupMembres = [
+  /* MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
   MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
   MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
   MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
-  MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
-  MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'),
+  MyUser(fullName: 'Johon Doe', email: 'johondoe@gmail.com'), */
 ];
 
 

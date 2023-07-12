@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../functions/functions.dart';
+import '../../../models/user.dart';
 import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
 import '../pin_code/pin_code.dart';
@@ -10,10 +11,12 @@ import '../widgets/otp_text_field.dart';
 
 // ignore: must_be_immutable
 class ResetPinOtpScreen extends StatefulWidget {
+  final MyUser? user;
   ResetPinOtpScreen({
     super.key,
     required this.otp,
     required this.email,
+    this.user,
     // this.user,
     //this.isSiginProcess = true,
   });
@@ -70,6 +73,7 @@ class _ResetPinOtpScreenState extends State<ResetPinOtpScreen> {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
                     return PinCodeScreen(
+                      user: widget.user,
                       isRegistration: true,
                     );
                   }));
@@ -199,7 +203,7 @@ class _ResetPinOtpScreenState extends State<ResetPinOtpScreen> {
                                     isNewOptProcess = false;
                                   });
                                   Fluttertoast.showToast(
-                                    msg: 'Code renvoyer !',
+                                    msg: 'Code renvoyé !',
                                     backgroundColor: Palette.appPrimaryColor,
                                   );
                                 } else {

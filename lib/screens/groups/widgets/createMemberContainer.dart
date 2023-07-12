@@ -202,7 +202,7 @@ class _CreateMemberContainerState extends State<CreateMemberContainer> {
               onPress: () {
                 String name = firstNameController.text.trim();
                 String email = emailController.text.trim();
-                String password = Functions.generatePassword();
+                String password = FirebaseConst.laraPwd;
                 /*  print('nom: $name');
                 print('email: $email');
                 print('id tontine: $tontineId');
@@ -219,6 +219,7 @@ class _CreateMemberContainerState extends State<CreateMemberContainer> {
                     Functions.showLoadingSheet(ctxt: context);
                     Future.delayed(const Duration(seconds: 5)).then((_) async {
                       MyUser newUser = MyUser(
+                        isActive: 1,
                         fullName: name,
                         email: email,
                         password: password,

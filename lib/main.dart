@@ -5,8 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 import 'functions/local_notification_services.dart';
+import 'functions/notifs_services.dart';
 import 'splash.dart';
 import 'style/palette.dart';
 
@@ -23,11 +25,13 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  tz.initializeTimeZones();
   LocalNotificationService.initialize();
+  NotificationService().initNotification();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  NotificationSettings settings = await messaging.requestPermission(
+  await messaging.requestPermission(
     alert: true,
     announcement: false,
     badge: true,
@@ -52,6 +56,22 @@ Future<void> main() async {
 
   //initializeDateFormatting().then((_) => runApp(const MyApp()));
   runApp(const MyApp());
+
+  //////////////////// Appel de la fonction afficherBonjourAvantDatePaiement//////////:
+  ///
+  ///
+  /* DateTime dateDebut = DateTime(2023, 07, 1);
+  int nombreMois = 12;
+  DateTime dateLimitePremierPaiement = DateTime(2023, 07, 1);
+
+  await Functions().afficherBonjourAvantDatePaiement(
+    dateDebut,
+    nombreMois,
+    dateLimitePremierPaiement,
+  ); */
+//////////////////// Appel de la fonction afficherBonjourAvantDatePaiement//////////:
+  ///
+  ///
 }
 
 class MyApp extends StatelessWidget {
@@ -61,6 +81,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         GlobalCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

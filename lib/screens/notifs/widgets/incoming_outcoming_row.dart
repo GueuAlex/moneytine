@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:moneytine/functions/functions.dart';
 
 import '../../../style/palette.dart';
 
@@ -59,7 +59,7 @@ class IncomingOutcomingRow extends StatelessWidget {
                     ),
                     FittedBox(
                       child: Text(
-                        '${versement} FCFA',
+                        '${Functions.addSpaceAfterThreeDigits(versement.toString())} FCFA',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -121,7 +121,7 @@ class IncomingOutcomingRow extends StatelessWidget {
                     ),
                     FittedBox(
                       child: Text(
-                        '${retrait} FCFA',
+                        '${Functions.addSpaceAfterThreeDigits(retrait.toString())} FCFA',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

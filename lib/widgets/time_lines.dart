@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../style/palette.dart';
-import 'transactions_widget.dart';
 
 class TimeLines extends StatelessWidget {
   const TimeLines({super.key, required this.isFirst});

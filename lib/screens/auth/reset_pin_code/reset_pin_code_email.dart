@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moneytine/models/user.dart';
 
 import '../../../functions/functions.dart';
 import '../../../style/palette.dart';
@@ -7,7 +8,8 @@ import '../widgets/reset_email_text_field.dart';
 import 'reset_pin_otp_screen.dart';
 
 class ResetPinCodeEmailScreen extends StatefulWidget {
-  const ResetPinCodeEmailScreen({super.key});
+  final MyUser user;
+  const ResetPinCodeEmailScreen({super.key, required this.user});
 
   @override
   State<ResetPinCodeEmailScreen> createState() =>
@@ -23,6 +25,12 @@ class _ResetPinCodeEmailScreenState extends State<ResetPinCodeEmailScreen> {
 
   //////////////////bool ////////////////
   bool isLoading = false;
+
+  @override
+  void initState() {
+    emailController.text = widget.user.email;
+    super.initState();
+  }
 
   //////////////
   @override
@@ -53,6 +61,7 @@ class _ResetPinCodeEmailScreenState extends State<ResetPinCodeEmailScreen> {
                     return ResetPinOtpScreen(
                       otp: code,
                       email: emailController.text,
+                      user: widget.user,
                       //isSiginProcess: false,
                     );
                   }));

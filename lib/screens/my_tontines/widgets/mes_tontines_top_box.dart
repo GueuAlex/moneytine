@@ -210,7 +210,7 @@ class MesTontinesTopBox extends StatelessWidget {
                                 width: 5.0,
                               ),
                               Text(
-                                allTontineWhereCurrentUserParticipe.length <= 1
+                                currentUSerTontineList.length <= 1
                                     ? ' tontine'
                                     : 'tontines',
                                 style: const TextStyle(

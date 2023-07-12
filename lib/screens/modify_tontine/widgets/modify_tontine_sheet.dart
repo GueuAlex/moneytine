@@ -110,15 +110,18 @@ class _ModifyTontineSheetContentState extends State<ModifyTontineSheetContent> {
                           ),
                           RecapInfosRow(
                             label: 'Montant de cotisation :',
-                            text: widget.amount.toString(),
+                            text: Functions.addSpaceAfterThreeDigits(
+                                widget.amount.toString()),
                           ),
                           RecapInfosRow(
                             label: 'Montant pour 1/2 part :',
-                            text: demiPart(widget.amount).toString(),
+                            text: Functions.addSpaceAfterThreeDigits(
+                                demiPart(widget.amount).toString()),
                           ),
                           RecapInfosRow(
                             label: 'Montant pour 1/4 de part :',
-                            text: unQuartPart(widget.amount).toString(),
+                            text: Functions.addSpaceAfterThreeDigits(
+                                unQuartPart(widget.amount).toString()),
                           ),
                           RecapInfosRow(
                             label: 'Code d\'invitation :',

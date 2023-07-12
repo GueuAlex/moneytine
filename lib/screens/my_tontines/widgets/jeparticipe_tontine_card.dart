@@ -105,7 +105,7 @@ class _JeParticipeTontineCardState extends State<JeParticipeTontineCard> {
                           height: 8,
                         ),
                         Text(
-                          'Créer le ${DateFormat('dd / MM / yyyy').format(widget.tontine.startDate)}',
+                          'Créée le ${DateFormat('dd / MM / yyyy').format(widget.tontine.startDate)}',
                         ),
                         const SizedBox(
                           height: 8,
@@ -152,11 +152,15 @@ class _JeParticipeTontineCardState extends State<JeParticipeTontineCard> {
                         //ContributionInfos(label: '${tontine.contribution} FCFA'),
 
                         ContributionInfos(
-                          label: '${widget.tontine.groupes.length} Groupes',
+                          label: widget.tontine.groupes.length > 1
+                              ? '${widget.tontine.groupes.length} Groupes'
+                              : '${widget.tontine.groupes.length} Groupe',
                           color: Palette.appSecondaryColor,
                         ),
                         ContributionInfos(
-                          label: '${widget.tontine.membersId.length} Membres',
+                          label: widget.tontine.membersId.length > 1
+                              ? '${widget.tontine.membersId.length} Membres'
+                              : '${widget.tontine.membersId.length} Membre',
                           color: Palette.appPrimaryColor,
                         ),
                         ContributionInfos(

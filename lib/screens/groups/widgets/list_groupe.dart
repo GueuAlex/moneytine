@@ -55,9 +55,11 @@ class _ListGroupState extends State<ListGroup> {
     if (data.isNotEmpty) {
       selectedGroupData.clear();
       for (SingleGroupData element in data) {
-        setState(() {
-          selectedGroupData.add(element);
-        });
+        if (mounted) {
+          setState(() {
+            selectedGroupData.add(element);
+          });
+        }
       }
     }
 
@@ -73,9 +75,11 @@ class _ListGroupState extends State<ListGroup> {
       }
       return updatedselectedGroupData;
     }).listen((updateList) {
-      setState(() {
-        selectedGroupData = updateList;
-      });
+      if (mounted) {
+        setState(() {
+          selectedGroupData = updateList;
+        });
+      }
     });
   }
 

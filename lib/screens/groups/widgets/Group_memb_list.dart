@@ -29,7 +29,7 @@ class GroupMembList extends StatefulWidget {
 }
 
 class _GroupMembListState extends State<GroupMembList> {
-  MyUser user = MyUser(fullName: '', email: '');
+  MyUser user = MyUser(fullName: '', email: '', isActive: 1);
   @override
   void initState() {
     getUser();

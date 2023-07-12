@@ -85,8 +85,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TopRow(user: widget.user),
+              const SizedBox(
+                height: 25.0,
+              ),
               const CustomText(
-                text: 'email',
+                text: 'Email',
                 fontSize: 16,
                 fontWeight: FontWeight.normal,
               ),
@@ -166,27 +169,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
-                        /* const CustomText(
-                          text: 'Selectinner le genre',
-                          fontSize: 18,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        Container(
-                          height: 50,
-                          width: 200,
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  width: 1, color: Palette.whiteColor),
-                            ),
-                          ),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                buildDropDown(),
-                                const Icon(Icons.arrow_drop_down),
-                              ]),
-                        ), */
                         SizedBox(
                           height: 50,
                           width: 200,

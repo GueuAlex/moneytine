@@ -10,7 +10,7 @@ class LocalNotificationService {
   static void initialize() {
     final InitializationSettings initializationSettings =
         InitializationSettings(
-      android: AndroidInitializationSettings("ic_launcher"),
+      android: AndroidInitializationSettings("ic_launcher1"),
       iOS: DarwinInitializationSettings(
         requestAlertPermission: true,
         requestBadgePermission: true,
@@ -37,6 +37,7 @@ class LocalNotificationService {
         message.notification!.body,
         await notificationDetails(),
       );
+      // ignore: unused_catch_clause
     } on Exception catch (e) {
       ///
       // print("errro is : $e");

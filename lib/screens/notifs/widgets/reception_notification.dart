@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../functions/functions.dart';
 import '../../../models/notification_models.dart';
 import '../../../style/palette.dart';
 
@@ -14,6 +15,9 @@ class ReceptionNotication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String montant = Functions.addSpaceAfterThreeDigits(
+      notificationModel.amount.toString(),
+    );
     return Container(
       width: double.infinity,
       //height: 50,
@@ -59,7 +63,7 @@ class ReceptionNotication extends StatelessWidget {
                       ),
                       children: <TextSpan>[
                         TextSpan(
-                          text: '${notificationModel.amount} FCFA ',
+                          text: '${montant} FCFA ',
                           style: const TextStyle(
                             color: Palette.appPrimaryColor,
                             fontSize: 13,

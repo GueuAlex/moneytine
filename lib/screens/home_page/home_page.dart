@@ -89,7 +89,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
           //size: iconSize,
           size: 22,
         ),
-        title: "Parametres",
+        title: "Paramètres",
         textStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 12,

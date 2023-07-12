@@ -359,11 +359,13 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                       print('date : $_selectedPaimentDate');
                       print('groupe id : ${widget.groupe.id}');
                       print('user id : ${widget.user.id}');
-                      print(
+                      print( 
                           '${_selectedPaimentTime.hour}:${_selectedPaimentTime.minute}'); */
                       double amount =
                           double.parse(_paiementAmountController.text);
                       MoneyTransaction moneyTransaction = MoneyTransaction(
+                        userName: widget.user.fullName,
+                        tontineName: widget.tontine.tontineName,
                         type: 'Versement',
                         amunt: amount,
                         hours:
@@ -394,6 +396,7 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                               notificationModel: newNotif,
                             );
                             if (response != null) {
+                              globalTransactionsList.add(moneyTransaction);
                               ///////////////////////////////////////////
                               /// envoi de notification
                               FirebaseFCM.getTokenNotificationByEmail(
@@ -405,7 +408,7 @@ class _RegisterUserVersementState extends State<RegisterUserVersement> {
                                       title: 'Transaction',
                                       token: token,
                                       message:
-                                          'Votre versement a été enregistrer  👍🏻',
+                                          'Votre versement a été enregistré  👍🏻',
                                     );
                                     ////////////:: set bool
                                     ///

@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../functions/functions.dart';
 import '../../../models/tontine.dart';
+import '../../../models/user.dart';
 import '../../../remote_services/remote_services.dart';
 import '../../../style/palette.dart';
 import '../../../widgets/custom_button.dart';
@@ -17,9 +18,11 @@ class ButtonsRow extends StatefulWidget {
   const ButtonsRow({
     super.key,
     required this.widget,
+    required this.user,
   });
 
   final SingleTontine widget;
+  final MyUser user;
 
   @override
   State<ButtonsRow> createState() => _ButtonsRowState();
@@ -204,8 +207,12 @@ class _ButtonsRowState extends State<ButtonsRow> {
         backgroundColor: Palette.appPrimaryColor,
       );
     } else {
-      currentUSerTontineList
-          .removeWhere((element) => element == widget.widget.tontine);
+      setState(() {
+        currentUSerTontineList
+            .removeWhere((element) => element == widget.widget.tontine);
+      });
+
+      //getUserOwnTontineList();
 
       Fluttertoast.showToast(
         msg: 'Tontine supprimée !',
@@ -248,6 +255,22 @@ class _ButtonsRowState extends State<ButtonsRow> {
         );
       },
     );
+  }
+
+  void getUserOwnTontineList() async {
+    List<Tontine?> tontineList1 = await RemoteServices()
+        .getCurrentUserTontineList(id: int.parse(widget.user.id.toString()));
+    if (tontineList1.isNotEmpty) {
+      //currentUSerTontineList.clear();
+      for (var element in tontineList1) {
+        setState(() {
+          // tontineList.add(element!);
+          setState(() {
+            currentUSerTontineList.add(element!);
+          });
+        });
+      }
+    }
   }
 }
 

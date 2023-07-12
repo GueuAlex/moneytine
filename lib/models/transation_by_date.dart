@@ -1,3 +1,5 @@
+import 'money_transaction.dart';
+
 class DataByDate<T> {
   DataByDate({
     required this.date,
@@ -6,3 +8,5 @@ class DataByDate<T> {
   final DateTime date;
   final List<T> data;
 }
+
+List<DataByDate<MoneyTransaction>> AlltrasansactionsByDate = [];

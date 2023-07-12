@@ -114,6 +114,7 @@ class _SinginScreenState extends State<SinginScreen> {
             } else {
               Future.delayed(const Duration(seconds: 4)).then((value) {
                 MyUser user = MyUser(
+                  isActive: 1,
                   fullName: firstNameController.text,
                   email: emailController.text,
                   password: passwordController.text,

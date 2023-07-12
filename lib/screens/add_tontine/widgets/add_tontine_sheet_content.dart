@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../../../functions/functions.dart';
@@ -110,11 +111,13 @@ class _AddTontineSheetContentState extends State<AddTontineSheetContent> {
                           ),
                           RecapInfosRow(
                             label: 'Montant pour 1/2 part :',
-                            text: demiPart(widget.amount).toString(),
+                            text: Functions.addSpaceAfterThreeDigits(
+                                demiPart(widget.amount).toString()),
                           ),
                           RecapInfosRow(
                             label: 'Montant pour 1/4 de part :',
-                            text: unQuartPart(widget.amount).toString(),
+                            text: Functions.addSpaceAfterThreeDigits(
+                                unQuartPart(widget.amount).toString()),
                           ),
                           RecapInfosRow(
                             label: 'Code d\'invitation :',
@@ -144,47 +147,59 @@ class _AddTontineSheetContentState extends State<AddTontineSheetContent> {
                       text: 'Créer la tontine',
                       onPress: () async {
                         Functions.showLoadingSheet(ctxt: context);
-                        Tontine newTontine = Tontine(
-                          id: 0,
-                          uniqueCode: widget.uniqueCode,
-                          tontineName: widget.tontineName,
-                          type: widget.type,
-                          numberOfType: widget.monbreType,
-                          contribution: widget.amount,
-                          startDate: widget.dateDebut,
-                          firstPaiemntDate: widget.datePremierePaie,
-                          creatorId: int.parse(widget.user.id.toString()),
-                        );
-                        int? responseId = await RemoteServices().postNewTontine(
-                          api: 'tontines',
-                          tontine: newTontine,
-                        );
-
-                        if (responseId != null) {
-                          Tontine? tontine =
-                              await RemoteServices().getSingleTontine(
-                            id: responseId,
+                        if (widget.type.toLowerCase() == 'mensuel') {
+                          Tontine newTontine = Tontine(
+                            id: 0,
+                            uniqueCode: widget.uniqueCode,
+                            tontineName: widget.tontineName,
+                            type: widget.type,
+                            numberOfType: widget.monbreType,
+                            contribution: widget.amount,
+                            startDate: widget.dateDebut,
+                            firstPaiemntDate: widget.datePremierePaie,
+                            creatorId: int.parse(widget.user.id.toString()),
                           );
-                          setState(() {
-                            currentUSerTontineList.add(tontine!);
-                          });
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
-                          if (tontine != null) {
-                            // ignore: use_build_context_synchronously
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return SingleTontine(
-                                    tontine: tontine,
-                                    user: widget.user,
-                                    isFiret: true,
-                                  );
-                                },
-                              ),
+                          int? responseId =
+                              await RemoteServices().postNewTontine(
+                            api: 'tontines',
+                            tontine: newTontine,
+                          );
+
+                          if (responseId != null) {
+                            Tontine? tontine =
+                                await RemoteServices().getSingleTontine(
+                              id: responseId,
                             );
+                            setState(() {
+                              currentUSerTontineList.add(tontine!);
+                            });
+                            // ignore: use_build_context_synchronously
+                            Navigator.pop(context);
+                            if (tontine != null) {
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return SingleTontine(
+                                      tontine: tontine,
+                                      user: widget.user,
+                                      isFiret: true,
+                                    );
+                                  },
+                                ),
+                              );
+                            }
                           }
+                        } else {
+                          ////
+                          ///
+                          Fluttertoast.showToast(
+                            msg:
+                                'les tontines de type ${widget.type} ne sont pas encore disponible',
+                            backgroundColor: Palette.appPrimaryColor,
+                          );
+                          Navigator.pop(context);
                         }
                       },
                     ),

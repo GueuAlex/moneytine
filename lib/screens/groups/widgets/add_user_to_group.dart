@@ -149,7 +149,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
       },
       validator: (value) {
         if (_selectedPart == '0.0') {
-          return 'Veuillez sélectionner un type de tontine';
+          return 'Veuillez sélectionner une part';
         }
         return null;
       },
@@ -186,9 +186,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
       appBar: AppBar(
         backgroundColor: Palette.secondaryColor,
         elevation: 0,
-        title: Text(
-          'Ajout d\'un membre',
-        ),
+        title: Text('Ajout d\'un membre au ${widget.groupe.nom.toLowerCase()}'),
         /* actions: [
           InkWell(
             borderRadius: BorderRadius.circular(50),

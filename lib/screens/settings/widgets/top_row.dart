@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../functions/functions.dart';
 import '../../../models/user.dart';
 import '../../../style/palette.dart';
 import '../../../widgets/custom_text.dart';
@@ -16,7 +15,7 @@ class TopRow extends StatelessWidget {
       children: <Widget>[
         SizedBox(
           width: 140,
-          height: 200,
+          height: 100,
           child: Center(
             child: Container(
               width: 100,
@@ -38,12 +37,12 @@ class TopRow extends StatelessWidget {
         Expanded(
           child: SizedBox(
             width: double.infinity,
-            height: 200,
+            //height: 200,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const CustomText(
+                /* const CustomText(
                   text: 'Prénoms',
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
@@ -56,17 +55,14 @@ class TopRow extends StatelessWidget {
                 ),
                 const SizedBox(
                   height: 25.0,
-                ),
+                ), */
                 const CustomText(
-                  text: 'Nom de famille',
+                  text: 'Nom',
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                 ),
                 NameContainer(
-                  text: Functions.nameFormater(
-                    fullName: user.fullName,
-                    isFirstname: true,
-                  ),
+                  text: user.fullName,
                 ),
               ],
             ),

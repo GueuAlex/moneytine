@@ -203,10 +203,12 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                               onPressed: () {
                                 Navigator.of(context)
                                     .push(MaterialPageRoute(builder: (context) {
-                                  return ResetPinCodeEmailScreen();
+                                  return ResetPinCodeEmailScreen(
+                                    user: widget.user!,
+                                  );
                                 }));
                               },
-                              child: Text('Vous avez oublié votre code ?'),
+                              child: Text('Définir un nouveau code ?'),
                             ),
                           )
                         : Container(),

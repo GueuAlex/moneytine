@@ -8,7 +8,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../config/firebase_const.dart';
 import '../../config/prefs.dart';
 import '../../functions/functions.dart';
+import '../../models/money_transaction.dart';
+import '../../models/tontine.dart';
+import '../../models/transation_by_date.dart';
 import '../../models/user.dart';
+import '../../remote_services/remote_services.dart';
 import '../../style/palette.dart';
 import '../../widgets/logo_container.dart';
 import 'pin_code/pin_code.dart';
@@ -94,46 +98,62 @@ class _LoginScreenState extends State<LoginScreen> {
                 email: emailController.text,
                 password: passwordController.text,
               );
+              if (logUser.isActive.toString() == "1") {
+                /////////////////////// on le connecte ////////////////////////
+                ///
+                //print('dans login id : ${logUser.id}');
+                //////////////////////////// a mettre en commentaire plutard ////
+                ///
+                await Prefs().setId(logUser.id);
+                int id = await Prefs().id;
+                //print(' prefs id : $id');
+                //////////////////////////////////////////////////////////////
+                Future.delayed(const Duration(seconds: 4)).then((value) async {
+                  setState(() {
+                    isLoading = false;
+                  });
+                  /////////////////////////// authentification vers firestore////
+                  ///
+                  await _auth
+                      .signInWithEmailAndPassword(
+                        email: emailController.text,
+                        password: FirebaseConst.authPwd,
+                      )
+                      .then((uid) => {})
+                      .catchError((e) async {
+                    Fluttertoast.showToast(msg: await e!.message);
+                  });
 
-              //print('dans login id : ${logUser.id}');
-              //////////////////////////// a mettre en commentaire plutard ////
-              ///
-              await Prefs().setId(logUser.id);
-              int id = await Prefs().id;
-              //print(' prefs id : $id');
-              //////////////////////////////////////////////////////////////
-              Future.delayed(const Duration(seconds: 4)).then((value) async {
+                  getAllTontineListWhereCurrentUserParticiped(id: logUser.id!);
+                  getAllTransactions(id: logUser.id);
+
+                  ///
+                  ///////////////////////////////////////////////////////////////
+
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) {
+                    return PinCodeScreen(
+                      user: logUser,
+                    ); //
+                  }), (route) => false);
+                });
+
+                ///
+                ////////////////////////////////////////////////////////////////
+              } else {
                 setState(() {
                   isLoading = false;
+                  Fluttertoast.showToast(
+                      msg: 'Compte désactivé',
+                      backgroundColor: Palette.appPrimaryColor);
                 });
-                /////////////////////////// authentification vers firestore////
-                ///
-                await _auth
-                    .signInWithEmailAndPassword(
-                      email: emailController.text,
-                      password: FirebaseConst.authPwd,
-                    )
-                    .then((uid) => {})
-                    .catchError((e) async {
-                  Fluttertoast.showToast(msg: await e!.message);
-                });
-
-                ///
-                ///////////////////////////////////////////////////////////////
-
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) {
-                  return PinCodeScreen(
-                    user: logUser,
-                  ); //
-                }), (route) => false);
-              });
+              }
             } else {
               setState(() {
                 isLoading = false;
               });
               Fluttertoast.showToast(
-                msg: 'Email ou mot de passe incorrect',
+                msg: 'Email incorrect !',
                 backgroundColor: Palette.appPrimaryColor,
               );
             }
@@ -205,5 +225,70 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  void getAllTontineListWhereCurrentUserParticiped({required int id}) async {
+    List<Tontine?> tontineList1 = await RemoteServices().getAllTontineList();
+    //List<Tontine> allTontineWhereCurrentUserParticipe = [];
+
+    if (tontineList1.isNotEmpty) {
+      //allTontineWhereCurrentUserParticipe.clear();
+      for (var element in tontineList1) {
+        if (element?.creatorId != id && element!.membersId.contains(id)) {
+          //setState(() {
+          allTontineWhereCurrentUserParticipe.add(element);
+          // });
+        }
+        if (element?.creatorId == id) {
+          // setState(() {
+          currentUSerTontineList.add(element!);
+          // });
+        }
+      }
+      // print('je participe à : $allTontineWhereCurrentUserParticipe');
+    }
+  }
+
+  Future<void> getAllTransactions({required id}) async {
+    List<MoneyTransaction> allTransactions =
+        await RemoteServices().getTransactionsList();
+
+    if (allTransactions.isNotEmpty) {
+      globalTransactionsList.clear();
+      for (MoneyTransaction element in allTransactions) {
+        if (element.tontineCreatorId == id || element.userId == id) {
+          //setState(() {
+          globalTransactionsList.add(element);
+          // });
+        }
+      }
+      globalTransactionsList.sort(
+        (a, b) => a.date.compareTo(b.date),
+      );
+      globalTransactionsList.sort((a, b) {
+        int dateComparison = b.date.compareTo(a.date);
+        if (dateComparison != 0) {
+          return dateComparison;
+        }
+        return a.hours.compareTo(b.hours);
+      });
+      // Créer une liste de TransactionsByDate à partir de la liste triée
+      List<DataByDate<MoneyTransaction>> transactionsByDate = [];
+      for (var t in globalTransactionsList) {
+        DataByDate? last =
+            transactionsByDate.isNotEmpty ? transactionsByDate.last : null;
+        if (last == null || last.date != t.date) {
+          transactionsByDate.add(DataByDate<MoneyTransaction>(
+            date: t.date,
+            data: [t],
+          ));
+        } else {
+          last.data.add(t);
+        }
+      }
+      //setState(() {
+      AlltrasansactionsByDate = transactionsByDate;
+      // });
+    }
   }
 }

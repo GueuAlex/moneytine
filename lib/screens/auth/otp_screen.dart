@@ -278,7 +278,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     isNewOptProcess = false;
                                   });
                                   Fluttertoast.showToast(
-                                    msg: 'Code renvoyer !',
+                                    msg: 'Code renvoyé !',
                                     backgroundColor: Palette.appPrimaryColor,
                                   );
                                 } else {

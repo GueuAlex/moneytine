@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moneytine/functions/functions.dart';
+import 'package:moneytine/screens/my_tontines/mes_tontines.dart';
 
 import '../../models/tontine.dart';
 import '../../models/user.dart';
@@ -32,8 +34,14 @@ class SingleTontine extends StatefulWidget {
 
 class _SingleTontineState extends State<SingleTontine> {
   bool isShimmer = false;
+  bool isCreator = false;
   @override
   void initState() {
+    if (widget.user.id == widget.tontine.creatorId) {
+      setState(() {
+        isCreator = true;
+      });
+    }
     setState(() {
       isShimmer = widget.isFiret;
     });
@@ -44,6 +52,10 @@ class _SingleTontineState extends State<SingleTontine> {
       });
       // Navigator.pop(context);
     });
+    Functions().sendPaiementRemember(
+      tontine: widget.tontine,
+      user: widget.user,
+    );
     super.initState();
   }
 
@@ -53,8 +65,22 @@ class _SingleTontineState extends State<SingleTontine> {
       extendBody: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leadingWidth: 20,
         leading: widget.isFiret
-            ? Container()
+            ? IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) {
+                    return MesTontinesScreen(user: widget.user);
+                  }), (route) => false);
+                },
+                icon: Icon(
+                  Platform.isIOS
+                      ? CupertinoIcons.chevron_back
+                      : CupertinoIcons.arrow_left,
+                  color: Palette.whiteColor,
+                ),
+              )
             : IconButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -80,9 +106,13 @@ class _SingleTontineState extends State<SingleTontine> {
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: widget.user.id == widget.tontine.id
-                      ? ButtonsRow(
-                          widget: widget,
+                  child: isCreator
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: ButtonsRow(
+                            widget: widget,
+                            user: widget.user,
+                          ),
                         )
                       : Container(),
                 ),

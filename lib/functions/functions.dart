@@ -4,10 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:moneytine/models/tontine.dart';
 
 import '../models/money_transaction.dart';
 import '../models/user.dart';
 import '../remote_services/remote_services.dart';
+import 'notifs_services.dart';
 
 class Functions {
   static Future<int> postEmail(
@@ -208,7 +211,12 @@ class Functions {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
     MyUser userModel = MyUser(
-        fullName: fullName, email: email, password: password, uid: user!.uid);
+      fullName: fullName,
+      email: email,
+      password: password,
+      uid: user!.uid,
+      isActive: 1,
+    );
 
     //wrtting all the values
 
@@ -263,6 +271,36 @@ class Functions {
     return dateFin;
   }
 
+  static DateTime calculerDateLimiteDernierPaiement({
+    required DateTime dateDebut,
+    required int nombreMois,
+    required DateTime dateLimitePremierPaiement,
+  }) {
+    DateTime dateLimiteDernierPaiement = DateTime(
+        dateDebut.year, dateDebut.month + nombreMois - 1, dateDebut.day);
+
+    if (dateLimiteDernierPaiement.isBefore(dateLimitePremierPaiement)) {
+      return dateLimitePremierPaiement;
+    } else {
+      return dateLimiteDernierPaiement;
+    }
+  }
+
+  /*  static void afficherBonjourAvantDatePaiement({
+    required DateTime dateDebut,
+    required int nombreMois,
+    required DateTime dateLimitePremierPaiement,
+  }) {
+    for (int i = nombreMois; i >= 1; i--) {
+      DateTime datePaiement = dateDebut.add(Duration(days: (i - 1) * 30));
+      DateTime dateBonjour = datePaiement.subtract(Duration(days: 4));
+
+      var formatter = DateFormat('yyyy-MM-dd');
+      print(
+          'Bonjour ${formatter.format(dateBonjour)}'); // Affiche "Bonjour" suivi de la date au format 'yyyy-MM-dd'
+    }
+  } */
+
   static String addSpaceAfterThreeDigits(String input) {
     // Supprimer les espaces de la chaîne
     String stringWithoutSpaces = input.replaceAll(' ', '');
@@ -288,5 +326,60 @@ class Functions {
     String reversedResult = result.toString().split('').reversed.join();
 
     return reversedResult;
+  }
+
+  Future<void> sendPaiementRemember({
+    //required DateTime dateLimitePremierPaiement,
+    required MyUser user,
+    required Tontine tontine,
+  }) async {
+    //list des dates
+    List<DateTime> d = [];
+    d.clear();
+
+    //extraction des dates de paiement
+    for (int i = tontine.numberOfType; i >= 1; i--) {
+      //extraction d'une date de paiement
+      DateTime datePaiement =
+          tontine.startDate.add(Duration(days: (i - 1) * 30));
+
+      //extraction d'une date de notification
+      //en fessant -4 jours sur la date de paiement
+      DateTime dateBonjour = datePaiement.subtract(Duration(days: 4));
+
+      // ajout de la date de notifs a liste des dates
+      //on ajoute egalement 10h30 a cette date de notif pour que
+      //la notif s'affiche pil a 10h30 a cette date
+      d.add(dateBonjour.add(Duration(hours: 10, minutes: 30)));
+    }
+
+    //on parcours la liste des dates de notifs
+    for (DateTime date in d) {
+      Random random = Random();
+      int id = random.nextInt(999999999);
+
+      //on virifie si la date de notif actuelle n'est pas encore passée
+      if (isDateFuture(date)) {
+        //on ajout 4 jours a la date de notif pour obtenir la date de paiement
+        //puissqu'on a fait l'inverse plus haut
+        String dateP = DateFormat('dd/MM/yyyy').format(
+          date.add(Duration(days: 4)),
+        );
+
+        //pour chaque date de notif, on programme une envoi de nofit.
+        NotificationService().scheduleNotification(
+          id: id,
+          title: "Rappel",
+          body:
+              "Le paiement de votre contribution pour ${tontine.tontineName} est dû le ${dateP}",
+          scheduledNotificationDateTime: date,
+        );
+      }
+    }
+  }
+
+  bool isDateFuture(DateTime date) {
+    final now = DateTime.now();
+    return date.isAfter(now);
   }
 }

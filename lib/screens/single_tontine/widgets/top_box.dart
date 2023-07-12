@@ -25,6 +25,7 @@ class TopBox extends StatefulWidget {
 }
 
 class _TopBoxState extends State<TopBox> {
+  bool isCreator = false;
   /////////////////////////////
   ///
   TontineMembersStatus tontineMembersStatus = TontineMembersStatus(
@@ -47,6 +48,12 @@ class _TopBoxState extends State<TopBox> {
 
   @override
   void initState() {
+    if (widget.user.id == widget.tontine.creatorId) {
+      //print("object");
+      setState(() {
+        isCreator = true;
+      });
+    }
     getTontineMembersStatus();
     super.initState();
   }
@@ -58,7 +65,8 @@ class _TopBoxState extends State<TopBox> {
     return Container(
       padding: const EdgeInsets.only(bottom: 8.0),
       width: double.infinity,
-      height: widget.user.id == widget.tontine.id ? 110 : 65,
+      //height: widget.user.id == widget.tontine.id ? 110 : 65,
+      height: isCreator ? 110 : 65,
       //height: 65,
       decoration: BoxDecoration(
         boxShadow: [
@@ -129,65 +137,65 @@ class _TopBoxState extends State<TopBox> {
                         ///
                         ///
                         ///
-                        Container(
-                          width: 80,
-                          margin: const EdgeInsets.only(bottom: 8.0),
-                          padding: const EdgeInsets.only(
-                            left: 4.0,
-                            right: 4.0,
-                            top: 4,
-                            bottom: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Palette.appPrimaryColor.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 5.0),
-                                //padding: const EdgeInsets.only(bottom: 15.0),
-                                //height: 28,
-                                width: 28,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Palette.secondaryColor,
-                                ),
-                                child: Center(
-                                  child: IconButton(
-                                    onPressed: () {
-                                      Functions.copyToClipboard(
-                                          text: widget.tontine.uniqueCode
-                                              .toString());
-                                      Fluttertoast.showToast(
-                                        msg: 'Copié !',
-                                        backgroundColor:
-                                            Palette.appPrimaryColor,
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.copy,
-                                      size: 12,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                'Copier',
-                                style: TextStyle(
-                                  color: Palette.secondaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+
                         //////////
                         ///
                         ///
                       ],
                     ),
+                  ),
+                ),
+                Container(
+                  width: 80,
+                  height: MediaQuery.of(context).size.height,
+                  margin: const EdgeInsets.only(left: 4.0),
+                  padding: const EdgeInsets.only(
+                    left: 4.0,
+                    right: 4.0,
+                    top: 4,
+                    bottom: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Palette.appPrimaryColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(right: 5.0),
+                        //padding: const EdgeInsets.only(bottom: 15.0),
+                        //height: 28,
+                        width: 28,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Palette.secondaryColor,
+                        ),
+                        child: Center(
+                          child: IconButton(
+                            onPressed: () {
+                              Functions.copyToClipboard(
+                                  text: widget.tontine.uniqueCode.toString());
+                              Fluttertoast.showToast(
+                                msg: 'Copié !',
+                                backgroundColor: Palette.appPrimaryColor,
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.copy,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'Copier',
+                        style: TextStyle(
+                          color: Palette.secondaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -196,7 +204,8 @@ class _TopBoxState extends State<TopBox> {
           const SizedBox(
             height: 2.0,
           ),
-          widget.user.id == widget.tontine.id
+          //widget.user.id == widget.tontine.id
+          isCreator
               ? Expanded(
                   child: Container(
                     //color: Colors.black,

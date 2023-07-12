@@ -69,7 +69,7 @@ class JorganiseTontineCard extends StatelessWidget {
                     height: 8,
                   ),
                   Text(
-                    'Créer le ${DateFormat('dd / MM / yyyy').format(tontine.startDate)}',
+                    'Créée le ${DateFormat('dd / MM / yyyy').format(tontine.startDate)}',
                   ),
 
                   /*  Row(
@@ -111,11 +111,15 @@ class JorganiseTontineCard extends StatelessWidget {
                   //ContributionInfos(label: '${tontine.contribution} FCFA'),
 
                   ContributionInfos(
-                    label: '${tontine.groupes.length} Groupes',
+                    label: tontine.groupes.length > 1
+                        ? '${tontine.groupes.length} Groupes'
+                        : '${tontine.groupes.length} Groupe',
                     color: Palette.appSecondaryColor,
                   ),
                   ContributionInfos(
-                    label: '${tontine.membersId.length} Membres',
+                    label: tontine.membersId.length > 1
+                        ? '${tontine.membersId.length} Membres'
+                        : '${tontine.membersId.length} Membre',
                     color: Palette.appPrimaryColor,
                   ),
                   ContributionInfos(
